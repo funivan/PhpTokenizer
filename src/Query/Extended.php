@@ -18,11 +18,9 @@
 
     const POSSIBLE = 1;
 
-    const EXPECT = 3;
+    const SEARCH = 2;
 
-    const SEARCH = 4;
-
-    const SECTION = 5;
+    const SECTION = 3;
 
 
     /**
@@ -45,7 +43,9 @@
      */
     protected $moves = [];
 
-    /**
+    /**         
+     * Add strict condition 
+     * 
      * @return Query
      */
     public function strict() {
@@ -60,29 +60,6 @@
     public function possible() {
       $query = new Query();
       $this->addQuery($query, self::POSSIBLE);
-      return $query;
-    }
-
-    /**
-     * Expect - exclude token from result. Main difference from search condition
-     *
-     * <code>
-     *  # perform simple search on this code
-     *  #'<?php echo 1+5*9; echo 2+4'
-     *
-     *  $collection->strict()->valueIs('echo');
-     *  $collection->search()->valueIs(';');
-     *
-     *  # result is WITHOUT semicolon
-     *  # echo 1+5*9
-     *
-     * </code>
-     *
-     * @return Query
-     */
-    public function expect() {
-      $query = new Query();
-      $this->addQuery($query, self::EXPECT);
       return $query;
     }
 
@@ -208,10 +185,11 @@
      * @return Block
      */
     protected function parse() {
+
       # validate conditions
 
-      if (count($this->queries) < 1) {
-        throw new \Funivan\PhpTokenizer\Exception('Invalid number of conditions. You need more than 1 condition or use delimiters');
+      if (empty($this->queries)) {
+        throw new \Funivan\PhpTokenizer\Exception('Invalid number of conditions.');
       }
 
       # drop cache
@@ -219,29 +197,22 @@
 
       $this->cache = new Block();
 
-      $listOfQueries = $this->queries;
+      $queries = $this->queries;
 
-      # Колекція яка містить токени.
-      # Кожен токен задовільняє першій умові
       foreach ($this->collection as $index => $tokenRaw) {
-        //echo "Start Iterate group from token :" . $index . "\n";
-        # Умови спрацювали якщо ми оприділили де закінчується наш блок
 
         $firstTokenIndex = $index;
         $lastTokenIndex = null;
 
-        foreach ($listOfQueries as $queryIndex => $rawQueryInfo) {
+        foreach ($queries as $queryIndex => $rawQueryInfo) {
 
           /** @var $token Token */
           $token = $this->collection[$queryIndex + $index];
 
-          //echo "\n";
-          //echo "Start check Token :" . ($queryIndex + $index) . " (" . $token . "). Query index: " . $queryIndex . "\n";
 
-          # У нас є 2 або більше умов
-          # І на останню умову немає токена.
-          # Все цикл завершується.
+          # If we have more queries than tokens condition failure 
           if (!is_object($token)) {
+            //@todo check if our last token is empty and last query is possible
             $lastTokenIndex = false;
             break;
           }
@@ -250,10 +221,11 @@
           $query = $rawQueryInfo[0];
           $type = $rawQueryInfo[1];
 
-          # Перший токен ми знаємо де знаходиться. Перевіряємо його і всі наступні
-          $isValid = $query->checkToken($token);
+          # Check if token is valid 
+          $isValid = $query->isValid($token);
 
           if ($type == static::STRICT) {
+
             if ($isValid) {
               $lastTokenIndex = $queryIndex + $index;
               $lastTokenIndex = $this->performMove($lastTokenIndex, $queryIndex);
@@ -261,19 +233,18 @@
               $lastTokenIndex = false;
               break;
             }
+
           } elseif ($type == static::POSSIBLE) {
-            # Умова не строга
 
             if ($isValid) {
-              # Токен підійшов ідемо перевіряти дальше
               $lastTokenIndex = $queryIndex + $index;
               $lastTokenIndex = $this->performMove($lastTokenIndex, $queryIndex);
             } else {
-              # Токен не підійшов перевіримо його на наступну умову
+              # token does not match. We will validate it in next step
               $index--;
             }
 
-          } elseif ($type == static::EXPECT or $type == static::SEARCH) {
+          } elseif ($type == static::SEARCH) {
 
             if (!$isValid) {
 
@@ -292,7 +263,7 @@
                 $tokenForExpect = $this->collection[$currentTokenIndex];
 
                 # Check token for expect condition
-                $validTokenFind = $query->checkToken($tokenForExpect);
+                $validTokenFind = $query->isValid($tokenForExpect);
 
                 if (!$validTokenFind and $currentTokenIndex == $tokenLastIndexInCollection) {
                   # invalid last token
@@ -330,7 +301,7 @@
                 continue;
               }
 
-              if ($query->checkToken($token)) {
+              if ($query->isValid($token)) {
                 $blockEndFlag++;
               } elseif ($token->getValue() === $rawQueryInfo[2]) {
                 $blockEndFlag--;
@@ -346,12 +317,6 @@
 
           }
 
-          if ($type == static::EXPECT) {
-            # run step back on expect
-            $index--;
-            $lastTokenIndex--;
-          }
-
         }
 
         if (is_int($firstTokenIndex) and is_int($lastTokenIndex)) {
@@ -361,6 +326,7 @@
           $this->resultEndIndexes[] = $lastTokenIndex;
           $this->cache->append($blockCollection);
         }
+
       }
 
     }

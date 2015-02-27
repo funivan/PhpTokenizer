@@ -48,8 +48,7 @@
     public function __construct($path) {
       $this->path = $path;
       $code = file_get_contents($path);
-      $this->initialContentHash = md5($code);
-      $this->collection = Collection::parseFromString($code);
+      $this->collection = Collection::initFromString($code);
     }
 
 
@@ -83,7 +82,7 @@
      */
     public function refresh() {
       $newCode = $this->collection->assemble();
-      $this->collection = Collection::parseFromString($newCode);
+      $this->collection = Collection::initFromString($newCode);
       return $this;
     }
 

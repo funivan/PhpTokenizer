@@ -13,14 +13,25 @@
 
     const N = __CLASS__;
 
-    const INVALID_TOKEN_TYPE = -1;
+    const INVALID_TYPE = -1;
 
-    const INVALID_TOKEN_LINE = -1;
+    const INVALID_LINE = -1;
 
+    const INVALID_VALUE = null;
+
+    /**
+     * @var null|int
+     */
     protected $type = null;
 
+    /**
+     * @var string
+     */
     protected $value = null;
 
+    /**
+     * @var string
+     */
     protected $line = null;
 
     /**
@@ -44,10 +55,30 @@
 
 
     /**
-     * @return bool
+     * @param array $data
+     * @return $this
+     * @throws Exception
      */
-    public function isValid() {
-      return $this->getValue() !== null;
+    protected function setData(array $data) {
+      if (!isset($data[0])) {
+        throw new Exception("Please provide type of token");
+      }
+
+      $this->setType($data[0]);
+
+      if (!isset($data[1])) {
+        throw new Exception("Please provide value of token");
+      }
+
+      $this->setValue($data[1]);
+
+      if (!isset($data[2])) {
+        throw new Exception("Please provide line of token");
+      }
+
+      $this->setLine($data[2]);
+
+      return $this;
     }
 
     /**
@@ -57,12 +88,6 @@
       return [$this->getType(), $this->getValue(), $this->getLine()];
     }
 
-    /**
-     * @return null
-     */
-    public function getType() {
-      return $this->type;
-    }
 
     /**
      * @param $type
@@ -71,6 +96,13 @@
     public function setType($type) {
       $this->type = $type;
       return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getType() {
+      return $this->type;
     }
 
     /**
@@ -96,7 +128,7 @@
     public function setValue($value) {
 
       if (!is_string($value) and !is_numeric($value)) {
-        throw new \Funivan\PhpTokenizer\Exception('You can set only string ');
+        throw new \Funivan\PhpTokenizer\Exception('You can set only string. Given: ' . gettype($value));
       }
 
       $this->value = (string) $value;
@@ -120,37 +152,57 @@
     }
 
     /**
-     * Remove all data from token so this token become invalid
-     * @void
+     * @return bool
      */
-    public function remove() {
-      foreach ($this as $property => $value) {
-        $this->$property = null;
-      }
+    public function isValid() {
+      return $this->getValue() !== null;
     }
 
     /**
-     * @param array $data
+     * Remove all data from token so this token become invalid
+     *
+     * @return $this
+     */
+    public function remove() {
+      $this->type = static::INVALID_TYPE;
+      $this->value = static::INVALID_VALUE;
+      $this->line = static::INVALID_LINE;
+      return $this;
+    }
+
+
+    /**
+     * Add part to the end of value
+     *
+     * @param string $part
+     * @return $this
      * @throws Exception
      */
-    protected function setData(array $data) {
-      if (!isset($data[0])) {
-        throw new Exception("Please provide type of token");
+    public function appendToValue($part) {
+      if (!is_string($part) and !is_numeric($part)) {
+        throw new \Funivan\PhpTokenizer\Exception('You can append only string to value');
       }
 
-      $this->setType($data[0]);
+      $this->value = $this->value . $part;
 
-      if (!isset($data[1])) {
-        throw new Exception("Please provide value of token");
+      return $this;
+    }
+
+    /**
+     * Add part to the begin of value
+     *
+     * @param string $part
+     * @return $this
+     * @throws Exception
+     */
+    public function prependToValue($part) {
+      if (!is_string($part) and !is_numeric($part)) {
+        throw new \Funivan\PhpTokenizer\Exception('You can prepend only string to value');
       }
 
-      $this->setValue($data[1]);
+      $this->value = $part . $this->value;
 
-      if (!isset($data[2])) {
-        throw new Exception("Please provide line of token");
-      }
-
-      $this->setLine($data[2]);
+      return $this;
     }
 
   }

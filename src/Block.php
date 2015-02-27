@@ -40,7 +40,7 @@
      * @return $this
      * @throws \Funivan\PhpTokenizer\Exception
      */
-    public function mapCollection($callback) {
+    public function mapCollectionTokens($callback) {
 
       if (!is_callable($callback)) {
         throw new \Funivan\PhpTokenizer\Exception('Invalid callback function');

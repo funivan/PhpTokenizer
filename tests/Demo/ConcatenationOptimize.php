@@ -11,142 +11,117 @@
     const MAX_ITERATION = 10;
 
     /**
-     * @var \Funivan\PhpTokenizer\File|null
+     *
+     * OLD: echo "$user";
+     * NEW: echo $user;
+     *
+     * @param \Funivan\PhpTokenizer\Collection $collection
+     * @return bool
      */
-    protected $file = null;
+    public function removeQuotesNearVariable(\Funivan\PhpTokenizer\Collection $collection) {
 
-    /**
-     * @param \Funivan\PhpTokenizer\File $file
-     */
-    public function __construct(\Funivan\PhpTokenizer\File $file) {
-      $this->file = $file;
-      $this->optimize();
+      $changed = false;
+
+      return $changed;
     }
 
     /**
+     *
+     * OLD: echo "text $user";
+     * NEW: echo "text".$user;
+     *
+     *
+     * OLD: echo "custom text: $user or ";
+     * NEW: echo "custom text: ".$user." or ";
+     *
+     *
+     * @param \Funivan\PhpTokenizer\Collection $collection
      * @return bool
      */
-    protected function optimize() {
-      $file = $this->file;
-      $collection = $file->getCollection();
+    public function extractVariableFromString(\Funivan\PhpTokenizer\Collection $collection) {
 
-      $iteration = static::MAX_ITERATION;
+      $changed = false;
 
-      $this->optimizeVariablesInCurlyBrackets($file);
-      do {
+      $collection->refresh();
+      $q = $collection->extendedQuery();
+      $q->strict()->valueIs(['"', "'"]);
+      $q->possible()->typeIs(T_ENCAPSED_AND_WHITESPACE);
+      $q->strict()->typeIs(T_VARIABLE);
+      $q->possible()->typeIs(T_ENCAPSED_AND_WHITESPACE);
+      $q->strict()->valueLike('!.*!');
 
-        $file->refresh();
-        $iteration--;
+      $block = $q->getBlock();
 
-        $optimizeStringsNum = $collection->query()->typeIs(T_ENCAPSED_AND_WHITESPACE)->getTokensNum();
 
-        # " ,
-        # T_ENCAPSED_AND_WHITESPACE
-        # T_VARIABLE
-        # T_OBJECT_OPERATOR
-        # T_STRING
-        # T_ENCAPSED_AND_WHITESPACE
-
-        if ($optimizeStringsNum) {
-
-          $file->refresh();
-          $q = $collection->extendedQuery();
-          $q->strict()->valueIs(['"', "'"]);
-          $q->strict()->typeIs(T_VARIABLE);
-          $q->strict()->valueIs('->');
-          $q->strict()->typeIs(T_STRING);
-          $q->strict()->valueIs(['"', "'"]);
-
-          $block = $q->getBlock();
-          foreach ($block as $col) {
-            if ($col->getFirst()->getValue() == $col->getLast()->getValue()) {
-              $col->getFirst()->remove();
-              $col->getLast()->remove();
-            }
-          }
-
-          $file->refresh();
-          $q = $collection->extendedQuery();
-          $q->strict()->valueIs(['"', "'"]);
-          $q->strict()->typeIs(T_VARIABLE);
-          $q->strict()->valueIs(['"', "'"]);
-
-          $block = $q->getBlock();
-          foreach ($block as $col) {
-            if ($col->getFirst()->getValue() == $col->getLast()->getValue()) {
-              $col->getFirst()->remove();
-              $col->getLast()->remove();
-            }
-          }
-
-          # step 1 Object call
-          $file->refresh();
-          $q = $collection->extendedQuery();
-          $q->strict()->valueIs(['"', "'"]);
-          $q->strict()->typeIs(T_ENCAPSED_AND_WHITESPACE);
-          $q->strict()->typeIs(T_VARIABLE);
-          $q->strict()->valueIs('->');
-          $q->strict()->typeIs(T_STRING);
-
-          $block = $q->getBlock();
-          foreach ($block as $col) {
-            $delimiter = $col->getFirst();
-
-            $dot = new \Funivan\PhpTokenizer\Token();
-            $dot->setValue('.');
-
-            $col->addAfter(1, array(clone $delimiter));
-            $col->addAfter(2, array(clone $dot));
-
-            $col->append(clone $dot);
-            $col->append(clone $delimiter);
-
-            $col->getFirst()->setValue($col->assemble());
-            foreach ($col as $index => $token) {
-              if ($index !== 0) {
-                $token->remove();
-              }
-            }
-          }
-
-          # step 2 variable
-          $file->refresh();
-          $q = $collection->extendedQuery();
-
-          $q->strict()->valueIs(['"', "'"]);
-          $q->strict()->typeIs(T_ENCAPSED_AND_WHITESPACE);
-          $q->strict()->typeIs(T_VARIABLE);
-          $q->strict()->typeIs(T_ENCAPSED_AND_WHITESPACE);
-
-          $block = $q->getBlock();
-          foreach ($block as $col) {
-
-            $delimiter = $col->getFirst();
-
-            $dot = new \Funivan\PhpTokenizer\Token();
-            $dot->setValue('.');
-
-            $col->addAfter(1, array(clone $delimiter));
-            $col->addAfter(2, array(clone $dot));
-
-            $col->addAfter(4, array(clone $dot));
-            $col->addAfter(5, array(clone $delimiter));
-
-            $col->getFirst()->setValue($col->assemble());
-
-            foreach ($col as $index => $token) {
-
-              if ($index !== 0) {
-                $token->remove();
-              }
-            }
-          }
-
+      foreach ($block as $col) {
+        $delimiterValue = $col->getFirst()->getValue();
+        $next = $col->getNext(1);
+        if ($next->getType() === T_ENCAPSED_AND_WHITESPACE) {
+          $next->appendToValue($delimiterValue . ".");
+          $changed = true;
+        } else {
+          $col->getFirst()->appendToValue($delimiterValue . ".");
+          $changed = true;
         }
 
-      } while (!empty($optimizeStringsNum) and $iteration > 0);
+        $lastItems = $col->extractItems(-2);
+        $prevItem = $lastItems->getFirst();
+        if ($prevItem->getType() === T_ENCAPSED_AND_WHITESPACE) {
+          $prevItem->prependToValue("." . $delimiterValue);
+          $changed = true;
+        } else {
+          $col->getLast()->prependToValue("." . $delimiterValue);
+          $changed = true;
+        }
 
-      return true;
+      }
+
+
+      return $changed;
+    }
+
+    /**
+     * OLD: echo $user."";
+     * NEW: echo $user;
+     *
+     * @param \Funivan\PhpTokenizer\Collection $collection
+     * @return bool
+     */
+    public function testRemoveEmptyConcatenatedStrings(\Funivan\PhpTokenizer\Collection $collection) {
+      $changed = false;
+
+      $removeTokens = function ($token) {
+        $token->remove();
+      };
+
+      $emptyStringsValue = array("''", '""');
+
+
+      $collection->refresh();
+      $q = $collection->extendedQuery();
+      $q->strict()->valueIs(".");
+      $q->strict()->valueIs($emptyStringsValue);
+
+      $block = $q->getBlock();
+      if ($block->count() > 0) {
+        $block->mapCollectionTokens($removeTokens);
+        $changed = true;
+      }
+
+      $collection->refresh();
+      $q = $collection->extendedQuery();
+
+      $q->strict()->valueIs($emptyStringsValue);
+      $q->strict()->valueIs(".");
+
+      $block = $q->getBlock();
+      if ($block->count() > 0) {
+        $block->mapCollectionTokens($removeTokens);
+        $changed = true;
+      }
+
+
+      return $changed;
     }
 
 
@@ -154,33 +129,77 @@
      * From:  "test '{$_GET["d"]}' new";
      * To  :  "test '".$_GET["d"]."' new";
      *
-     * @param \Funivan\PhpTokenizer\File $file
+     * @param \Funivan\PhpTokenizer\Collection $collection
+     * @return bool
      */
-    protected function optimizeVariablesInCurlyBrackets(\Funivan\PhpTokenizer\File $file) {
-
-      $file->refresh();
-
-      $collection = $file->getCollection();
+    public function extractVariablesFromCurlyBrackets(\Funivan\PhpTokenizer\Collection $collection) {
+      $changed = false;
 
       $q = $collection->extendedQuery();
 
-      $q->strict()->valueIs(['"', "'"]);
-      $q->strict()->typeIs(T_ENCAPSED_AND_WHITESPACE);
+      //@todo search condition check
+      $q->strict()->valueIs('"');
+      $q->possible()->typeIs(T_ENCAPSED_AND_WHITESPACE);
       $q->strict()->valueIs('{');
+      $q->strict()->typeIs(T_VARIABLE);
       $q->search()->valueIs('}');
+      $q->move(1);
 
       $block = $q->getBlock();
+
+
       foreach ($block as $col) {
-        $open = $col->query()->valueIs('{')->getTokensNum();
-        $close = $col->query()->valueIs('}')->getTokensNum();
-        if ($open == $close) {
-          $delimiter = $col->getFirst()->getValue();
-          $col->rewind();
-          $curly = $col->getNext(2);
-          $curly->setValue($delimiter . '.');
-          $col->getLast()->setValue('.' . $delimiter);
+        $delimiter = $col->getFirst();
+        $delimiterValue = $col->getFirst()->getValue();
+
+
+        $next = $col->getNext(1);
+        if ($next->getType() === T_ENCAPSED_AND_WHITESPACE) {
+          $col->getNext(2)->setValue($delimiterValue . ".");
+        } else {
+          $delimiter->remove();
+          $next->remove();
         }
+
+        $col->getLast()->setValue("." . $delimiterValue);
       }
 
+
+      # optimize blocks with start of "{$name} custom text"
+      //$q = $collection->extendedQuery();
+      //$q->strict()->typeIs(T_WHITESPACE);
+      //$q->strict()->valueIs('"');
+      //$q->strict()->valueIs('{');
+      //$q->search()->valueIs('}');
+      //
+      //$block = $q->getBlock();
+      //
+      //
+      //foreach ($block as $col) {
+      //  # simple validation 
+      //
+      //  $open = $col->query()->valueIs('{')->getTokensNum();
+      //  $close = $col->query()->valueIs('}')->getTokensNum();
+      //
+      //  if ($open != $close) {
+      //    continue;
+      //  }
+      //
+      //  $delimiter = $col->getFirst();
+      //  echo "\n***".__LINE__."***\n<pre>".print_r($col, true)."</pre>\n";die();
+      //  $lastItem = $col->getLast();
+      //  
+      //  $lastItem->setValue("." . $delimiter->getValue());
+      //  //$col->offsetGet(2)->remove();
+      //  //
+      //  //$delimiter->remove();
+      //  //$col->refresh();
+      //  $changed = true;
+      //}
+      //
+      //
+
+      return $changed;
     }
+
   }

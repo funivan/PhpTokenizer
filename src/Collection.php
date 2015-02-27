@@ -7,6 +7,7 @@
    *
    * @method \Funivan\PhpTokenizer\Token getLast();
    * @method \Funivan\PhpTokenizer\Token current();
+   * @method \Funivan\PhpTokenizer\Token offsetGet($index);
    * @method \Funivan\PhpTokenizer\Token getFirst();
    * @method \Funivan\PhpTokenizer\Token[] getItems();
    * @method \Funivan\PhpTokenizer\Collection extractItems($offset, $length = null);
@@ -59,11 +60,11 @@
      * @return $this
      */
     public function refresh() {
-      foreach ($this as $index => $token) {
-        if (!$token->isValid()) {
-          unset($this->items[$index]);
-        }
-      }
+      $string = $this->assemble();
+      $this->cleanCollection();
+
+      $tokens = Helper::getTokensFromString($string);
+      $this->setItems($tokens);
 
       $this->rewind();
       return $this;
@@ -120,32 +121,25 @@
       return $string;
     }
 
-    public static function parseFromString($string) {
-      $tokensCollection = new Collection();
+    public static function initFromString($string) {
+      $tokens = Helper::getTokensFromString($string);
+      return new Collection($tokens);
+    }
 
-      $rawTokens = token_get_all($string);
-
-      foreach ($rawTokens as $index => $token) {
-
-        unset($rawTokens[$index]);
-
-        if (!is_array($token)) {
-          $lastToken = $tokensCollection->getLast();
-
-          $token = array(
-            Token::INVALID_TOKEN_TYPE,
-            $token,
-            Token::INVALID_TOKEN_LINE,
-          );
-
-          if (!empty($lastToken)) {
-            $token[2] = $lastToken->getLine();
-          }
+    /**
+     * Remove invalid tokens from collection
+     *
+     * @return $this
+     */
+    protected function cleanCollection() {
+      foreach ($this as $index => $token) {
+        if ($token->isValid()) {
+          continue;
         }
-
-        $tokensCollection->append(new Token($token));
+        unset($this->items[$index]);
       }
-      return $tokensCollection;
+
+      return $this;
     }
 
   }

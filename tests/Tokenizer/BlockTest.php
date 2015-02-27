@@ -45,7 +45,7 @@ CODE;
 
       $this->assertCount(3, $block);
 
-      $block->mapCollection(function (Token $token, $index, Collection $collection) {
+      $block->mapCollectionTokens(function (Token $token, $index, Collection $collection) {
         if ($token->getValue() == 1) {
           $token->setValue(2);
         }
@@ -73,7 +73,7 @@ CODE;
         $eq->section('{', '}');
         $block = $eq->getBlock();
 
-        $block->mapCollection('invalid_function');
+        $block->mapCollectionTokens('invalid_function');
 
       } catch (\Exception $e) {
         $this->assertInstanceOf('\Funivan\PhpTokenizer\Exception', $e);

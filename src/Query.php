@@ -169,7 +169,7 @@
 
       $tokensResult = [];
       foreach ($this->collection as $token) {
-        if ($this->checkToken($token)) {
+        if ($this->isValid($token)) {
           $tokensResult[] = $token;
         }
       }
@@ -185,7 +185,7 @@
      * @param Token $token
      * @return bool
      */
-    public function checkToken(Token $token) {
+    public function isValid(Token $token) {
       # check type
       if (!$this->validate(self::FIELD_TYPE, $token->getType())) {
         return false;

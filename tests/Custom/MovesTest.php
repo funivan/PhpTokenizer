@@ -4,8 +4,7 @@
 
   class MovesTest extends \Test\Funivan\PhpTokenizer\Main {
 
-
-    public function _testMoveWithoutQueries() {
+    public function testMoveWithoutQueries() {
       $file = $this->initFileWithCode('<?php
          echo 1+5;
       ');
@@ -19,7 +18,7 @@
       $this->assertInstanceOf('Exception', $e);
     }
 
-    public function _testMoveAfterStrict() {
+    public function testMoveAfterStrict() {
       $file = $this->initFileWithCode('<?php
          echo 1+5;
       ');
@@ -33,7 +32,7 @@
       $this->assertEquals('echo 1', (string) $blocks->getFirst());
     }
 
-    public function _testMoveAfterPossible() {
+    public function testMoveAfterPossible() {
       $file = $this->initFileWithCode('<?php
          echo 1+5;
          echo 1-5;
@@ -62,7 +61,7 @@
       $this->assertEquals('echo 1', (string) $blocks->getLast());
     }
 
-    public function _testMoveAfterSearch() {
+    public function testMoveAfterSearch() {
       $file = $this->initFileWithCode('<?php
          echo 1+5-4-6+4/5;
       ');
@@ -81,7 +80,7 @@
       $this->assertEquals('echo 1+5-4-6', (string) $blocks->getFirst());
     }
 
-    public function _testMoveAfterSection() {
+    public function testMoveAfterSection() {
       $file = $this->initFileWithCode('<?php
          function ($a){
                           echo 123;
@@ -100,7 +99,7 @@
       $this->assertEquals('function ($a){', (string) $blocks->getFirst());
     }
 
-    public function _testMoveWithSpaces() {
+    public function testMoveWithSpaces() {
       $file = $this->initFileWithCode('<?php
          function ($a){
          }
@@ -125,7 +124,7 @@
 
     }
 
-    public function _testMoveExample() {
+    public function testMoveExample() {
       $file = $this->initFileWithCode('<?php
       $user = $this->getUser();
       $dealer = $this->getDealer();

@@ -49,7 +49,7 @@
      * @return \Funivan\PhpTokenizer\Collection
      */
     protected function getTestCollection() {
-      $collection = \Funivan\PhpTokenizer\Collection::parseFromString('<?php echo 123;');
+      $collection = \Funivan\PhpTokenizer\Collection::initFromString('<?php echo 123;');
       return $collection;
     }
 
