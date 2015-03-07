@@ -97,6 +97,43 @@
 
     public function _testMethodCallFinder() {
 
+      # simple method call
+      MethodCall::create()
+        ->name('header');
+      // header()       -> fire
+      // header($a,$b)  -> fire
+
+      MethodCall::create()
+        ->name('header')
+        ->withoutArguments();
+      // header()        -> fire
+      // header($header) -> skip
+
+      MethodCall::reference('$this')
+        ->method('getUserName');
+      // $this->getUserName() -> fire
+
+      MethodCall::reference('$this')
+        ->method('getStorage')
+        ->method('getUserName');
+      // $this->getStorage()->getUserName() -> fire
+
+      MethodCall::reference('$user')
+        ->staticMethod('getStorage');
+      // $user::getStorage()  -> fire
+
+      MethodCall::reference('$user')
+        ->staticMethod('getStorage')
+        ->method('getUser');
+      // $user::getStorage()->getUser()  -> fire
+      
+      MethodCall::reference('StorageComponent')
+        ->staticMethod('getStorage')
+        ->method('getUser');
+      // StorageComponent::getStorage()->getUser()  -> fire
+      
+      
+
       # 1. simple method call extractor
       $extractor = MethodCall::create()
         ->objectVariable('$this')
@@ -128,10 +165,6 @@
             ->withArgument(0, '!$.*!')
             ->withArgumentsNum(3)
         );
-      
-      
-      
-      
 
     }
 
