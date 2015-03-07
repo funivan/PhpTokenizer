@@ -7,7 +7,7 @@
    */
   class ModificationTest extends \Test\Funivan\PhpTokenizer\Main {
 
-    public function testExtractVariableFromString() {
+    public function _testExtractVariableFromString() {
 
       $lines = array(
         'echo "custom text $f other text";' =>
@@ -37,7 +37,7 @@
 
     }
 
-    public function testRemoveEmptyConcatenatedStrings() {
+    public function _testRemoveEmptyConcatenatedStrings() {
 
       $lines = array(
         'echo "";' =>
@@ -83,8 +83,8 @@
           'echo "$this->table" . "+new";',
         //'echo "{$this->table}" . "+new";  ' => 'echo "{$this->table}" . "+new";',
         //'echo "{$this->table[123]}" . "+new";  ' => 'echo "{$this->table[123]}" . "+new";',
-        //'echo "{$item['test']}" . "+new";  '=>'echo "{$item['test']}" . "+new";', 
-        //'echo "test{$item['test']}" . "+new";  '=>'echo "test{$item['test']}" . "+new";', 
+        //'echo "{$item['test']}" . "+new";  '=>'echo "{$item['test']}" . "+new";',
+        //'echo "test{$item['test']}" . "+new";  '=>'echo "test{$item['test']}" . "+new";',
       );
 
 
@@ -116,7 +116,7 @@
       }
     }
 
-    public function testCurlyBrackets() {
+    public function _testCurlyBrackets() {
 
 
       $lines = array(
@@ -140,7 +140,7 @@
         //
         'echo "{$item} other string" ;' =>
           'echo $item." other string" ;',
-        
+
         ' echo "test \'{$_GET["d"]}\' new";' =>
           ' echo "test \'".$_GET["d"]."\' new";',
       );

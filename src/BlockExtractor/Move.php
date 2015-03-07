@@ -45,4 +45,8 @@
       }
     }
 
+    public function getNextTokenIndexForCheck() {
+      return $this->endIndex;
+    }
+
   }

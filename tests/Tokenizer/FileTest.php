@@ -7,18 +7,18 @@
   class FileTest extends \Test\Funivan\PhpTokenizer\Main {
 
 
-    public function _testOpen() {
+    public function testOpen() {
       $file = new \Funivan\PhpTokenizer\File($this->getDemoDataDir() . '/demo.php');
       $this->assertCount(7, $file->getCollection());
     }
 
-    public function _testFilePath() {
+    public function testFilePath() {
       $file = \Funivan\PhpTokenizer\File::open($this->getDemoDataDir() . '/demo.php');
       $this->assertContains('files/demo.php', $file->getPath());
     }
 
 
-    public function _testSave() {
+    public function testSave() {
       $data = '<?php echo 1;';
 
       # create temp file
@@ -44,7 +44,7 @@
     }
 
 
-    public function _testRefresh() {
+    public function testRefresh() {
       $file = new \Funivan\PhpTokenizer\File($this->getDemoDataDir() . '/demo.php');
       $q = $file->getCollection()->query();
 
@@ -68,7 +68,7 @@
 
     }
 
-    public function _testHtml() {
+    public function testHtml() {
       # create temp file
       $code = '<html><?= 1 ?></html>';
 
@@ -78,7 +78,7 @@
       $this->assertCount(7, $file->getCollection());
     }
 
-    public function _testSaveFileWithoutChange() {
+    public function testSaveFileWithoutChange() {
       $file = new \Funivan\PhpTokenizer\File($this->getDemoDataDir() . '/demo.php');
       $startModificationTime = \filemtime($file->getPath());
       sleep(1);

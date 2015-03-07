@@ -9,7 +9,7 @@
    */
   class ExceptionTest extends \Test\Funivan\PhpTokenizer\Main {
 
-    public function _testSetTokenValueException() {
+    public function testSetTokenValueException() {
       $token = new Token();
 
       try {

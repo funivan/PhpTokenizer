@@ -17,7 +17,7 @@
       unlink($file->getPath());
     }
 
-    public function _testSetType() {
+    public function testSetType() {
 
       $file = $this->initFileWithCode('<?php echo 1');
       $lastToken = $file->getCollection()->getLast();
@@ -37,6 +37,7 @@
 
       unlink($file->getPath());
     }
+
 
     public function testToString() {
       $file = $this->initFileWithCode('<?php echo 1');

@@ -12,4 +12,6 @@
 
     public function getEndIndex();
 
+    public function getNextTokenIndexForCheck();
+
   }

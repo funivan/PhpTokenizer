@@ -61,7 +61,7 @@
         $collection[10] = null;
         $this->fail('Invalid token set. Expect exception.');
       } catch (\Exception $e) {
-        $this->assertInstanceOf('\Funivan\PhpTokenizer\Exception', $e);
+        $this->assertInstanceOf('\Exception', $e);
       }
 
       $itemsNum = $collection->count();
@@ -75,7 +75,7 @@
 
       $newToken = new Token();
       $newToken->setValue("echo");
-      
+
       $collection->addAfter(4, array($newToken));
 
       $this->assertEquals($newToken, $collection->getLast());

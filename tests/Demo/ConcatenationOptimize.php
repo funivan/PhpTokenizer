@@ -126,8 +126,8 @@
 
 
     /**
-     * From:  "test '{$_GET["d"]}' new";
-     * To  :  "test '".$_GET["d"]."' new";
+     * From:  "test {$_GET["d"]} new";
+     * To  :  "test ".$_GET["d"]." new";
      *
      * @param \Funivan\PhpTokenizer\Collection $collection
      * @return bool
@@ -176,7 +176,7 @@
       //
       //
       //foreach ($block as $col) {
-      //  # simple validation 
+      //  # simple validation
       //
       //  $open = $col->query()->valueIs('{')->getTokensNum();
       //  $close = $col->query()->valueIs('}')->getTokensNum();
@@ -188,7 +188,7 @@
       //  $delimiter = $col->getFirst();
       //  echo "\n***".__LINE__."***\n<pre>".print_r($col, true)."</pre>\n";die();
       //  $lastItem = $col->getLast();
-      //  
+      //
       //  $lastItem->setValue("." . $delimiter->getValue());
       //  //$col->offsetGet(2)->remove();
       //  //
