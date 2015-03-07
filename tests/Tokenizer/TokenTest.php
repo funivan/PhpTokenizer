@@ -7,7 +7,7 @@
    */
   class TokenTest extends \Test\Funivan\PhpTokenizer\Main {
 
-    public function _testGetTypeName() {
+    public function testGetTypeName() {
 
       $file = $this->initFileWithCode('<?php echo 1');
       $lastToken = $file->getCollection()->getLast();
@@ -28,7 +28,7 @@
       unlink($file->getPath());
     }
 
-    public function _testGetData() {
+    public function testGetData() {
 
       $file = $this->initFileWithCode('<?php echo 1');
       $firstToken = $file->getCollection()->getFirst();
@@ -38,7 +38,7 @@
       unlink($file->getPath());
     }
 
-    public function _testToString() {
+    public function testToString() {
       $file = $this->initFileWithCode('<?php echo 1');
       $firstToken = $file->getCollection()->getFirst();
 
