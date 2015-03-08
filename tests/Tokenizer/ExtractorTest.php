@@ -98,73 +98,126 @@
     public function _testMethodCallFinder() {
 
       # simple method call
-      MethodCall::create()
+      FuctionCall::create()
         ->name('header');
       // header()       -> fire
       // header($a,$b)  -> fire
 
-      MethodCall::create()
+      # without arguments
+      FuctionCall::create()
         ->name('header')
         ->withoutArguments();
       // header()        -> fire
       // header($header) -> skip
 
-      MethodCall::reference('$this')
-        ->method('getUserName');
-      // $this->getUserName() -> fire
+      # with custom argument filter
+      FuctionCall::create()
+        ->name('header')
+        ->argument(0, \ArrayExtractor::create());
+      // header(array())          -> fire
+      // header(array(), 123)     -> fire
+      // header()                 -> skip
+      // header('')               -> skip
+      // header(new stdClass())   -> skip
 
-      MethodCall::reference('$this')
+      MethodCall::create()
+        ->reference('$this')
+        ->method('getUserName');
+
+      // $this->getUserName()         -> fire
+      // $this->getUserName(123)      -> fire
+      // CustomObject::getUserName()  -> skip
+
+      MethodCall::create()
+        ->reference('$this')
         ->method('getStorage')
         ->method('getUserName');
+
       // $this->getStorage()->getUserName() -> fire
 
-      MethodCall::reference('$user')
+      MethodCall::create()
+        ->reference('$user')
         ->staticMethod('getStorage');
       // $user::getStorage()  -> fire
 
-      MethodCall::reference('$user')
+      MethodCall::create()
+        ->reference('$user')
         ->staticMethod('getStorage')
         ->method('getUser');
       // $user::getStorage()->getUser()  -> fire
-      
-      MethodCall::reference('StorageComponent')
+
+      MethodCall::create()
+        ->reference('StorageComponent')
         ->staticMethod('getStorage')
         ->method('getUser');
       // StorageComponent::getStorage()->getUser()  -> fire
-      
-      
 
       # 1. simple method call extractor
-      $extractor = MethodCall::create()
-        ->objectVariable('$this')
+      MethodCall::create()
+        ->reference('$this')
         ->method('response')
         ->method('redirect');
 
       // $this->response()->redirect();
       // $this->response([1,2,3])->redirect([0], 123);
 
-      # 2. static method on object  
-      $extractor = MethodCall::create()
-        ->objectVariable('$this')
+      # static method on object  
+      MethodCall::create()
+        ->reference('$this')
         ->staticMethod('response');
 
       // $this::redirect();
 
-      # 2.1. Static method 
-      $extractor = MethodCall::create()
+      # static method 
+      MethodCall::create()
         ->className('UserName')->staticMethod('response');
 
       // UserName::redirect();
 
-      # 3. With method filter
-      $extractor = MethodCall::create()
-        ->objectVariable('$this')
+      # With method filter
+      MethodCall::create()
+        ->reference('$this')
         ->method(
           MethodCall::create()
             ->name('response')
             ->withArgument(0, '!$.*!')
             ->withArgumentsNum(3)
         );
+
+      # method and property
+      # //@todo create name for method and property call  
+      StmCall::create()
+        ->reference('$this')
+        ->staticMethod('response')
+        ->property('user')
+        ->property('45');
+
+      $this->getReference()->user;
+
+    }
+
+    public function _testProperty() {
+
+      Property::create()
+        ->reference('$this')
+        ->property('userName');
+      
+      // $this->userName    -> fire
+      // $this->name        -> skip
+      
+      Property::create()
+        ->reference('$advert')
+        ->property('fetcher')
+        ->method('getTitle');
+      
+      // $advert->fetcher->getTitle()    -> fire
+      // $this->fetcher->getTitle()      -> skip
+      
+      
+      # 
+      # $callback()->userName
+      
+      
 
     }
 
