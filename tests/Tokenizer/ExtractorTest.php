@@ -10,6 +10,7 @@
     public function _testExtractor() {
 
       $extractor = ClassExtractor::create()->find(
+
         ClassMethodDeclaration::create()
           ->nameLike('^action.*$')
           ->find(
@@ -201,23 +202,22 @@
       Property::create()
         ->reference('$this')
         ->property('userName');
-      
+
       // $this->userName    -> fire
       // $this->name        -> skip
-      
+
       Property::create()
         ->reference('$advert')
         ->property('fetcher')
         ->method('getTitle');
-      
+
       // $advert->fetcher->getTitle()    -> fire
       // $this->fetcher->getTitle()      -> skip
-      
-      
+
+
       # 
       # $callback()->userName
-      
-      
+
 
     }
 
