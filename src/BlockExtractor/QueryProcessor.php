@@ -2,12 +2,19 @@
 
   namespace Funivan\PhpTokenizer\BlockExtractor;
 
-  abstract class ExtractProcessor implements ExtractorInterface {
+  abstract class QueryProcessor implements ExtractorInterface {
 
     /**
      * @var null|int
      */
     protected $startIndex = null;
+
+    /**
+     * @return static
+     */
+    public static function create() {
+      return new static();
+    }
 
     /**
      * @var null|int

@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Query;
 
-  class Strict extends ExtractProcessor {
+  class Strict extends QueryProcessor {
 
 
     /**
@@ -44,12 +44,9 @@
 
     }
 
-    public function getStartIndex() {
-      return null;
-    }
+    public function getNextTokenIndexForCheck() {
 
-    public function getEndIndex() {
-      return $this->endIndex;
     }
-
+    
+    
   }

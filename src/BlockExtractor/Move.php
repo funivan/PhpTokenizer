@@ -1,7 +1,7 @@
 <?
   namespace Funivan\PhpTokenizer\BlockExtractor;
 
-  class Move extends ExtractProcessor {
+  class Move extends QueryProcessor {
 
     const DIRECTION_FORWARD = 1;
 

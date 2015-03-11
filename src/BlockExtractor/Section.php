@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Query;
 
-  class Section extends ExtractProcessor {
+  class Section extends QueryProcessor {
 
     /**
      * @var Query

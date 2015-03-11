@@ -2,14 +2,17 @@
 
   namespace Funivan\PhpTokenizer\BlockExtractor;
 
-  class Possible extends ExtractProcessor {
+  class Possible extends QueryProcessor {
 
     /**
      * @var \Funivan\PhpTokenizer\Query
      */
     protected $query = null;
 
-    public function __construct($query) {
+    /**
+     * @param \Funivan\PhpTokenizer\Query $query
+     */
+    public function __construct(\Funivan\PhpTokenizer\Query $query) {
       $this->query = $query;
     }
 
@@ -41,4 +44,7 @@
 
     }
 
+    public function getNextTokenIndexForCheck() {
+
+    }
   }
