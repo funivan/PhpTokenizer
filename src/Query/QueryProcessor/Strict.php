@@ -5,7 +5,7 @@
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\Query\QueryInterface;
 
-  class Strict extends \Funivan\PhpTokenizer\BlockExtractor\ExtractProcessor {
+  class Strict implements QueryProcessorInterface {
 
 
     /**
