@@ -49,6 +49,8 @@
       $this->path = $path;
       $code = file_get_contents($path);
       $this->collection = Collection::initFromString($code);
+      
+      $this->storeInitialContentHash();
     }
 
 
@@ -70,8 +72,7 @@
         return true;
       }
       $newCode = $this->collection->assemble();
-      file_put_contents($this->path, $newCode);
-      return true;
+      return file_put_contents($this->path, $newCode);
     }
 
 
@@ -99,6 +100,13 @@
     public function isChanged() {
       $newCode = $this->collection->assemble();
       return (md5($newCode) != $this->initialContentHash);
+    }
+
+    /**
+     * @return $this
+     */
+    protected function storeInitialContentHash() {
+      $this->initialContentHash = md5($this->collection);
     }
 
   }

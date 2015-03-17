@@ -2,6 +2,8 @@
 
   namespace Funivan\PhpTokenizer;
 
+  use Funivan\PhpTokenizer\Query\Query;
+
   /**
    * Represent access and manipulation array of tokens
    *
@@ -100,14 +102,6 @@
     public function query() {
       return new Query($this);
     }
-
-    /**
-     * @return Query\Extended
-     */
-    public function extendedQuery() {
-      return new Query\Extended($this);
-    }
-
 
     /**
      * @return string

@@ -1,14 +1,12 @@
 <?php
 
 
-  namespace Funivan\PhpTokenizer;
-
-  use Funivan\PhpTokenizer\Query\Base;
+  namespace Funivan\PhpTokenizer\Query;
 
   /**
    * @author Ivan Shcherbak <dev@funivan.com>
    */
-  class Query extends Base {
+  class Query implements QueryInterface {
 
     const N = __CLASS__;
 
@@ -38,7 +36,7 @@
 
 
     /**
-     * @param $type
+     * @param int $type
      * @return $this
      */
     public function typeIs($type) {
@@ -46,7 +44,7 @@
     }
 
     /**
-     * @param $type
+     * @param int $type
      * @return $this
      */
     public function typeNot($type) {
@@ -54,7 +52,7 @@
     }
 
     /**
-     * @param $value
+     * @param string $value
      * @return $this
      */
     public function valueIs($value) {
@@ -62,7 +60,7 @@
     }
 
     /**
-     * @param $value
+     * @param string $value
      * @return $this
      */
     public function valueNot($value) {
@@ -70,7 +68,7 @@
     }
 
     /**
-     * @param $regexp
+     * @param string $regexp
      * @return $this
      */
     public function valueLike($regexp) {
@@ -79,7 +77,7 @@
 
 
     /**
-     * @param $lineNumber
+     * @param int $lineNumber
      * @return $this
      */
     public function lineIs($lineNumber) {
@@ -87,7 +85,7 @@
     }
 
     /**
-     * @param $lineNumber
+     * @param int $lineNumber
      * @return $this
      */
     public function lineNot($lineNumber) {
@@ -95,7 +93,7 @@
     }
 
     /**
-     * @param $lineNumber
+     * @param int $lineNumber
      * @return $this
      */
     public function lineGt($lineNumber) {
@@ -103,7 +101,7 @@
     }
 
     /**
-     * @param $lineNumber
+     * @param int $lineNumber
      * @return $this
      */
     public function lineLt($lineNumber) {
@@ -112,15 +110,13 @@
 
 
     /**
-     * @param $field
-     * @param $value
-     * @param $type
+     * @param string $field
+     * @param string|int $value
+     * @param int $type
      * @throws \Funivan\PhpTokenizer\Exception
      * @return $this
      */
     protected function addCondition($field, $value, $type) {
-      $this->cleanCache();
-
       $value = (array) $value;
 
       if (!isset($this->{$field}[$type])) {
@@ -143,49 +139,9 @@
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
-    public function getTokens() {
-      if ($this->cache === null) {
-        $this->parse();
-      }
-
-      return $this->cache;
-    }
-
-    /**
-     * Return number of find tokens
-     * @return int
-     */
-    public function getTokensNum() {
-      return count($this->getTokens());
-    }
-
-    /**
-     * @return $this
-     */
-    protected function parse() {
-      $this->cleanCache();
-
-      $tokensResult = [];
-      foreach ($this->collection as $token) {
-        if ($this->isValid($token)) {
-          $tokensResult[] = $token;
-        }
-      }
-
-      $collection = new Collection();
-      $collection->setItems($tokensResult);
-      $this->cache = $collection;
-
-      return $this;
-    }
-
-    /**
-     * @param Token $token
-     * @return bool
-     */
-    public function isValid(Token $token) {
+    public function isValid(\Funivan\PhpTokenizer\Token $token) {
       # check type
       if (!$this->validate(self::FIELD_TYPE, $token->getType())) {
         return false;

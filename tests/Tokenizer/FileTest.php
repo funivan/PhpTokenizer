@@ -2,90 +2,120 @@
 
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
+  use Funivan\PhpTokenizer\Extractor\TokenSequence;
   use Funivan\PhpTokenizer\Token;
 
   class FileTest extends \Test\Funivan\PhpTokenizer\Main {
 
+    protected function getFileObjectWithCode($code) {
+      $tempFile = $this->createFileWithCode($code);
+      return new \Funivan\PhpTokenizer\File($tempFile);
+    }
 
     public function testOpen() {
-      $file = new \Funivan\PhpTokenizer\File($this->getDemoDataDir() . '/demo.php');
+      $file = $this->getFileObjectWithCode('<?php
+      echo 1; ');
+      
       $this->assertCount(7, $file->getCollection());
+      unlink($file->getPath());
     }
 
     public function testFilePath() {
-      $file = \Funivan\PhpTokenizer\File::open($this->getDemoDataDir() . '/demo.php');
-      $this->assertContains('files/demo.php', $file->getPath());
+      $file = $this->getFileObjectWithCode('<?php echo 1; ');
+      $this->assertNotEmpty($file->getPath());
+      unlink($file->getPath());
     }
 
 
     public function testSave() {
-      $data = '<?php echo 1;';
 
-      # create temp file
-      $tempFile = $this->createFileWithCode($data);
+      $file = $this->getFileObjectWithCode('<?php echo 1;');
+      $sequence = new TokenSequence();
+      $sequence->strict()->valueIs(1);
+      $blocks = $sequence->extract($file->getCollection());
 
-      $file = new \Funivan\PhpTokenizer\File($tempFile);
-      $q = $file->getCollection()->query();
-      $q->valueIs(1);
 
-      foreach ($q->getTokens() as $token) {
-        $token->setValue(2);
+      foreach ($blocks as $blockTokens) {
+        $blockTokens->getFirst()->setValue(2);
       }
 
       $file->save();
 
-      $file = new \Funivan\PhpTokenizer\File($tempFile);
-      $q = $file->getCollection()->query();
-      $q->valueIs(2);
 
-      $this->assertCount(1, $q->getTokens());
+      $sequence = new TokenSequence();
+      $sequence->strict()->valueIs(1);
+      $this->assertCount(0, $sequence->extract($file->getCollection()));
 
-      unlink($tempFile);
+
+      $sequence = new TokenSequence();
+      $sequence->strict()->valueIs(2);
+      $this->assertCount(1, $sequence->extract($file->getCollection()));
+
+
+      $this->assertCount(1, $sequence->extract($file->getCollection())->getFirst());
+
+      unlink($file->getPath());
     }
 
 
     public function testRefresh() {
-      $file = new \Funivan\PhpTokenizer\File($this->getDemoDataDir() . '/demo.php');
-      $q = $file->getCollection()->query();
-
-      $this->assertCount(7, $q->getTokens());
-
-      $q->valueIs('echo');
-
-      $tokens = $q->getTokens();
-
-      $this->assertCount(1, $tokens);
-
-      $tokens->map(function (Token $item) {
-        $item->remove();
-      });
-
-      $this->assertCount(7, $file->getCollection());
-
-      $file->refresh();
+      $file = $this->getFileObjectWithCode('<?php echo 1;');
 
       $this->assertCount(5, $file->getCollection());
 
+      $sequence = new TokenSequence();
+      $sequence->strict()->valueIs('echo');
+
+      $blocks = $sequence->extract($file->getCollection());
+      $this->assertCount(1, $blocks->getFirst());
+
+      $blocks->getFirst()->map(function (Token $item) {
+        $item->remove();
+      });
+
+      $this->assertCount(5, $file->getCollection());
+      $file->refresh();
+
+      $this->assertCount(4, $file->getCollection());
+      $code = $file->getCollection()->assemble();
+      $this->assertEquals('<?php  1;', $code);
+
+      unlink($file->getPath());
     }
 
     public function testHtml() {
       # create temp file
       $code = '<html><?= 1 ?></html>';
 
-      $tempFile = $this->createFileWithCode($code);
-      $file = new \Funivan\PhpTokenizer\File($tempFile);
+
+      $file = $file = $this->getFileObjectWithCode($code);
 
       $this->assertCount(7, $file->getCollection());
+      unlink($file->getPath());
     }
 
     public function testSaveFileWithoutChange() {
-      $file = new \Funivan\PhpTokenizer\File($this->getDemoDataDir() . '/demo.php');
+      $file = $this->getFileObjectWithCode('<?php echo 1;');
+
+
       $startModificationTime = \filemtime($file->getPath());
-      sleep(1);
+
       $file->save();
 
       $endModificationTime = \filemtime($file->getPath());
       $this->assertEquals($endModificationTime, $startModificationTime);
+      unlink($file->getPath());
+    }
+
+
+    public function testIsChanged() {
+      $file = $this->getFileObjectWithCode('<?php echo 1;');
+
+      $this->assertFalse($file->isChanged());
+
+      $file->getCollection()->getFirst()->setValue('<?');
+      $this->assertTrue($file->isChanged());
+      unlink($file->getPath());
     }
 
   }

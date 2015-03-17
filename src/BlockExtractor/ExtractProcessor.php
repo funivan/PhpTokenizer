@@ -2,7 +2,9 @@
 
   namespace Funivan\PhpTokenizer\BlockExtractor;
 
-  abstract class ExtractProcessor implements ExtractorInterface {
+  use Funivan\PhpTokenizer\Query\QueryProcessor\QueryProcessorInterface;
+
+  abstract class ExtractProcessor implements QueryProcessorInterface {
 
     /**
      * @var null|int
@@ -13,6 +15,11 @@
      * @var null|int
      */
     protected $endIndex = null;
+
+    /**
+     * @var null|int
+     */
+    protected $nextTokenIndexForCheck = null;
 
     /**
      * @return null|int
@@ -26,6 +33,13 @@
      */
     public function getEndIndex() {
       return $this->endIndex;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getNextTokenIndexForCheck() {
+      return $this->nextTokenIndexForCheck;
     }
 
   }

@@ -2,7 +2,7 @@
 
   namespace Funivan\PhpTokenizer\BlockExtractor;
 
-  use Funivan\PhpTokenizer\Query;
+  use Funivan\PhpTokenizer\Query\Query;
 
   class Section extends ExtractProcessor {
 
@@ -12,12 +12,12 @@
     protected $startQuery = null;
 
     /**
-     * @var Query
+     * @var \Funivan\PhpTokenizer\Query\Query
      */
     protected $endQuery = null;
 
     /**
-     * @param Query $startSection
+     * @param \Funivan\PhpTokenizer\Query\Query $startSection
      * @param Query $endSection
      */
     public function __construct(Query $startSection, Query $endSection) {
