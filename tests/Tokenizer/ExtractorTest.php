@@ -19,8 +19,8 @@
 
       $this->assertCount(1, $sequence->extract($file->getCollection()));
       $this->assertCount(1, $sequence->extract($file->getCollection())->getFirst());
+      unlink($file->getPath());
     }
-    
 
 
     public function testExtractWithConditionChangedOnTheFly() {
@@ -39,6 +39,7 @@
       $sequence->strict()->valueLike('!^.\s*location\s*:.+!i');
       $this->assertCount(1, $sequence->extract($file->getCollection()));
 
+      unlink($file->getPath());
     }
 
     public function testExtractWithPossibleLastCondition() {

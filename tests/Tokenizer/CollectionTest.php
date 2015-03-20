@@ -111,6 +111,20 @@
 
     }
 
+    public function testRefresh() {
+      $collection = Collection::initFromString("<?php function();");
+
+      $itemsNum = $collection->count();
+
+      $collection->getLast()->prependToValue(" ");
+      $this->assertCount($itemsNum, $collection);
+
+      $collection->refresh();
+      $itemsNum++;
+      $this->assertCount($itemsNum, $collection);
+
+    }
+
     public function testNewCollection() {
 
       $error = null;

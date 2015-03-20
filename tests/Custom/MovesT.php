@@ -16,6 +16,8 @@
       } catch (\Exception $e) {
       }
       $this->assertInstanceOf('Exception', $e);
+
+      unlink($file->getPath());
     }
 
     public function _testMoveAfterStrict() {
@@ -30,6 +32,8 @@
       $this->assertCount(1, $blocks);
       $this->assertCount(3, $blocks->getFirst());
       $this->assertEquals('echo 1', (string) $blocks->getFirst());
+      
+      unlink($file->getPath());
     }
 
     public function _testMoveAfterPossible() {
@@ -59,6 +63,8 @@
 
       $this->assertEquals('echo 1+5;', (string) $blocks->getFirst());
       $this->assertEquals('echo 1', (string) $blocks->getLast());
+
+      unlink($file->getPath());
     }
 
     public function _testMoveAfterSearch() {
@@ -78,6 +84,8 @@
       $blocks = $q->getBlock();
 
       $this->assertEquals('echo 1+5-4-6', (string) $blocks->getFirst());
+
+      unlink($file->getPath());
     }
 
     public function _testMoveAfterSection() {
@@ -97,6 +105,8 @@
       $q->move(1);
       $blocks = $q->getBlock();
       $this->assertEquals('function ($a){', (string) $blocks->getFirst());
+      
+      unlink($file->getPath());
     }
 
     public function _testMoveWithSpaces() {
@@ -122,6 +132,8 @@
       $blocks = $q->getBlock();
       $this->assertEquals('function', (string) $blocks->getFirst());
 
+      unlink($file->getPath());
+
     }
 
     public function _testMoveExample() {
@@ -138,6 +150,7 @@
 
       $this->assertEquals('$user = $this->getUser', (string) $blocks->getFirst());
 
+      unlink($file->getPath());
     }
 
   }

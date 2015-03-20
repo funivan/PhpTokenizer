@@ -14,7 +14,7 @@
    * @author  Ivan Shcherbak <dev@funivan.com>
    * @package Funivan\PhpTokenizer\Query\Query
    */
-  class TokenSequence {
+  class TokenSequence extends TokenSequenceExtractor {
 
     /**
      * @var QueryProcessorInterface[]
@@ -61,7 +61,7 @@
       return $processor;
     }
 
-    public function extract(\Funivan\PhpTokenizer\Collection $collection, $name = null) {
+    public function testExtract(\Funivan\PhpTokenizer\Collection $collection, $name = null) {
 
       $block = new \Funivan\PhpTokenizer\Block();
 

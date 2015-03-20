@@ -27,23 +27,23 @@
     /**
      * For each token in collection apply callback
      *
-     * <code>
+     * ```php
      * //Remove fist token in all collections
-     * $block->mapCollection(function($item, $index, $collection){
+     * $block->mapCollection(function(Token $item, $index, Collection $collection){
      *   if ( $index == 1 ) {
      *     $item->remove();
      *   }
      * })
-     * </code>
+     * ```
      *
      * @param callback $callback
      * @return $this
-     * @throws \Funivan\PhpTokenizer\Exception
+     * @throws \Funivan\PhpTokenizer\Exception\InvalidArgumentException
      */
     public function mapCollectionTokens($callback) {
 
       if (!is_callable($callback)) {
-        throw new \Funivan\PhpTokenizer\Exception('Invalid callback function');
+        throw new Exception\InvalidArgumentException('Invalid callback function');
       }
 
       foreach ($this as $collection) {

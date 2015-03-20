@@ -44,7 +44,8 @@
       $firstToken = $file->getCollection()->getFirst();
 
       $this->assertEquals('<?php ', (string) $firstToken);
-
+      
+      unlink($file->getPath());
     }
 
   }

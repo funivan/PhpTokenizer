@@ -115,6 +115,12 @@
       return $string;
     }
 
+    /**        
+     * 
+     * @param string $string
+     * @return Collection
+     * @throws Exception
+     */
     public static function initFromString($string) {
       $tokens = Helper::getTokensFromString($string);
       return new Collection($tokens);

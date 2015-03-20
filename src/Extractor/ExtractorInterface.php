@@ -9,14 +9,16 @@
 
     /**
      * @param ExtractorInterface $extractor
+     * @param null $name
      * @return mixed
      */
-    public function with(ExtractorInterface $extractor = null);
+    public function with(ExtractorInterface $extractor = null, $name = null);
 
     /**
      * @param \Funivan\PhpTokenizer\Collection $collection
+     * @param null $name
      * @return \Funivan\PhpTokenizer\Collection[]
      */
-    public function extract(\Funivan\PhpTokenizer\Collection $collection);
+    public function extract(\Funivan\PhpTokenizer\Collection $collection, $name = null);
 
   }

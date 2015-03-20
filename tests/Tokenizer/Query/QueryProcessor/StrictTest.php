@@ -28,6 +28,7 @@
       $this->assertCount(1, $block);
       $firstCode = $block->getFirst()->assemble();
       $this->assertEquals('header()', $firstCode);
+      unlink($file->getPath());
     }
 
     public function testExtractWithSingleCondition() {

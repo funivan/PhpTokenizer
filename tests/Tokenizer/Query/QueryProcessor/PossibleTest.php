@@ -23,6 +23,9 @@
 
       $this->assertCount(3, $sequence->extract($file->getCollection()));
 
+
+      unlink($file->getPath());
+
     }
 
     public function testPossibleEnd() {
@@ -42,6 +45,7 @@
 
       $this->assertCount(3, $sequence->extract($file->getCollection()));
 
+      unlink($file->getPath());
     }
 
 
@@ -67,6 +71,8 @@
       $this->assertEquals('(', $block[3]->assemble());
       $this->assertEquals('(', $block[4]->assemble());
 
+      unlink($file->getPath());
+      
     }
 
   }
