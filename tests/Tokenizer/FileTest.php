@@ -91,7 +91,7 @@
 
     public function testHtml() {
       # create temp file
-      $code = '<html><?php= 1 ?></html>';
+      $code = '<html><?= 1 ?></html>';
 
 
       $file = $file = $this->getFileObjectWithCode($code);
