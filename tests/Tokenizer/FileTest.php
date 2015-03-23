@@ -2,6 +2,7 @@
 
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
+  use Funivan\PhpTokenizer\Extractor\Extractor;
   use Funivan\PhpTokenizer\Extractor\TokenSequence;
   use Funivan\PhpTokenizer\Token;
 
@@ -15,7 +16,7 @@
     public function testOpen() {
       $file = $this->getFileObjectWithCode('<?php
       echo 1; ');
-      
+
       $this->assertCount(7, $file->getCollection());
       unlink($file->getPath());
     }
@@ -32,7 +33,10 @@
       $file = $this->getFileObjectWithCode('<?php echo 1;');
       $sequence = new TokenSequence();
       $sequence->strict()->valueIs(1);
-      $blocks = $sequence->extract($file->getCollection());
+
+      $extractor = new Extractor($file->getCollection(), $sequence);
+
+      $blocks = $extractor->fetchBlocks();
 
 
       foreach ($blocks as $blockTokens) {
@@ -44,15 +48,17 @@
 
       $sequence = new TokenSequence();
       $sequence->strict()->valueIs(1);
-      $this->assertCount(0, $sequence->extract($file->getCollection()));
 
+
+      $extractor = new Extractor($file->getCollection(), $sequence);
+      $this->assertCount(0, $extractor->fetchBlocks());
 
       $sequence = new TokenSequence();
       $sequence->strict()->valueIs(2);
-      $this->assertCount(1, $sequence->extract($file->getCollection()));
+      
+      $extractor = new Extractor($file->getCollection(), $sequence);
+      $this->assertCount(1, $extractor->fetchBlocks());
 
-
-      $this->assertCount(1, $sequence->extract($file->getCollection())->getFirst());
 
       unlink($file->getPath());
     }

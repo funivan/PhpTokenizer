@@ -2,6 +2,7 @@
 
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
+  use Funivan\PhpTokenizer\Extractor\Extractor;
   use Funivan\PhpTokenizer\Extractor\TokenSequence;
 
   /**
@@ -17,8 +18,8 @@
       $sequence = new \Funivan\PhpTokenizer\Extractor\TokenSequence();
       $sequence->strict()->valueIs('echo');
 
-      $this->assertCount(1, $sequence->extract($file->getCollection()));
-      $this->assertCount(1, $sequence->extract($file->getCollection())->getFirst());
+      $this->assertCount(1, $sequence->getRangeList($file->getCollection()));
+
       unlink($file->getPath());
     }
 
@@ -34,10 +35,12 @@
       $sequence->strict()->valueIs('header');
       $sequence->strict()->valueIs('(');
 
-      $this->assertCount(2, $sequence->extract($file->getCollection()));
+      $extractor = new Extractor($file->getCollection(), $sequence);
+
+      $this->assertCount(2, $extractor->fetchBlocks());
 
       $sequence->strict()->valueLike('!^.\s*location\s*:.+!i');
-      $this->assertCount(1, $sequence->extract($file->getCollection()));
+      $this->assertCount(1, $extractor->fetchBlocks());
 
       unlink($file->getPath());
     }
@@ -46,20 +49,21 @@
 
       $file = $this->initFileWithCode("<?php echo 123");
 
-
       $sequence = new TokenSequence();
       $sequence->strict()->valueIs('echo');
       $sequence->strict()->typeIs(T_WHITESPACE);
       $sequence->strict()->valueIs('123');
       $sequence->possible()->typeIs(';');
 
-      $this->assertCount(1, $sequence->extract($file->getCollection()));
+      $extractor = new Extractor($file->getCollection(), $sequence);
+
+      $this->assertCount(1, $extractor->fetchBlocks());
 
 
       unlink($file->getPath());
 
       $file = $this->initFileWithCode("<?php echo 123;");
-      $this->assertCount(1, $sequence->extract($file->getCollection()));
+      $this->assertCount(1, $extractor->fetchBlocks());
 
       unlink($file->getPath());
     }

@@ -36,7 +36,6 @@
       $sequence->move(Move::DIRECTION_BACK, 1);
 
       $block = $sequence->extract($file->getCollection());
-      echo "\n***" . __LINE__ . "***\n<pre>" . print_r($file->getCollection(), true) . "</pre>\n";
 
       $this->assertCount(1, $block);
       $this->assertEquals('header(', $block->getFirst()->assemble());

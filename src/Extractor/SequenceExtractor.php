@@ -5,92 +5,53 @@
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 3/11/15
    */
-  class TokenSequenceExtractor implements ExtractorInterface {
+  /**
+   *
+   * @package Funivan\PhpTokenizer\Extractor
+   */
+  abstract class SequenceExtractor implements ExtractorInterface {
 
-    protected $childName;
+    /**
+     * @var string|null
+     */
+    protected $name;
 
     /**
      * @var null|ExtractorInterface
      */
     protected $child = null;
 
-    public function create() {
-      return new static();
+    /**
+     * @param null $childName
+     */
+    public function __construct($childName = null) {
+      $this->name = $childName;
+    }
+
+
+    /**
+     * @param string|null $name
+     * @return static
+     */
+    public static function create($name = null) {
+      return new static($name);
     }
 
     /**
      * @param ExtractorInterface $extractor
-     * @param null|string $name
      * @return mixed
      */
-    public function with(ExtractorInterface $extractor = null, $name = null) {
-
+    public function with(ExtractorInterface $extractor = null) {
       $this->child = $extractor;
-      $this->childName = $name;
-
-
       return $this;
     }
 
 
     /**
      * @param \Funivan\PhpTokenizer\Collection $collection
-     * @param null|string $name
-     * @return \Funivan\PhpTokenizer\Block
+     * @return array
      */
-    public function extract(\Funivan\PhpTokenizer\Collection $collection, $name = null) {
-
-      $ranges = $this->getRangeList($collection);
-
-      $block = new \Funivan\PhpTokenizer\Block();
-
-      foreach ($ranges as $rangeInfo) {
-        $start = $rangeInfo[0];
-        $length = $rangeInfo[1];
-        $items = $collection->extractItems($start, $length);
-        $block->append($items);
-      }
-
-      $rangesAll = [];
-
-      if (!empty($this->child)) {
-        foreach ($block as $index => $blockCollection) {
-          $ranges = $this->child->getRangeList($blockCollection);
-          echo "\n***" . __LINE__ . "***\n<pre>blockCollection:" . print_r((string) $blockCollection, true) . "</pre>\n";
-          echo "\n***" . __LINE__ . "***\n<pre>" . print_r($ranges, true) . "</pre>\n";
-
-          if (empty($ranges)) {
-            unset($block[$index]);
-            continue;
-          }
-
-          if ($name == $this->childName) {
-            unset($block[$index]);
-            $rangesAll = array_merge($rangesAll, $ranges);
-          }
-        }
-      }
-
-
-      if (!empty($rangesAll)) {
-
-        foreach ($rangesAll as $rangeInfo) {
-          $start = $rangeInfo[0];
-          $length = $rangeInfo[1];
-
-          $items = $collection->extractItems($start, $length);
-          $block->append($items);
-        }
-
-        //echo "\n***".__LINE__."***\n<pre>".print_r($block, true)."</pre>\n";die();
-      }
-
-      $block->rewind();
-      return $block;
-
-    }
-
-    private function getRangeList($collection) {
+    public function getRangeList(\Funivan\PhpTokenizer\Collection $collection) {
       $rangeList = array();
 
 
@@ -132,20 +93,23 @@
 
           $endIndex = $result->getEndIndex();
 
+          //echo __LINE__ . "*** | endIndex: " . $endIndex . "\n";
+
           if ($endIndex !== null or $endSectionIndex == null) {
             $endSectionIndex = $endIndex;
           }
 
           $startIndex = $result->getStartIndex();
+          //echo __LINE__ . "*** | startIndex: " . $startIndex . "\n";
           if ($startIndex !== null or $startSectionIndex === null) {
             $startSectionIndex = $startIndex;
           }
 
-          if ($endSectionIndex == null and $startSectionIndex != null) {
+          if ($endSectionIndex == null and $startSectionIndex !== null) {
             $endSectionIndex = $startSectionIndex;
           }
 
-          if ($startSectionIndex == null and $endSectionIndex != null) {
+          if ($startSectionIndex == null and $endSectionIndex !== null) {
             $startSectionIndex = $endSectionIndex;
           }
 
@@ -173,9 +137,8 @@
           // 2=3 => 2
           // 2=4 => 3
 
-          $rangeList[] = array(
-            $startSectionIndex, ($endSectionIndex - $startSectionIndex + 1)
-          );
+          $rangeList[] = new ExtractorResult($startSectionIndex, $endSectionIndex);
+
 
           //$items = $collection->extractItems($startSectionIndex, ($endSectionIndex - $startSectionIndex + 1));
           //$block->append($items);
@@ -188,13 +151,28 @@
       return $rangeList;
     }
 
-    public function extractInRange(\Funivan\PhpTokenizer\Collection $collection, $range) {
+    /**
+     * @return ExtractorInterface|null
+     */
+    public function getChild() {
+      return $this->child;
+    }
 
-      $items = $collection->extractItems($range->from, $range->to);
+    /**
+     * @return string|null
+     */
+    public function getName() {
+      return $this->name;
+    }
 
-      foreach ($items as $token) {
-
-      }
+    /**
+     * @param \Funivan\PhpTokenizer\Collection $collection
+     * @param null $name
+     * @return \Funivan\PhpTokenizer\Block
+     */
+    public function extract(\Funivan\PhpTokenizer\Collection $collection, $name = null) {
+      $extractor = new Extractor($collection, $this);
+      return $extractor->fetchBlocks($name);
     }
 
   }

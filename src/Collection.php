@@ -13,7 +13,7 @@
    * @method \Funivan\PhpTokenizer\Token getFirst();
    * @method \Funivan\PhpTokenizer\Token[] getItems();
    * @method \Funivan\PhpTokenizer\Collection extractItems($offset, $length = null);
-   * @method $this setItems()
+   * @method $this setItems($tokens)
    *
    * @package Funivan\PhpTokenizer
    */
@@ -115,8 +115,8 @@
       return $string;
     }
 
-    /**        
-     * 
+    /**
+     *
      * @param string $string
      * @return Collection
      * @throws Exception

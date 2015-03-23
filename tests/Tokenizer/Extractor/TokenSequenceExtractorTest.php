@@ -2,6 +2,11 @@
 
   namespace Test\Funivan\PhpTokenizer\Extractor;
 
+  use Funivan\PhpTokenizer\Extractor\Extractor;
+  use Funivan\PhpTokenizer\Extractor\TokenSequence;
+  use Funivan\PhpTokenizer\Query\Query;
+  use Funivan\PhpTokenizer\Query\QueryProcessor\Strict;
+
   class TokenSequenceExtractorTest extends \Test\Funivan\PhpTokenizer\Main {
 
     public function testWithChildExtractor() {
@@ -12,7 +17,7 @@
       ");
 
 
-      $sequence = new \Funivan\PhpTokenizer\Extractor\TokenSequence();
+      $sequence = new TokenSequence();
       $sequence->strict()->valueIs('header');
       $sequence->possible()->typeIs(T_WHITESPACE);
       $sequence->strict()->valueIs('(');
@@ -20,22 +25,76 @@
       $sequence->strict()->valueIs(')');
 
 
-      $stringSequence = new \Funivan\PhpTokenizer\Extractor\TokenSequence();
+      $extractor = new Extractor($file->getCollection(), $sequence);
+      $blocks = $extractor->fetchBlocks();
+      $this->assertCount(3, $blocks);
+      $this->assertEquals("header('Location: http://funivan.com')", $blocks[0]);
+      $this->assertEquals("header(123)", $blocks[1]);
+      $this->assertEquals("header ('test:test')", $blocks[2]);
+
+      $stringSequence = new TokenSequence();
       $stringSequence->strict()->typeIs(T_CONSTANT_ENCAPSED_STRING);
       $sequence->with($stringSequence, 'test');
 
-      $block = $sequence->extract($file->getCollection());
-      $this->assertCount(2, $block);
-      $this->assertEquals("header('Location: http://funivan.com')", $block[0]);
-      $this->assertEquals("header ('test:test')", $block[1]);
 
-      $block = $sequence->extract($file->getCollection(), 'test');
-      $this->assertCount(2, $block);
-      $this->assertEquals("'Location: http://funivan.com'", $block[0]);
-      $this->assertEquals("'test:test'", $block[1]);
+      $blocks = $extractor->fetchBlocks();
+      $this->assertCount(2, $blocks);
+      $this->assertEquals("header('Location: http://funivan.com')", $blocks[0]);
+      $this->assertEquals("header ('test:test')", $blocks[1]);
 
       unlink($file->getPath());
-
     }
 
+    public function testWithMultipleChildExtractor() {
+      $file = $this->initFileWithCode("<?php
+        header('Location: http://funivan.com');
+        header(123);
+        header ('test:test');
+      ");
+
+
+      $sequence = new TokenSequence('f');
+      $sequence->strict()->valueIs('header');
+      $sequence->possible()->typeIs(T_WHITESPACE);
+      $sequence->strict()->valueIs('(');
+      $sequence->strict()->valueLike('!.*!');
+      $sequence->strict()->valueIs(')');
+
+      $sequence->with(
+        TokenSequence::create('f2')
+          ->addProcessor(new Strict((new Query())->typeIs(T_CONSTANT_ENCAPSED_STRING)))
+          ->with(
+            TokenSequence::create('f3')
+              ->addProcessor(new Strict((new Query())->valueLike('!\:t!')))
+
+          )
+      );
+
+
+      $extractor = new Extractor($file->getCollection(), $sequence);
+      $blocks = $extractor->fetchBlocks('f3');
+      $this->assertCount(1, $blocks);
+      $this->assertEquals("'test:test'", $blocks[0]);
+
+      unlink($file->getPath());
+    }
+
+    public function _testWithSingleToken() {
+      $file = $this->initFileWithCode("<?php
+        header('Location: http://funivan.com');
+        header(123);
+        header ('test:test');
+      ");
+
+      $collection = $file->getCollection()->extractItems(3, 1);
+
+
+      $sequence = new TokenSequence();
+      $sequence->strict()->valueIs('(');
+
+      $ranges = $sequence->getRangeList($collection);
+
+      $this->assertCount(1, $ranges);
+
+    }
   }

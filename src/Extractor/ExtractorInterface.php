@@ -9,16 +9,24 @@
 
     /**
      * @param ExtractorInterface $extractor
-     * @param null $name
      * @return mixed
      */
-    public function with(ExtractorInterface $extractor = null, $name = null);
+    public function with(ExtractorInterface $extractor = null);
+
+    /**
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * @return ExtractorInterface|null
+     */
+    public function getChild();
 
     /**
      * @param \Funivan\PhpTokenizer\Collection $collection
-     * @param null $name
-     * @return \Funivan\PhpTokenizer\Collection[]
+     * @return ExtractorResult[]
      */
-    public function extract(\Funivan\PhpTokenizer\Collection $collection, $name = null);
+    public function getRangeList(\Funivan\PhpTokenizer\Collection $collection);
 
   }

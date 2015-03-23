@@ -83,7 +83,9 @@
      */
     public function refresh() {
       $newCode = $this->collection->assemble();
-      $this->collection = Collection::initFromString($newCode);
+      $tokens = Helper::getTokensFromString($newCode);
+
+      $this->collection->setItems($tokens);
       return $this;
     }
 
