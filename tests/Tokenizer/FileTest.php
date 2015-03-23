@@ -91,7 +91,7 @@
 
     public function testHtml() {
       # create temp file
-      $code = '<html><?= 1 ?></html>';
+      $code = '<html><?php= 1 ?></html>';
 
 
       $file = $file = $this->getFileObjectWithCode($code);
@@ -119,7 +119,7 @@
 
       $this->assertFalse($file->isChanged());
 
-      $file->getCollection()->getFirst()->setValue('<?');
+      $file->getCollection()->getFirst()->setValue('<?php');
       $this->assertTrue($file->isChanged());
       unlink($file->getPath());
     }

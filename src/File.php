@@ -29,7 +29,7 @@
      * $file = File::open('test.php');
      * $tokens = $file->getCollection();
      * if ($tokens[0]=='<?php'){
-     *  $tokens[0] = '<?';
+     *  $tokens[0] = '<?php';
      *  $file->save();
      * }
      * ```
