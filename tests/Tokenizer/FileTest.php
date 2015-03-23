@@ -91,12 +91,12 @@
 
     public function testHtml() {
       # create temp file
-      $code = '<html><?= 1 ?></html>';
+      $code = '<html><?php echo 1 ?></html>';
 
 
-      $file = $file = $this->getFileObjectWithCode($code);
+      $file = $this->getFileObjectWithCode($code);
 
-      $this->assertCount(7, $file->getCollection());
+      $this->assertCount(8, $file->getCollection());
       unlink($file->getPath());
     }
 
