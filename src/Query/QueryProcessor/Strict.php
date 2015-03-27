@@ -5,6 +5,10 @@
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\Query\QueryInterface;
 
+  /**
+   *
+   * @package Funivan\PhpTokenizer\Query\QueryProcessor
+   */
   class Strict implements QueryProcessorInterface {
 
 
@@ -33,7 +37,7 @@
     public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
       $token = $collection->offsetGet($currentIndex);
 
-      $result = new \Funivan\PhpTokenizer\BlockExtractor\ExtractorResult();
+      $result = new \Funivan\PhpTokenizer\Query\QueryProcessor\QueryProcessorResult();
 
       if (empty($token)) {
         return $result;
@@ -45,7 +49,7 @@
         return $result;
       }
 
-      $result->setEndIndex($currentIndex);
+      $result->moveEndIndex($currentIndex);
       $result->setNextTokenIndexForCheck($currentIndex + 1);
 
       return $result;

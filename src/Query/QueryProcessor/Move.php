@@ -59,18 +59,18 @@
      * @inheritdoc
      */
     public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
-      $result = new \Funivan\PhpTokenizer\BlockExtractor\ExtractorResult();
+      $result = new \Funivan\PhpTokenizer\Query\QueryProcessor\QueryProcessorResult();
 
       if ($this->isForward()) {
         $endIndex = $currentIndex + $this->steps;
-        $result->setEndIndex($endIndex - 1);
+        $result->moveEndIndex($endIndex - 1, QueryProcessorResult::STRATEGY_FORCE);
         $result->setNextTokenIndexForCheck($endIndex);
       } else {
         $currentIndex--;
 
         $startIndex = $currentIndex - $this->steps;
 
-        $result->setEndIndex($startIndex);
+        $result->moveEndIndex($startIndex, QueryProcessorResult::STRATEGY_FORCE);
         $result->setNextTokenIndexForCheck(($startIndex + 1));
       }
 

@@ -45,13 +45,14 @@
       unlink($file->getPath());
     }
 
-    public function testWithMultipleChildExtractor() {
+    public function _testWithMultipleChildExtractor() {
       $file = $this->initFileWithCode("<?php
         header('Location: http://funivan.com');
         header(123);
         header ('test:test');
       ");
 
+      $collection = $file->getCollection();
 
       $sequence = new TokenSequence('f');
       $sequence->strict()->valueIs('header');
@@ -60,24 +61,27 @@
       $sequence->strict()->valueLike('!.*!');
       $sequence->strict()->valueIs(')');
 
-      $sequence->with(
-        TokenSequence::create('f2')
-          ->addProcessor(new Strict((new Query())->typeIs(T_CONSTANT_ENCAPSED_STRING)))
-          ->with(
-            TokenSequence::create('f3')
-              ->addProcessor(new Strict((new Query())->valueLike('!\:t!')))
+      $this->assertCount(3, $sequence->extract($collection));
 
-          )
-      );
+      $stringExtractor = TokenSequence::create('f2')->addProcessor(new Strict((new Query())->typeIs(T_CONSTANT_ENCAPSED_STRING)));
+      $sequence->with($stringExtractor);
+
+      $this->assertCount(2, $sequence->extract($collection));
 
 
-      $extractor = new Extractor($file->getCollection(), $sequence);
-      $blocks = $extractor->fetchBlocks('f3');
+      $testStringExtractor = TokenSequence::create('f3')->addProcessor(new Strict((new Query())->valueLike('!\:test!')));
+      $stringExtractor->with($testStringExtractor);
+
+      $blocks = $sequence->extract($collection, 'f3');
+      
       $this->assertCount(1, $blocks);
+      
       $this->assertEquals("'test:test'", $blocks[0]);
 
       unlink($file->getPath());
     }
+    
+    
 
     public function _testWithSingleToken() {
       $file = $this->initFileWithCode("<?php
@@ -96,5 +100,11 @@
 
       $this->assertCount(1, $ranges);
 
+    }
+
+    public function testExtractorName() {
+      $tokenSequenceFinder = TokenSequence::create("test");
+      $this->assertEquals('test', $tokenSequenceFinder->getName());
+        
     }
   }

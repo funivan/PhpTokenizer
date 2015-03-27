@@ -37,7 +37,7 @@
 
       $token = $collection->offsetGet($currentIndex);
 
-      $result = new \Funivan\PhpTokenizer\BlockExtractor\ExtractorResult();
+      $result = new \Funivan\PhpTokenizer\Query\QueryProcessor\QueryProcessorResult();
 
       $result->setNextTokenIndexForCheck($currentIndex);
 
@@ -51,7 +51,7 @@
         return $result;
       }
 
-      $result->setEndIndex($currentIndex);
+      $result->moveEndIndex($currentIndex);
       $result->setNextTokenIndexForCheck($currentIndex + 1);
 
       return $result;

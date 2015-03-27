@@ -74,11 +74,12 @@
 
         $result[$index]['name'] = $extractor->getName();
         $result[$index]['range'] = $rangeResult;
+
         $child = $extractor->getChild();
-        if ($child) {
+
+        if ($child !== null) {
           $childResult = $this->getRangeRecursively($extractor->getChild(), $rangeResult);
           $result[$index]['child'] = $childResult;
-
         }
 
       }

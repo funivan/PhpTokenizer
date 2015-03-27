@@ -4,6 +4,10 @@
 
   use Funivan\PhpTokenizer\Query\QueryProcessor\Move;
 
+  /**
+   *
+   * @package Test\Funivan\PhpTokenizer\Tokenizer\Query\QueryProcessor
+   */
   class MoveTest extends \Test\Funivan\PhpTokenizer\Main {
 
     public function testExtractWithSingleMove() {

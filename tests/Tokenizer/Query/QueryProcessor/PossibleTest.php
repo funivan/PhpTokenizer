@@ -4,6 +4,10 @@
 
   use Funivan\PhpTokenizer\Extractor\TokenSequence;
 
+  /**
+   *
+   * @package Test\Funivan\PhpTokenizer\Tokenizer\Query\QueryProcessor
+   */
   class PossibleTest extends \Test\Funivan\PhpTokenizer\Main {
 
     public function testPossibleInTheMiddle() {

@@ -60,6 +60,8 @@
       $nextTokenIndexForCheck = 0;
       while ($nextTokenIndexForCheck <= $tokensNum) {
 
+        $range = new SectionRange();
+        
         $startSectionIndex = null;
         $endSectionIndex = null;
 
@@ -67,6 +69,7 @@
 
         $startNextTokenIndexToCheck = $nextTokenIndexForCheck;
 
+        /** @var \Funivan\PhpTokenizer\Query\QueryProcessor\QueryProcessorInterface $query */
         foreach ($this->processors as $query) {
 
           $result = $query->process($collection, $startNextTokenIndexToCheck);
@@ -79,8 +82,7 @@
 
           if (!$result->isValid()) {
             //echo __LINE__ . "*** | no valid \n";
-            $startSectionIndex = null;
-            $endSectionIndex = null;
+            $range->reset();
             break;
           }
 
@@ -91,27 +93,7 @@
           $startNextTokenIndexToCheck = $result->getNextTokenIndexForCheck();
           //echo __LINE__ . "*** | From result nextTokenIndexForCheck:" . $startNextTokenIndexToCheck . "\n";
 
-          $endIndex = $result->getEndIndex();
-
-          //echo __LINE__ . "*** | endIndex: " . $endIndex . "\n";
-
-          if ($endIndex !== null or $endSectionIndex == null) {
-            $endSectionIndex = $endIndex;
-          }
-
-          $startIndex = $result->getStartIndex();
-          //echo __LINE__ . "*** | startIndex: " . $startIndex . "\n";
-          if ($startIndex !== null or $startSectionIndex === null) {
-            $startSectionIndex = $startIndex;
-          }
-
-          if ($endSectionIndex == null and $startSectionIndex !== null) {
-            $endSectionIndex = $startSectionIndex;
-          }
-
-          if ($startSectionIndex == null and $endSectionIndex !== null) {
-            $startSectionIndex = $endSectionIndex;
-          }
+          $range->applyQueryProcessorResult($result);
 
           //echo __LINE__ . "*** | startSectionIndex:" . $startSectionIndex . "\n";
           //echo __LINE__ . "*** | endSectionIndex  :" . $endSectionIndex . "\n";
@@ -121,6 +103,8 @@
         //echo __LINE__ . "*** | got startSectionIndex:" . $startSectionIndex . "\n";
         //echo __LINE__ . "*** | got endSectionIndex:" . $endSectionIndex . "\n";
 
+        $startSectionIndex = $range->getStart();
+        $endSectionIndex = $range->getEnd();
         if ($startSectionIndex !== null and $endSectionIndex !== null) {
           //echo __LINE__ . "*** | " . "" . "\n";
           //echo __LINE__ . "*** | start index: " . $startSectionIndex . "\n";

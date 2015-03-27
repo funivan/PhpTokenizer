@@ -1,12 +1,17 @@
 <?php
 
-  namespace Funivan\PhpTokenizer\BlockExtractor;
+  namespace Funivan\PhpTokenizer\Query\QueryProcessor;
 
   /**
    *
    * @package Funivan\PhpTokenizer\BlockExtractor
    */
-  class ExtractorResult {
+  class QueryProcessorResult {
+
+    const STRATEGY_SOFT = 0;
+
+    const STRATEGY_FORCE = 1;
+
 
     /**
      * @var null|int
@@ -24,28 +29,46 @@
     protected $nextTokenIndexForCheck = null;
 
     /**
-     * @param int|null $startIndex
+     * @var int
+     */
+    protected $startIndexStrategy;
+
+    /**
+     * @var int
+     */
+    protected $endIndexStrategy;
+
+    /**
+     * @param int $startIndex
+     * @param null $strategy
      * @return $this
      */
-    public function setStartIndex($startIndex) {
+    public function moveStartIndex($startIndex, $strategy = null) {
       if (!is_integer($startIndex)) {
         throw new \InvalidArgumentException("Expect integer for startIndex. Given:" . gettype($startIndex));
       }
+
       $this->startIndex = $startIndex;
-      
+
+      $this->startIndexStrategy = ($strategy !== null) ? $strategy : static::STRATEGY_SOFT;
+
       return $this;
     }
 
     /**
-     * @param int|null $endIndex
+     * @param int $endIndex
+     * @param null $strategy
      * @return $this
      */
-    public function setEndIndex($endIndex) {
+    public function moveEndIndex($endIndex, $strategy = null) {
       if (!is_integer($endIndex)) {
         throw new \InvalidArgumentException("Expect integer for startIndex. Given:" . gettype($endIndex));
       }
+
       $this->endIndex = $endIndex;
-      
+
+      $this->endIndexStrategy = ($strategy !== null) ? $strategy : static::STRATEGY_SOFT;
+
       return $this;
     }
 
@@ -59,7 +82,7 @@
       }
 
       $this->nextTokenIndexForCheck = $nextTokenIndexForCheck;
-      
+
       return $this;
     }
 
@@ -91,6 +114,20 @@
      */
     public function isValid() {
       return (null !== $this->nextTokenIndexForCheck);
+    }
+
+    /**
+     * @return int
+     */
+    public function getStartIndexStrategy() {
+      return $this->startIndexStrategy;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndIndexStrategy() {
+      return $this->endIndexStrategy;
     }
 
   }
