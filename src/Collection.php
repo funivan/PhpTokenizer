@@ -123,7 +123,7 @@
      */
     public static function initFromString($string) {
       $tokens = Helper::getTokensFromString($string);
-      return new Collection($tokens);
+      return new static($tokens);
     }
 
     /**

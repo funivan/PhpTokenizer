@@ -16,14 +16,12 @@
         header ('test:test');
       ");
 
-
       $sequence = new TokenSequence();
       $sequence->strict()->valueIs('header');
       $sequence->possible()->typeIs(T_WHITESPACE);
       $sequence->strict()->valueIs('(');
       $sequence->strict()->valueLike('!.*!');
       $sequence->strict()->valueIs(')');
-
 
       $extractor = new Extractor($file->getCollection(), $sequence);
       $blocks = $extractor->fetchBlocks();
@@ -35,7 +33,6 @@
       $stringSequence = new TokenSequence();
       $stringSequence->strict()->typeIs(T_CONSTANT_ENCAPSED_STRING);
       $sequence->with($stringSequence, 'test');
-
 
       $blocks = $extractor->fetchBlocks();
       $this->assertCount(2, $blocks);
@@ -68,20 +65,18 @@
 
       $this->assertCount(2, $sequence->extract($collection));
 
-
       $testStringExtractor = TokenSequence::create('f3')->addProcessor(new Strict((new Query())->valueLike('!\:test!')));
       $stringExtractor->with($testStringExtractor);
 
       $blocks = $sequence->extract($collection, 'f3');
-      
+
       $this->assertCount(1, $blocks);
-      
+
       $this->assertEquals("'test:test'", $blocks[0]);
 
       unlink($file->getPath());
     }
-    
-    
+
 
     public function _testWithSingleToken() {
       $file = $this->initFileWithCode("<?php
@@ -91,7 +86,6 @@
       ");
 
       $collection = $file->getCollection()->extractItems(3, 1);
-
 
       $sequence = new TokenSequence();
       $sequence->strict()->valueIs('(');
@@ -105,6 +99,6 @@
     public function testExtractorName() {
       $tokenSequenceFinder = TokenSequence::create("test");
       $this->assertEquals('test', $tokenSequenceFinder->getName());
-        
+
     }
   }
