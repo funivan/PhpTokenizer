@@ -2,7 +2,83 @@
 
   require 'vendor/autoload.php';
 
-  class Q {
+  class TokenDummy extends \Funivan\PhpTokenizer\Token {
+
+    /**
+     * @param array $data
+     * @throws Exception
+     */
+    public function __construct(array $data = []) {
+      if (!empty($data)) {
+        throw new \Exception("You cant create dummy with any data");
+      }
+
+      $this->line = static::INVALID_LINE;
+      $this->value = static::INVALID_VALUE;
+      $this->type = static::INVALID_TYPE;
+      $this->position = static::INVALID_POSITION;
+    }
+
+    /**
+     *
+     */
+    public static function create() {
+      return new static();
+    }
+
+    /**
+     * @internal
+     * @param array $data
+     * @return $this|void
+     * @throws Exception
+     */
+    protected function setData(array $data) {
+      throw new \Exception('This token is dummy and cant be changed');
+    }
+
+    /**
+     * @internal
+     * @param $type
+     * @return $this|void
+     * @throws Exception
+     */
+    public function setType($type) {
+      throw new \Exception('This token is dummy and cant be changed');
+    }
+
+    /**
+     * @internal
+     * @param int|string $value
+     * @return $this|void
+     * @throws Exception
+     */
+    public function setValue($value) {
+      throw new \Exception('This token is dummy and cant be changed');
+    }
+
+    /**
+     * @internal
+     * @param int $line
+     * @return $this|void
+     * @throws Exception
+     */
+    public function setLine($line) {
+      throw new \Exception('This token is dummy and cant be changed');
+    }
+
+    /**
+     * @internal
+     * @param null $position
+     * @return $this|void
+     * @throws Exception
+     */
+    public function setPosition($position) {
+      throw new \Exception('This token is dummy and cant be changed');
+    }
+
+  }
+
+  class TokenStreamProcess {
 
     private $position;
 
@@ -19,49 +95,56 @@
     }
 
     /**
+     * Return current token
+     *
      * @return \Funivan\PhpTokenizer\Token
      */
-    public function token() {
+    private function token() {
       return !empty($this->collection[$this->position]) ? $this->collection[$this->position] : null;
     }
 
     public function valueIs($value) {
       if (!$this->skipCondition and $this->token()->getValue() == $value) {
         $token = $this->token();
+        $token->setPosition($this->position);
         $this->position++;
         return $token;
       }
       $this->skipCondition = true;
-      return new \Funivan\PhpTokenizer\Token([1, '', -1]);
+      return TokenDummy::create();
     }
 
     public function typeIs($type) {
       if (!$this->skipCondition and $this->token()->getType() == $type) {
         $token = $this->token();
+        $token->setPosition($this->position);
         $this->position++;
         return $token;
       }
       $this->skipCondition = true;
-      return new \Funivan\PhpTokenizer\Token([1, '', -1]);
+      return TokenDummy::create();
     }
 
     public function typePossible($type) {
       if (!$this->skipCondition and $this->token()->getType() == $type) {
         $token = $this->token();
+        $token->setPosition($this->position);
         $this->position++;
         return $token;
       }
-      return new \Funivan\PhpTokenizer\Token([1, '', -1]);
+      return TokenDummy::create();
     }
 
     public function any() {
       $token = $this->token();
+      $token->setPosition($this->position);
       $this->position++;
       return $token;
     }
 
     public function possible() {
       $token = $this->token();
+      $token->setPosition($this->position);
       if ($token !== null) {
         $this->position++;
       }
@@ -74,6 +157,9 @@
 
   }
 
+  /**
+   * @method static Finder initFromString($code)
+   */
   class Finder extends \Funivan\PhpTokenizer\Collection {
 
     public function getNext($step = 1) {
@@ -81,16 +167,16 @@
     }
 
     /**
-     * @return Q
+     * Return new Query
+     * @return TokenStreamProcess
      */
-    public function go() {
+    public function iterate() {
 
       if ($this->valid() == false) {
         return null;
       }
 
-      $q = new Q($this->position, $this);
-
+      $q = new TokenStreamProcess($this->position, $this);
       ++$this->position;
 
       return $q;
@@ -117,8 +203,9 @@
   ';
   $finder = Finder::initFromString($code);
 
-  /** @var Q $q */
-  while ($q = $finder->go()) {
+  /** @var TokenStreamProcess $q */
+  while ($q = $finder->iterate()) {
+
     $token = $q->typeIs(T_VARIABLE);
     $q->valueIs('->');
     $q->typePossible(T_WHITESPACE);

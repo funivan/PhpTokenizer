@@ -19,6 +19,8 @@
 
     const INVALID_VALUE = null;
 
+    const INVALID_POSITION = null;
+
     /**
      * @var null|int
      */
@@ -33,6 +35,13 @@
      * @var string
      */
     protected $line = null;
+
+    /**
+     * Indicate position in current collection
+     *
+     * @var null
+     */
+    protected $position = null;
 
     /**
      * You need to provide at least 3 elements
@@ -77,6 +86,10 @@
       }
 
       $this->setLine($data[2]);
+
+      if (array_key_exists(3, $data)) {
+        $this->setPosition($data[3]);
+      }
 
       return $this;
     }
@@ -167,6 +180,7 @@
       $this->type = static::INVALID_TYPE;
       $this->value = static::INVALID_VALUE;
       $this->line = static::INVALID_LINE;
+      $this->position = static::INVALID_POSITION;
       return $this;
     }
 
@@ -202,6 +216,26 @@
 
       $this->value = $part . $this->value;
 
+      return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getPosition() {
+      return $this->position;
+    }
+
+    /**
+     * @param null|int $position
+     * @return $this
+     */
+    public function setPosition($position) {
+      if ($position !== null and !is_int($position)) {
+        throw new \InvalidArgumentException("Invalid position argument. Expect null or integer. Given #" . gettype($position));
+      }
+
+      $this->position = $position;
       return $this;
     }
 
