@@ -2,11 +2,11 @@
 
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Query\QueryProcessor;
 
-  use Funivan\PhpTokenizer\Query\QueryProcessor\Move;
+  use Funivan\PhpTokenizer\Strategy\Move;
 
   /**
    *
-   * @package Test\Funivan\PhpTokenizer\Tokenizer\Query\QueryProcessor
+   * @package Test\Funivan\PhpTokenizer\Tokenizer\Query\Strategy
    */
   class MoveTest extends \Test\Funivan\PhpTokenizer\Main {
 

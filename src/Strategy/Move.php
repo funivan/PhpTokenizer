@@ -1,12 +1,12 @@
 <?php
 
-  namespace Funivan\PhpTokenizer\Query\QueryProcessor;
+  namespace Funivan\PhpTokenizer\Strategy;
 
   /**
    *
    * @package Funivan\PhpTokenizer\BlockExtractor
    */
-  class Move implements QueryProcessorInterface {
+  class Move implements StrategyInterface {
 
     /**
      * Direction forward flag
@@ -58,8 +58,8 @@
     /**
      * @inheritdoc
      */
-    public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
-      $result = new \Funivan\PhpTokenizer\Query\QueryProcessor\QueryProcessorResult();
+    public function getNextTokenIndex(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+      $result = new \Funivan\PhpTokenizer\Strategy\QueryProcessorResult();
 
       if ($this->isForward()) {
         $endIndex = $currentIndex + $this->steps;

@@ -34,6 +34,13 @@
 
     protected $line = array();
 
+    /**
+     * @return static
+     */
+    public static function create() {
+      return new static();
+    }
+    
 
     /**
      * @param int $type

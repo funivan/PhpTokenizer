@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Extractor\TokenSequence;
   use Funivan\PhpTokenizer\Query\Query;
-  use Funivan\PhpTokenizer\Query\QueryProcessor\Section;
+  use Funivan\PhpTokenizer\Strategy\Section;
 
   class SectionTest extends \Test\Funivan\PhpTokenizer\Main {
 

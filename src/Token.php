@@ -126,7 +126,7 @@
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getValue() {
       return $this->value;

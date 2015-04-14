@@ -6,7 +6,7 @@
 
   /**
    *
-   * @package Test\Funivan\PhpTokenizer\Tokenizer\Query\QueryProcessor
+   * @package Test\Funivan\PhpTokenizer\Tokenizer\Query\Strategy
    */
   class PossibleTest extends \Test\Funivan\PhpTokenizer\Main {
 

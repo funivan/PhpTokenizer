@@ -1,45 +1,54 @@
 <?
 
-  namespace Funivan\PhpTokenizer\Query\QueryProcessor;
+  namespace Funivan\PhpTokenizer\Strategy;
 
-  use Funivan\PhpTokenizer\Query\QueryInterface;
+  use Funivan\PhpTokenizer\Query\Query;
 
   /**
    *
-   * @package Funivan\PhpTokenizer\Query\QueryProcessor
+   * @package Funivan\PhpTokenizer\Query\Strategy
    */
-  class Section implements QueryProcessorInterface {
+  class Section extends Query implements StrategyInterface {
 
     /**
-     * @var QueryInterface
+     * @var Query
      */
-    protected $startQuery = null;
+    private $startQuery;
 
     /**
-     * @var QueryInterface
+     * @var Query
      */
-    protected $endQuery = null;
+    private $endQuery;
 
-    /**
-     * @param QueryInterface $startSection
-     * @param QueryInterface $endSection
-     */
-    public function __construct(QueryInterface $startSection, QueryInterface $endSection) {
-      $this->startQuery = $startSection;
-      $this->endQuery = $endSection;
+    public function setDelimiters($start, $end) {
+      $this->startQuery = new Query();
+      $this->startQuery->valueIs($start);
+
+      $this->endQuery = new Query();
+      $this->endQuery->valueIs($end);
+
+      return $this;
     }
 
     /**
      * @param \Funivan\PhpTokenizer\Collection $collection
      * @param int $currentIndex
-     * @return QueryProcessorResult
+     * @return int|null
      */
-    public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
-      $result = new QueryProcessorResult();
+    public function getNextTokenIndex(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+
+      if (empty($this->startQuery)) {
+        throw new \InvalidArgumentException("Empty start Query. ");
+      }
+
+      if (empty($this->endQuery)) {
+        throw new \InvalidArgumentException("Empty end Query. ");
+      }
+
 
       $token = $collection->offsetGet($currentIndex);
       if (empty($token) or $this->startQuery->isValid($token) == false) {
-        return $result;
+        return null;
       }
 
       $blockEndFlag = null;
@@ -68,11 +77,10 @@
       }
 
       if (isset($startIndex) and isset($endIndex)) {
-        $result->moveEndIndex($endIndex);
-        $result->setNextTokenIndexForCheck(++$endIndex);
+        return ++$endIndex;
       }
 
-      return $result;
+      return null;
     }
 
   }
