@@ -99,7 +99,9 @@
     }
 
     public function search($string) {
-      
+      $section = new Strategy\Search();
+      $section->valueIs($string);
+      return $this->check($section); 
     }
 
   }

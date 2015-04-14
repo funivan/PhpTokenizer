@@ -26,8 +26,13 @@
         $q->valueIs('(');
         $q->check(Possible::create()->valueIs('!'));
         $q->valueIs('is_array');
-        $q->valueIs('(');
-        $q->search('{');
+        $token = $q->valueIs('(');
+        $token = $q->search('{');
+
+        if ($q->valid()) {
+          
+            echo "\n***".__LINE__."***\n<pre>".print_r($token, true)."</pre>\n";die();
+        }
 
 
         $condition = $q->section('(', ')');
