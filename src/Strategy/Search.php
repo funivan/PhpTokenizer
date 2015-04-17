@@ -2,6 +2,7 @@
 
   namespace Funivan\PhpTokenizer\Strategy;
 
+  use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\Query\Query;
 
   /**
@@ -9,6 +10,16 @@
    * @package Funivan\PhpTokenizer\Query\Strategy
    */
   class Search extends Query implements StrategyInterface {
+
+    const FORWARD = 1;
+
+    const BACKWARD = -1;
+
+    /**
+     * @var int
+     */
+    protected $direction = 1;
+
 
     /**
      * @inheritdoc
@@ -20,23 +31,40 @@
       # iterate while we can check toke
 
       $index = $currentIndex;
+      $searchForward = ($this->direction === static::FORWARD);
+
       do {
 
         $token = $collection->offsetGet($index);
-
-        $index++;
+        if ($token === null) {
+          return $result;
+        }
+        $index = $searchForward ? ++$index : --$index;
 
         if ($this->isValid($token)) {
           $result->setNexTokenIndex($index);
           $result->setValid(true);
           $result->setToken($token);
-          return $result;
+          break;
         }
 
       } while (!empty($token));
 
-
       return $result;
+    }
+
+    /**
+     * @param int $direction
+     * @return $this
+     */
+    public function setDirection($direction) {
+
+      if ($direction !== static::FORWARD and $direction !== static::BACKWARD) {
+        throw new InvalidArgumentException('Invalid direction option');
+      }
+
+      $this->direction = $direction;
+      return $this;
     }
 
   }

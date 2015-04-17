@@ -154,14 +154,14 @@
 
         $start = $q->sequence(['if', '(', Possible::create()->valueIs('!'), 'is_array', '(']);
 
-        $token = $q->typeIs(T_VARIABLE);
-        $q->valueIs(')');
+        $token = $q->strict(T_VARIABLE);
+        $q->strict(')');
 
         if ($q->isValid() and $start[2]->isValid() == false) {
           if ($q->process(Possible::create()->valueIs(['==', '===']))->isValid()) {
-            $q->valueIs('false');
+            $q->strict('false');
           } elseif ($q->process(Possible::create()->valueIs(['!=', '!==']))->isValid()) {
-            $q->valueIs('true');
+            $q->strict('true');
           }
         }
 

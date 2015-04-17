@@ -12,7 +12,7 @@
    *
    * @package Test\Funivan\PhpTokenizer\Tokenizer\Query\Strategy
    */
-  class MoveTest extends \Test\Funivan\PhpTokenizer\Main {
+  class MoveTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
     public function testMove() {
       $code = '<?php  $a';

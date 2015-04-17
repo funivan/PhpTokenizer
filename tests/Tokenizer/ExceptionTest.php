@@ -7,7 +7,7 @@
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 11/25/13
    */
-  class ExceptionTest extends \Test\Funivan\PhpTokenizer\Main {
+  class ExceptionTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
     public function testSetTokenValueException() {
       $token = new Token();

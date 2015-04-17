@@ -6,7 +6,7 @@
   use Funivan\PhpTokenizer\TokenStream;
   use Funivan\PhpTokenizer\Strategy\Strict;
 
-  class StrictTest extends \Test\Funivan\PhpTokenizer\Main {
+  class StrictTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
 
     public function testSimple() {

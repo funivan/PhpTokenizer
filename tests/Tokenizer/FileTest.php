@@ -5,7 +5,7 @@
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\Token;
 
-  class FileTest extends \Test\Funivan\PhpTokenizer\Main {
+  class FileTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
     protected function getFileObjectWithCode($code) {
       $tempFile = $this->createFileWithCode($code);

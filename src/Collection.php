@@ -9,8 +9,8 @@
    *
    * @method \Funivan\PhpTokenizer\Token getLast();
    * @method \Funivan\PhpTokenizer\Token current();
-   * @method \Funivan\PhpTokenizer\Token offsetGet($index);
-   * @method \Funivan\PhpTokenizer\Token getFirst();
+   * @method \Funivan\PhpTokenizer\Token|null offsetGet($index);
+   * @method \Funivan\PhpTokenizer\Token|null getFirst();
    * @method \Funivan\PhpTokenizer\Token[] getItems();
    * @method \Funivan\PhpTokenizer\Collection extractItems($offset, $length = null);
    * @method $this setItems($tokens)
@@ -142,5 +142,14 @@
       return $this;
     }
 
+    /**
+     * @param Token $tokenStart
+     * @param Token $tokenEnd
+     * @return Collection
+     */
+    public function extractByTokens(Token $tokenStart, Token $tokenEnd) {
+      return $this->extractItems($tokenStart->getIndex(), $tokenEnd->getIndex() - $tokenStart->getIndex() + 1);
+    }
+    
   }
 

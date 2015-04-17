@@ -9,7 +9,7 @@
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 11/25/13
    */
-  class QueryTest extends \Test\Funivan\PhpTokenizer\Main {
+  class QueryTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
 
     public function testLine() {

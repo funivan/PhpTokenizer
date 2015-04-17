@@ -7,7 +7,7 @@
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 11/25/13
    */
-  class Main extends \PHPUnit_Framework_TestCase {
+  class MainTestCase extends \PHPUnit_Framework_TestCase {
 
     /**
      * @return string

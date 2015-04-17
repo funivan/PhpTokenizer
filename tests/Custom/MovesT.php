@@ -2,7 +2,7 @@
 
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Query;
 
-  class MovesTest extends \Test\Funivan\PhpTokenizer\Main {
+  class MovesTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
     public function _testMoveWithoutQueries() {
       $file = $this->initFileWithCode('<?php

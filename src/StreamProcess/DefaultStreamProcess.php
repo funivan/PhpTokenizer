@@ -3,6 +3,10 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
+  use Funivan\PhpTokenizer\Query\QueryInterface;
+  use Funivan\PhpTokenizer\Strategy\Move;
+  use Funivan\PhpTokenizer\Strategy\Possible;
+  use Funivan\PhpTokenizer\Strategy\Search;
   use Funivan\PhpTokenizer\Strategy\StrategyInterface;
   use Funivan\PhpTokenizer\Strategy\Strict;
   use Funivan\PhpTokenizer\Token;
@@ -45,24 +49,25 @@
 
 
     /**
-     * Alias
-     * @param string $value
+     * Strict validation of condition
+     * 
+     * @param int|string $condition
      * @return Token
      */
-    public function valueIs($value) {
-      $strict = new Strict();
-      $strict->valueIs($value);
-      return $this->process($strict);
+    public function strict($condition) {
+      $query = $this->buildQuery($condition, Strict::create());
+      return $this->process($query);
     }
 
     /**
-     * @param $value
+     * Check if token possible valid for our condition
+     * 
+     * @param int|string $condition
      * @return Token
      */
-    public function typeIs($value) {
-      $strict = new Strict();
-      $strict->typeIs($value);
-      return $this->process($strict);
+    public function possible($condition) {
+      $query = $this->buildQuery($condition, Possible::create());
+      return $this->process($query);
     }
 
     /**
@@ -74,6 +79,58 @@
       $section = new \Funivan\PhpTokenizer\Strategy\Section();
       $section->setDelimiters($start, $end);
       return $this->process($section);
+    }
+
+    /**
+     * By default we search forward
+     * 
+     * @param int|string $condition
+     * @param null $direction
+     * @return Token
+     */
+    public function search($condition, $direction = null) {
+      $strategy = Search::create();
+      if ($direction !== null) {
+        $strategy->setDirection($direction);
+      }
+      $query = $this->buildQuery($condition, $strategy);
+      return $this->process($query);
+    }
+
+    /**
+     * @param int $steps
+     * @return Token
+     */
+    public function move($steps) {
+      return $this->process(Move::create($steps));
+    }
+
+    /**
+     * @param array $conditions
+     * @return Collection
+     */
+    public function sequence(array $conditions) {
+      $range = new Collection();
+      foreach ($conditions as $value) {
+        $range[] = $this->check($value);
+      }
+
+      return $range;
+    }
+
+    /**
+     * @param string|int|$value
+     * @return Token
+     */
+    private function check($value) {
+      if ($value instanceof StrategyInterface) {
+        $query = $value;
+      } else {
+        $query = $this->buildQuery($value, Strict::create());
+      }
+
+      $token = $this->process($query);
+      return $token;
     }
 
     /**
@@ -116,36 +173,25 @@
       return $token;
     }
 
-    public function search($string) {
-      $section = new \Funivan\PhpTokenizer\Strategy\Search();
-      $section->valueIs($string);
-      return $this->process($section);
-    }
-
     /**
-     * @param array $conditions
-     * @return Collection
+     * @todo change queryInterface
+     *
+     * @param StrategyInterface|string|int $value
+     * @param QueryInterface $defaultStrategy
+     * @return StrategyInterface
      */
-    public function sequence(array $conditions) {
-      $range = new Collection();
-      foreach ($conditions as $value) {
-        if (is_string($value) or $value === null) {
-          $query = new \Funivan\PhpTokenizer\Strategy\Strict();
-          $query->valueIs($value);
-        } elseif (is_int($value)) {
-          $query = new \Funivan\PhpTokenizer\Strategy\Strict();
-          $query->typeIs($value);
-        } elseif ($value instanceof StrategyInterface) {
-          $query = $value;
-        } else {
-          throw new InvalidArgumentException("Invalid token Values sequence");
-        }
-
-        $token = $this->process($query);
-        $range[] = $token;
+    private function buildQuery($value, QueryInterface $defaultStrategy) {
+      if (is_string($value) or $value === null) {
+        $query = $defaultStrategy;
+        $query->valueIs($value);
+      } elseif (is_int($value)) {
+        $query = $defaultStrategy;
+        $query->typeIs($value);
+      } else {
+        throw new InvalidArgumentException("Invalid token condition. Expect string or int or StrategyInterface");
       }
 
-      return $range;
+      return $query;
     }
 
   }
