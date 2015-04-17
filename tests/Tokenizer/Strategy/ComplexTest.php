@@ -1,4 +1,4 @@
-<?
+<?php
 
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 

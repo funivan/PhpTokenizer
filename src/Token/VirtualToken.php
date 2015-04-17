@@ -1,4 +1,4 @@
-<?
+<?php
   namespace Funivan\PhpTokenizer\Token;
 
   /**
