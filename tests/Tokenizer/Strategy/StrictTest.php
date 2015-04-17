@@ -3,7 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Finder;
+  use Funivan\PhpTokenizer\TokenStream;
   use Funivan\PhpTokenizer\Strategy\Strict;
 
   class StrictTest extends \Test\Funivan\PhpTokenizer\Main {
@@ -13,10 +13,10 @@
 
       $code = '<? $a';
 
-      $finder = new Finder(Collection::initFromString($code));
+      $finder = new TokenStream(Collection::initFromString($code));
 
       while ($q = $finder->iterate()) {
-        $token = $q->check(Strict::create()->typeIs(T_VARIABLE));
+        $token = $q->process(Strict::create()->typeIs(T_VARIABLE));
       }
 
       $this->assertEquals('$a', $token->getValue());

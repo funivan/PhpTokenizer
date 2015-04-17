@@ -3,7 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Finder;
+  use Funivan\PhpTokenizer\TokenStream;
   use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Token;
 
@@ -17,10 +17,10 @@
       
       ;
       ';
-      $finder = new Finder(Collection::initFromString($code));
+      $finder = new TokenStream(Collection::initFromString($code), true);
 
       $findItems = array();
-      while ($q = $finder->iterate(true)) {
+      while ($q = $finder->iterate()) {
 
         $list = $q->sequence(['echo', '$a', ';']);
         if ($q->isValid()) {
@@ -64,9 +64,8 @@
       );
       $collection = Collection::initFromString($code);
 
-
       foreach ($sequenceConfiguration as $itemInfo) {
-        $finder = new Finder($collection);
+        $finder = new TokenStream($collection);
         $findItems = array();
         while ($q = $finder->iterate(false)) {
 
@@ -149,25 +148,22 @@
 
       $collection = Collection::initFromString($code);
 
-      $finder = new Finder($collection);
+      $finder = new TokenStream($collection, true);
 
-
-      while ($q = $finder->iterate(true)) {
+      while ($q = $finder->iterate()) {
 
         $start = $q->sequence(['if', '(', Possible::create()->valueIs('!'), 'is_array', '(']);
 
         $token = $q->typeIs(T_VARIABLE);
         $q->valueIs(')');
 
-
         if ($q->isValid() and $start->get(2)->isValid() == false) {
-          if ($q->check(Possible::create()->valueIs(['==', '===']))->isValid()) {
+          if ($q->process(Possible::create()->valueIs(['==', '===']))->isValid()) {
             $q->valueIs('false');
-          } elseif ($q->check(Possible::create()->valueIs(['!=', '!==']))->isValid()) {
+          } elseif ($q->process(Possible::create()->valueIs(['!=', '!==']))->isValid()) {
             $q->valueIs('true');
           }
         }
-
 
         $last = $q->sequence(array(')', '{', $token->getValue(), '=', '(array)', $token->getValue(), ';', '}'));
 
@@ -189,8 +185,7 @@
 
       }
 
-
-      $result = (string) $collection;
+      $result = (string)$collection;
       if ($contain == null and $notContain === null) {
         throw new \Exception("Please provide notContain or contain condition");
       }

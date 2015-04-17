@@ -21,7 +21,7 @@
       $this->line = static::INVALID_LINE;
       $this->value = static::INVALID_VALUE;
       $this->type = static::INVALID_TYPE;
-      $this->index = static::INVALID_POSITION;
+      $this->index = static::INVALID_INDEX;
     }
 
     /**

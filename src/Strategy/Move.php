@@ -2,6 +2,8 @@
 
   namespace Funivan\PhpTokenizer\Strategy;
 
+  use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
+
   /**
    *
    * @package Funivan\PhpTokenizer\BlockExtractor
@@ -29,39 +31,27 @@
     protected $direction = null;
 
     /**
-     * @param $direction
-     * @param $steps
+     * @param int $steps
      * @return static
      */
-    public static function create($direction, $steps) {
-      return new static($direction, $steps);
+    public static function create($steps) {
+      return new static($steps);
     }
 
     /**
-     * @param $direction
-     * @param $steps
+     *
+     * @param int $steps
      */
-    public function __construct($direction, $steps) {
+    public function __construct($steps) {
 
       if (!is_integer($steps)) {
-        throw new \InvalidArgumentException("Invalid steps. Expect integer. Given: " . gettype($steps));
+        throw new InvalidArgumentException("Invalid steps. Expect integer. Given: " . gettype($steps));
       }
 
       $this->steps = $steps;
 
-      if ($direction !== static::DIRECTION_BACK and $direction !== static::DIRECTION_FORWARD) {
-        throw new \InvalidArgumentException("Invalid direction.");
-      }
-
-      $this->direction = $direction;
     }
 
-    /**
-     * @return bool
-     */
-    protected function isForward() {
-      return ($this->direction === static::DIRECTION_FORWARD);
-    }
 
     /**
      * @inheritdoc
@@ -69,12 +59,7 @@
     public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
       $result = new Result();
 
-      if ($this->isForward()) {
-        $endIndex = $currentIndex + $this->steps;
-      } else {
-        $currentIndex--;
-        $endIndex = $currentIndex - $this->steps;
-      }
+      $endIndex = $currentIndex + $this->steps;
 
       $result->setNexTokenIndex($endIndex);
       if (isset($collection[$endIndex])) {

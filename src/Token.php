@@ -19,7 +19,7 @@
 
     const INVALID_VALUE = null;
 
-    const INVALID_POSITION = null;
+    const INVALID_INDEX = null;
 
     /**
      * @var null|int
@@ -186,7 +186,7 @@
       $this->type = static::INVALID_TYPE;
       $this->value = static::INVALID_VALUE;
       $this->line = static::INVALID_LINE;
-      $this->index = static::INVALID_POSITION;
+      $this->index = static::INVALID_INDEX;
       return $this;
     }
 

@@ -2,8 +2,7 @@
 
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
-  use Funivan\PhpTokenizer\Extractor\Extractor;
-  use Funivan\PhpTokenizer\Extractor\TokenSequence;
+  use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\Token;
 
   class FileTest extends \Test\Funivan\PhpTokenizer\Main {
@@ -31,34 +30,39 @@
     public function testSave() {
 
       $file = $this->getFileObjectWithCode('<?php echo 1;');
-      $sequence = new TokenSequence();
-      $sequence->strict()->valueIs(1);
+      $query = new Query();
+      $query->valueIs(1);
 
-      $extractor = new Extractor($file->getCollection(), $sequence);
-
-      $blocks = $extractor->fetchBlocks();
-
-
-      foreach ($blocks as $blockTokens) {
-        $blockTokens->getFirst()->setValue(2);
+      foreach ($file->getCollection() as $token) {
+        if ($query->isValid($token)) {
+          $token->setValue(2);
+        }
       }
 
       $file->save();
 
+      $itemsNum = 0;
 
-      $sequence = new TokenSequence();
-      $sequence->strict()->valueIs(1);
+      $query = new Query();
+      $query->valueIs(1);
+      foreach ($file->getCollection() as $token) {
+        if ($query->isValid($token)) {
+          $itemsNum++;
+        }
+      }
 
-
-      $extractor = new Extractor($file->getCollection(), $sequence);
-      $this->assertCount(0, $extractor->fetchBlocks());
-
-      $sequence = new TokenSequence();
-      $sequence->strict()->valueIs(2);
+      $this->assertEquals(0, $itemsNum);
       
-      $extractor = new Extractor($file->getCollection(), $sequence);
-      $this->assertCount(1, $extractor->fetchBlocks());
+      $itemsNum = 0;
+      $query = new Query();
+      $query->valueIs(2);
+      foreach ($file->getCollection() as $token) {
+        if ($query->isValid($token)) {
+          $itemsNum++;
+        }
+      }
 
+      $this->assertEquals(1, $itemsNum);
 
       unlink($file->getPath());
     }
@@ -69,20 +73,21 @@
 
       $this->assertCount(5, $file->getCollection());
 
-      $sequence = new TokenSequence();
-      $sequence->strict()->valueIs('echo');
+      $query = new Query();
+      $query->valueIs('echo');
+      foreach ($file->getCollection() as $token) {
+        if ($query->isValid($token)) {
+          $token->remove();
+        }
+      }
 
-      $blocks = $sequence->extract($file->getCollection());
-      $this->assertCount(1, $blocks->getFirst());
 
-      $blocks->getFirst()->map(function (Token $item) {
-        $item->remove();
-      });
 
       $this->assertCount(5, $file->getCollection());
       $file->refresh();
 
       $this->assertCount(4, $file->getCollection());
+      
       $code = $file->getCollection()->assemble();
       $this->assertEquals('<?php  1;', $code);
 
@@ -93,7 +98,6 @@
       # create temp file
       $code = '<html><?php echo 1 ?></html>';
 
-
       $file = $this->getFileObjectWithCode($code);
 
       $this->assertCount(8, $file->getCollection());
@@ -102,7 +106,6 @@
 
     public function testSaveFileWithoutChange() {
       $file = $this->getFileObjectWithCode('<?php echo 1;');
-
 
       $startModificationTime = \filemtime($file->getPath());
 

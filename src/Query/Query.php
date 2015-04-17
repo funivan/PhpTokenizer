@@ -3,6 +3,8 @@
 
   namespace Funivan\PhpTokenizer\Query;
 
+  use Funivan\PhpTokenizer\Exception;
+
   /**
    * @author Ivan Shcherbak <dev@funivan.com>
    */
@@ -43,7 +45,7 @@
     
 
     /**
-     * @param int $type
+     * @param int|array $type
      * @return $this
      */
     public function typeIs($type) {
@@ -51,7 +53,7 @@
     }
 
     /**
-     * @param int $type
+     * @param int|array $type
      * @return $this
      */
     public function typeNot($type) {
@@ -120,7 +122,7 @@
      * @param string $field
      * @param string|int $value
      * @param int $type
-     * @throws \Funivan\PhpTokenizer\Exception
+     * @throws Exception
      * @return $this
      */
     protected function addCondition($field, $value, $type) {
@@ -134,7 +136,7 @@
       if ($field == self::FIELD_VALUE) {
         foreach ($value as $k => $val) {
           if (!is_string($val) and !is_numeric($val)) {
-            throw new \Funivan\PhpTokenizer\Exception('Invalid value. Must be string');
+            throw new Exception('Invalid value. Must be string');
           }
 
           $value[$k] = (string) $val;
