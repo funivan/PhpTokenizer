@@ -1,12 +1,11 @@
 <?php
   namespace Funivan\PhpTokenizer\StreamProcess;
 
+  use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\Strategy\StrategyInterface;
   use Funivan\PhpTokenizer\Strategy\Strict;
   use Funivan\PhpTokenizer\Token;
-  use Funivan\PhpTokenizer\Token\Range;
-  use Funivan\PhpTokenizer\Token\VirtualToken;
 
   /**
    * Start from specific position and check token from this position according to strategies
@@ -19,7 +18,7 @@
     private $position;
 
     /**
-     * @var \Funivan\PhpTokenizer\Collection
+     * @var Collection
      */
     private $collection;
 
@@ -34,11 +33,11 @@
     private $skipWhitespaces = false;
 
     /**
-     * @param \Funivan\PhpTokenizer\Collection $collection
+     * @param Collection $collection
      * @param $position
      * @param bool $skipWhitespaces
      */
-    public function __construct(\Funivan\PhpTokenizer\Collection $collection, $position, $skipWhitespaces = false) {
+    public function __construct(Collection $collection, $position, $skipWhitespaces = false) {
       $this->position = $position;
       $this->collection = $collection;
       $this->skipWhitespaces = $skipWhitespaces;
@@ -124,12 +123,12 @@
     }
 
     /**
-     * @param array $tokenValues
-     * @return Range
+     * @param array $conditions
+     * @return Collection
      */
-    public function sequence(array $tokenValues) {
-      $range = new Range();
-      foreach ($tokenValues as $value) {
+    public function sequence(array $conditions) {
+      $range = new Collection();
+      foreach ($conditions as $value) {
         if (is_string($value) or $value === null) {
           $query = new \Funivan\PhpTokenizer\Strategy\Strict();
           $query->valueIs($value);
@@ -143,7 +142,7 @@
         }
 
         $token = $this->process($query);
-        $range->add($token);
+        $range[] = $token;
       }
 
       return $range;

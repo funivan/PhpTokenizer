@@ -157,7 +157,7 @@
         $token = $q->typeIs(T_VARIABLE);
         $q->valueIs(')');
 
-        if ($q->isValid() and $start->get(2)->isValid() == false) {
+        if ($q->isValid() and $start[2]->isValid() == false) {
           if ($q->process(Possible::create()->valueIs(['==', '===']))->isValid()) {
             $q->valueIs('false');
           } elseif ($q->process(Possible::create()->valueIs(['!=', '!==']))->isValid()) {
