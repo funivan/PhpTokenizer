@@ -21,7 +21,7 @@
       $this->line = static::INVALID_LINE;
       $this->value = static::INVALID_VALUE;
       $this->type = static::INVALID_TYPE;
-      $this->position = static::INVALID_POSITION;
+      $this->index = static::INVALID_POSITION;
     }
 
     /**
@@ -73,11 +73,11 @@
 
     /**
      * @internal
-     * @param null $position
+     * @param null $index
      * @return $this|void
      * @throws \Funivan\PhpTokenizer\Exception
      */
-    public function setPosition($position) {
+    public function setIndex($index) {
       throw new \Funivan\PhpTokenizer\Exception('This token is virtual and cant be changed');
     }
 

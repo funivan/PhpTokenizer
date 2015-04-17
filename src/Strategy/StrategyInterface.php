@@ -16,8 +16,8 @@
      * 
      * @param Collection $collection
      * @param int $currentIndex
-     * @return int|null
+     * @return Result
      */
-    public function getNextTokenIndex(Collection $collection, $currentIndex);
+    public function process(Collection $collection, $currentIndex);
 
   }

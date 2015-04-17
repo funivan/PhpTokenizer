@@ -5,45 +5,202 @@
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Finder;
   use Funivan\PhpTokenizer\Strategy\Possible;
+  use Funivan\PhpTokenizer\Token;
 
   class ComplexTest extends \PHPUnit_Framework_TestCase {
 
-    public function testComplex() {
+    public function testSkipWhitespaces() {
       $code = '<? 
+      echo $a;
+      echo $a  ;
+      echo $a
       
-      if(!is_array($variable)) {
-        $variable = (array) $variable;
-      }
-      
+      ;
       ';
-
       $finder = new Finder(Collection::initFromString($code));
 
-      while ($q = $finder->iterate()) {
+      $findItems = array();
+      while ($q = $finder->iterate(true)) {
+
+        $list = $q->sequence(['echo', '$a', ';']);
+        if ($q->isValid()) {
+          $findItems[] = $list;
+        }
+      }
+
+      $this->assertCount(3, $findItems);
+    }
+
+    public function testWithoutWhitespaceSkip() {
+      $code = '<? 
+      echo $a;
+      echo $a  ;
+      echo $a
+      
+      ;
+      ';
+
+      $sequenceConfiguration = array(
+        array(
+          'sequence' => array('echo', '$a', ';'),
+          'items' => 0
+        ),
+
+        array(
+          'sequence' => array('$a', ';'),
+          'items' => 1
+        ),
+
+        array(
+          'sequence' => array('echo', ' ', '$a', '  ', ';'),
+          'items' => 1
+        ),
+
+        array(
+          'sequence' => array('echo', T_WHITESPACE, '$a', T_WHITESPACE, ';'),
+          'items' => 2
+        ),
+
+      );
+      $collection = Collection::initFromString($code);
 
 
-        $q->valueIs('if');
-        $q->valueIs('(');
-        $q->check(Possible::create()->valueIs('!'));
-        $q->valueIs('is_array');
-        $token = $q->valueIs('(');
-        $token = $q->search('{');
+      foreach ($sequenceConfiguration as $itemInfo) {
+        $finder = new Finder($collection);
+        $findItems = array();
+        while ($q = $finder->iterate(false)) {
 
-        if ($q->valid()) {
-          
-            echo "\n***".__LINE__."***\n<pre>".print_r($token, true)."</pre>\n";die();
+          $list = $q->sequence($itemInfo['sequence']);
+          if ($q->isValid()) {
+            $findItems[] = $list;
+          }
+        }
+
+        $this->assertEquals($itemInfo['items'], count($findItems));
+      }
+
+    }
+
+    public function getComplexTestData() {
+      return [
+        [
+          'if (!is_array($a1)){
+            $a1 = (array) $a1;
+          }'
+          ,
+          'containt' => '$a1 = (array) $a1;',
+          'notContain' => 'is_array',
+        ],
+        [
+          'if ( is_array( $a2 )==false){
+              $a2 = (array) 
+              $a2;
+          }
+          ',
+          'containt' => '$a2 = (array) $a2;',
+          'notContain' => 'is_array',
+        ],
+        [
+          ' if (!is_array($a4) == false){
+          $a4 = (array) $a4;
+          }
+        ',
+          'containt' => 'is_array',
+          'notContain' => null,
+        ],
+        [
+          'if (is_array($a5)!=true){
+          $a5 = (array) $a5;
+          }',
+          'containt' => '$a5 = (array) $a5;',
+          'notContain' => 'is_array',
+        ],
+        [
+          ' if (is_array($a6) !==
+      true){
+          $a6 = (array) $a6;
+          }',
+          'containt' => '$a6 = (array) $a6;',
+          'notContain' => 'is_array',
+        ],
+        ['    if (is_array($a7)==true){
+          $a7 = (array) $a7;
+        }',
+          'containt' => 'is_array',
+          'notContain' => null,
+        ],
+        [
+          ' if (is_array($a8) === false){
+            $a8 = (array) $a8;
+          }
+        ',
+          'containt' => '$a8 = (array) $a8;',
+          'notContain' => 'is_array',
+        ]
+      ];
+    }
+
+    /**
+     * @dataProvider   getComplexTestData
+     * @throws \Funivan\PhpTokenizer\Exception
+     */
+    public function testComplex($code, $contain, $notContain) {
+      $code = '<? ' . $code;
+
+      $collection = Collection::initFromString($code);
+
+      $finder = new Finder($collection);
+
+
+      while ($q = $finder->iterate(true)) {
+
+        $start = $q->sequence(['if', '(', Possible::create()->valueIs('!'), 'is_array', '(']);
+
+        $token = $q->typeIs(T_VARIABLE);
+        $q->valueIs(')');
+
+
+        if ($q->isValid() and $start->get(2)->isValid() == false) {
+          if ($q->check(Possible::create()->valueIs(['==', '===']))->isValid()) {
+            $q->valueIs('false');
+          } elseif ($q->check(Possible::create()->valueIs(['!=', '!==']))->isValid()) {
+            $q->valueIs('true');
+          }
         }
 
 
-        $condition = $q->section('(', ')');
+        $last = $q->sequence(array(')', '{', $token->getValue(), '=', '(array)', $token->getValue(), ';', '}'));
 
-        $endSection = $q->section('{', '}');
+        if ($q->isValid()) {
+          $start = $start->getFirst()->getIndex();
+          $end = $last->getLast()->getIndex();
+
+          $newToken = new Token();
+          $newToken->setValue($token->getValue() . ' = (array) ' . $token->getValue() . ';');
+
+          foreach ($collection as $index => $collectionToken) {
+            if ($index >= $start and $index <= $end) {
+              $collectionToken->remove();
+            }
+          }
+
+          $collection[$end] = $newToken;
+        }
+
+      }
 
 
-        //$token = $q->check(Strict::create()->valueIs('if'));
-        //$q->check(Section::create()->setDelimiters('(', ')'));
+      $result = (string) $collection;
+      if ($contain == null and $notContain === null) {
+        throw new \Exception("Please provide notContain or contain condition");
+      }
 
+      if ($contain !== null) {
+        $this->assertContains($contain, $result);
+      }
 
+      if ($notContain !== null) {
+        $this->assertNotContains($notContain, $result);
       }
 
     }

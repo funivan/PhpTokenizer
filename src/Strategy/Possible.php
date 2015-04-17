@@ -13,15 +13,21 @@
     /**
      * @inheritdoc
      */
-    public function getNextTokenIndex(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+    public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+
+      $result = new Result();
+      $result->setValid(true);
 
       $token = $collection->offsetGet($currentIndex);
 
-      if ($this->isValid($token) == false) {
-        return $currentIndex;
+      if ($this->isValid($token)) {
+        $result->setToken($token);
+        ++$currentIndex;
       }
 
-      return ++$currentIndex;
+      $result->setNexTokenIndex($currentIndex);
+
+      return $result;
     }
 
   }

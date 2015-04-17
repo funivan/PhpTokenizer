@@ -35,7 +35,7 @@
      * @param int $currentIndex
      * @return int|null
      */
-    public function getNextTokenIndex(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+    public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
 
       if (empty($this->startQuery)) {
         throw new \InvalidArgumentException("Empty start Query. ");
@@ -46,9 +46,10 @@
       }
 
 
+      $result = new Result();
       $token = $collection->offsetGet($currentIndex);
       if (empty($token) or $this->startQuery->isValid($token) == false) {
-        return null;
+        return $result;
       }
 
       $blockEndFlag = null;
@@ -77,10 +78,14 @@
       }
 
       if (isset($startIndex) and isset($endIndex)) {
-        return ++$endIndex;
+        $result = new Result();
+        $result->setValid(true);
+        $result->setNexTokenIndex(++$endIndex);
+        $result->setToken($token);
+        return $result;
       }
 
-      return null;
+      return new Result();
     }
 
   }

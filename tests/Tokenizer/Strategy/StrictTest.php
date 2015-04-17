@@ -21,6 +21,5 @@
 
       $this->assertEquals('$a', $token->getValue());
 
-
     }
   }

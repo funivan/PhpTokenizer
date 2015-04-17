@@ -28,15 +28,16 @@
     /**
      * Return new StreamProcess for token validation
      *
-     * @return \Funivan\PhpTokenizer\StreamProcess
+     * @param boolean $skipWhitespaces
+     * @return StreamProcess
      */
-    public function iterate() {
+    public function iterate($skipWhitespaces = false) {
 
       if (isset($this->collection[$this->position]) === false) {
         return null;
       }
 
-      $q = new \Funivan\PhpTokenizer\StreamProcess($this->collection, $this->position);
+      $q = new \Funivan\PhpTokenizer\StreamProcess($this->collection, $this->position, $skipWhitespaces);
 
       ++$this->position;
 

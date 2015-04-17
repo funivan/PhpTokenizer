@@ -28,6 +28,14 @@
      */
     protected $direction = null;
 
+    /**
+     * @param $direction
+     * @param $steps
+     * @return static
+     */
+    public static function create($direction, $steps) {
+      return new static($direction, $steps);
+    }
 
     /**
      * @param $direction
@@ -58,20 +66,22 @@
     /**
      * @inheritdoc
      */
-    public function getNextTokenIndex(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
-      $result = new \Funivan\PhpTokenizer\Strategy\QueryProcessorResult();
+    public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+      $result = new Result();
 
       if ($this->isForward()) {
         $endIndex = $currentIndex + $this->steps;
-        $result->moveEndIndex($endIndex - 1, QueryProcessorResult::STRATEGY_FORCE);
-        $result->setNextTokenIndexForCheck($endIndex);
       } else {
         $currentIndex--;
+        $endIndex = $currentIndex - $this->steps;
+      }
 
-        $startIndex = $currentIndex - $this->steps;
-
-        $result->moveEndIndex($startIndex, QueryProcessorResult::STRATEGY_FORCE);
-        $result->setNextTokenIndexForCheck(($startIndex + 1));
+      $result->setNexTokenIndex($endIndex);
+      if (isset($collection[$endIndex])) {
+        $result->setValid(true);
+        $result->setToken($collection[$endIndex]);
+      } else {
+        $result->setValid(false);
       }
 
       return $result;

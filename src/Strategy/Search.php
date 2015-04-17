@@ -13,7 +13,9 @@
     /**
      * @inheritdoc
      */
-    public function getNextTokenIndex(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+    public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+
+      $result = new Result();
 
       # iterate while we can check toke
 
@@ -25,13 +27,16 @@
         $index++;
 
         if ($this->isValid($token)) {
-          return $index;
+          $result->setNexTokenIndex($index);
+          $result->setValid(true);
+          $result->setToken($token);
+          return $result;
         }
 
       } while (!empty($token));
 
 
-      return null;
+      return $result;
     }
 
   }
