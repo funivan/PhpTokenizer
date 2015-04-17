@@ -15,20 +15,20 @@
   class MoveTest extends \Test\Funivan\PhpTokenizer\Main {
 
     public function testMove() {
-      $code = '<? $a';
+      $code = '<?php  $a';
 
       $finder = new TokenStream(Collection::initFromString($code));
 
       $q = $finder->iterate();
       $token = $q->process(Move::create(0));
-      $this->assertEquals('<?', $token->getValue());
+      $this->assertEquals('<?php ', $token->getValue());
 
       $token = $q->process(Move::create(2));
       $this->assertEquals('$a', $token->getValue());
 
       $token = $q->process(Move::create(-2));
-      $this->assertEquals('<?', $token->getValue());
-
+      $this->assertEquals('<?php ', $token->getValue());
+                                 
       $token = $q->process(Move::create(10));
       $this->assertEquals(Token::INVALID_VALUE, $token->getValue());
       $this->assertFalse($token->isValid());

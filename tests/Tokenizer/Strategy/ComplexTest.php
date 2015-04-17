@@ -10,7 +10,7 @@
   class ComplexTest extends \PHPUnit_Framework_TestCase {
 
     public function testSkipWhitespaces() {
-      $code = '<? 
+      $code = '<?php
       echo $a;
       echo $a  ;
       echo $a
@@ -32,7 +32,7 @@
     }
 
     public function testWithoutWhitespaceSkip() {
-      $code = '<? 
+      $code = '<?php 
       echo $a;
       echo $a  ;
       echo $a
@@ -144,7 +144,7 @@
      * @throws \Funivan\PhpTokenizer\Exception
      */
     public function testComplex($code, $contain, $notContain) {
-      $code = '<? ' . $code;
+      $code = '<?php ' . $code;
 
       $collection = Collection::initFromString($code);
 

@@ -11,7 +11,7 @@
 
     public function testSimple() {
 
-      $code = '<? $a';
+      $code = '<?php $a';
 
       $finder = new TokenStream(Collection::initFromString($code));
 

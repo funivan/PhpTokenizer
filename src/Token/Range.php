@@ -68,7 +68,7 @@
      * @return Token|null
      */
     public function get($int) {
-      return isset($this->items[$int]) ? $this->items[$int] : new VirtualToken();
+      return isset($this->items[$int]) ? $this->items[$int] : new Token();
     }
 
     public function __toString() {

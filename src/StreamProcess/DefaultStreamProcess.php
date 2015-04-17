@@ -4,6 +4,7 @@
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\Strategy\StrategyInterface;
   use Funivan\PhpTokenizer\Strategy\Strict;
+  use Funivan\PhpTokenizer\Token;
   use Funivan\PhpTokenizer\Token\Range;
   use Funivan\PhpTokenizer\Token\VirtualToken;
 
@@ -47,7 +48,7 @@
     /**
      * Alias
      * @param string $value
-     * @return \Funivan\PhpTokenizer\Token
+     * @return Token
      */
     public function valueIs($value) {
       $strict = new Strict();
@@ -57,7 +58,7 @@
 
     /**
      * @param $value
-     * @return \Funivan\PhpTokenizer\Token
+     * @return Token
      */
     public function typeIs($value) {
       $strict = new Strict();
@@ -68,7 +69,7 @@
     /**
      * @param string $start
      * @param string $end
-     * @return \Funivan\PhpTokenizer\Token
+     * @return Token
      */
     public function section($start, $end) {
       $section = new \Funivan\PhpTokenizer\Strategy\Section();
@@ -86,26 +87,26 @@
 
     /**
      * @param StrategyInterface $strategy
-     * @return \Funivan\PhpTokenizer\Token
+     * @return Token
      */
     public function process(StrategyInterface $strategy) {
 
       if ($this->isValid() === false) {
-        return VirtualToken::create();
+        return new Token();
       }
 
       $result = $strategy->process($this->collection, $this->position);
 
       if ($result->isValid() == false) {
         $this->valid = false;
-        return VirtualToken::create();
+        return new Token();
       }
 
       $this->position = $result->getNexTokenIndex();
 
       $token = $result->getToken();
       if ($token === null) {
-        $token = new VirtualToken();
+        $token = new Token();
       }
 
       if ($this->skipWhitespaces and isset($this->collection[$this->position]) and $this->collection[$this->position]->getType() === T_WHITESPACE) {
