@@ -3,6 +3,7 @@
   namespace Funivan\PhpTokenizer\Query;
 
   use Funivan\PhpTokenizer;
+  use Funivan\PhpTokenizer\Token;
 
   /**
    *
@@ -13,9 +14,9 @@
     /**
      * Check if token is valid for current query
      *
-     * @param PhpTokenizer\Token $token
+     * @param Token $token
      * @return boolean
      */
-    public function isValid(PhpTokenizer\Token $token);
+    public function isValid(Token $token);
 
   }

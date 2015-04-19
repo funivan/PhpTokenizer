@@ -39,12 +39,32 @@
 
     const FIELD_INDEX = 'index';
 
+    /**
+     * Storage of type conditions
+     *
+     * @var array
+     */
     protected $type = array();
 
+    /**
+     * Storage of value conditions
+     *
+     * @var array
+     */
     protected $value = array();
 
+    /**
+     * Storage of line conditions
+     *
+     * @var array
+     */
     protected $line = array();
 
+    /**
+     * Storage of index conditions
+     *
+     * @var array
+     */
     protected $index = array();
 
     /**
@@ -276,6 +296,10 @@
       return true;
     }
 
+    /**
+     * @param Token $token
+     * @return bool
+     */
     private function validateValue(Token $token) {
 
       $value = $token->getValue();
