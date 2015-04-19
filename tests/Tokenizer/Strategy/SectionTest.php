@@ -10,7 +10,7 @@
    */
   class SectionTest extends \PHPUnit_Framework_TestCase {
 
-    public function testSection() {
+    public function testValidSection() {
       $code = '<?php 
       
       header(123);
@@ -36,6 +36,56 @@
       }
 
       $this->assertCount(1, $linesWithEcho);
+
+    }
+
+    public function testWithEmptySection() {
+      $code = '<?php 
+      
+      header(123);
+      
+      return;
+      
+      ';
+
+      $collection = Collection::initFromString($code);
+      $finder = new TokenStream($collection);
+
+      $linesWithEcho = array();
+
+      while ($q = $finder->iterate()) {
+
+        $start = $q->strict('return');
+        $end = $q->section('(', ')');
+
+        if ($q->isValid()) {
+          $linesWithEcho[] = $collection->extractByTokens($start, $end);
+        }
+      }
+
+      $this->assertCount(0, $linesWithEcho);
+
+    }
+
+    /**
+     * @expectedException \Funivan\PhpTokenizer\Exception\InvalidArgumentException
+     */
+    public function testInvalidSectionStartDefinition() {
+
+      $section = new \Funivan\PhpTokenizer\Strategy\Section();
+      $section->process(new Collection(), 0);
+
+    }
+
+    /**
+     * @expectedException \Funivan\PhpTokenizer\Exception\InvalidArgumentException
+     */
+    public function testInvalidSectionEndDefinition() {
+
+      $section = new \Funivan\PhpTokenizer\Strategy\Section();
+      $section->setStartQuery(new \Funivan\PhpTokenizer\Query\Query());
+
+      $section->process(new Collection(), 0);
 
     }
 

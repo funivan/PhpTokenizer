@@ -2,7 +2,9 @@
 
   namespace Funivan\PhpTokenizer\Strategy;
 
+  use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\Query\Query;
+  use Funivan\PhpTokenizer\Query\QueryInterface;
 
   /**
    *
@@ -20,12 +22,19 @@
      */
     private $endQuery;
 
+    /**
+     * @param string $start
+     * @param string $end
+     * @return $this
+     */
     public function setDelimiters($start, $end) {
-      $this->startQuery = new Query();
-      $this->startQuery->valueIs($start);
+      $startQuery = new Query();
+      $startQuery->valueIs($start);
+      $this->setStartQuery($startQuery);
 
-      $this->endQuery = new Query();
-      $this->endQuery->valueIs($end);
+      $endQuery = new Query();
+      $endQuery->valueIs($end);
+      $this->setEndQuery($endQuery);
 
       return $this;
     }
@@ -38,13 +47,12 @@
     public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
 
       if (empty($this->startQuery)) {
-        throw new \InvalidArgumentException("Empty start Query. ");
+        throw new InvalidArgumentException("Empty start Query. ");
       }
 
       if (empty($this->endQuery)) {
-        throw new \InvalidArgumentException("Empty end Query. ");
+        throw new InvalidArgumentException("Empty end Query. ");
       }
-
 
       $result = new Result();
       $token = $collection->offsetGet($currentIndex);
@@ -86,6 +94,24 @@
       }
 
       return new Result();
+    }
+
+    /**
+     * @param QueryInterface $startQuery
+     * @return $this
+     */
+    public function setStartQuery(QueryInterface $startQuery) {
+      $this->startQuery = $startQuery;
+      return $this;
+    }
+
+    /**
+     * @param QueryInterface $endQuery
+     * @return $this
+     */
+    public function setEndQuery(QueryInterface $endQuery) {
+      $this->endQuery = $endQuery;
+      return $this;
     }
 
   }
