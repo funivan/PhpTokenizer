@@ -17,7 +17,7 @@
         $token->setValue((object) array());
 
       } catch (\Exception $e) {
-        $this->assertInstanceOf('\Funivan\PhpTokenizer\Exception', $e);
+        $this->assertInstanceOf('\Funivan\PhpTokenizer\Exception\Exception', $e);
         return true;
       }
 

@@ -2,6 +2,8 @@
 
   namespace Funivan\PhpTokenizer;
 
+  use Funivan\PhpTokenizer\Exception\Exception;
+
   /**
    *
    * Value is 2 type variable. It can be string or null
@@ -141,13 +143,13 @@
 
     /**
      * @param string|int $value
-     * @throws \Funivan\PhpTokenizer\Exception
+     * @throws \Funivan\PhpTokenizer\Exception\Exception
      * @return $this
      */
     public function setValue($value) {
 
       if (!is_string($value) and !is_numeric($value)) {
-        throw new \Funivan\PhpTokenizer\Exception('You can set only string. Given: ' . gettype($value));
+        throw new Exception('You can set only string. Given: ' . gettype($value));
       }
 
       $this->value = (string) $value;
@@ -200,7 +202,7 @@
      */
     public function appendToValue($part) {
       if (!is_string($part) and !is_numeric($part)) {
-        throw new \Funivan\PhpTokenizer\Exception('You can append only string to value');
+        throw new Exception('You can append only string to value');
       }
 
       $this->value = $this->value . $part;
@@ -217,7 +219,7 @@
      */
     public function prependToValue($part) {
       if (!is_string($part) and !is_numeric($part)) {
-        throw new \Funivan\PhpTokenizer\Exception('You can prepend only string to value');
+        throw new Exception('You can prepend only string to value');
       }
 
       $this->value = $part . $this->value;

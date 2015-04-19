@@ -14,7 +14,7 @@
   /**
    * Start from specific position and check token from this position according to strategies
    */
-  class DefaultStreamProcess {
+  class DefaultStreamProcess implements StreamProcess {
 
     /**
      * @var
@@ -50,7 +50,7 @@
 
     /**
      * Strict validation of condition
-     * 
+     *
      * @param int|string $condition
      * @return Token
      */
@@ -61,7 +61,7 @@
 
     /**
      * Check if token possible valid for our condition
-     * 
+     *
      * @param int|string $condition
      * @return Token
      */
@@ -83,7 +83,9 @@
 
     /**
      * By default we search forward
-     * 
+     *
+     * @todo return collection instead of single token
+     *
      * @param int|string $condition
      * @param null $direction
      * @return Token
@@ -134,7 +136,8 @@
     }
 
     /**
-     * Indicate if our conditions is valid
+     * Indicate if state of all conditions
+     *
      * @return bool
      */
     public function isValid() {
@@ -143,7 +146,7 @@
 
     /**
      * @param StrategyInterface $strategy
-     * @return Token
+     * @return Token|null
      */
     public function process(StrategyInterface $strategy) {
 

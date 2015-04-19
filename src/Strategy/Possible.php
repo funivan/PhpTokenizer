@@ -20,7 +20,7 @@
 
       $token = $collection->offsetGet($currentIndex);
 
-      if ($this->isValid($token)) {
+      if ($token and $this->isValid($token)) {
         $result->setToken($token);
         ++$currentIndex;
       }

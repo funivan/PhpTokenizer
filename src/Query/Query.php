@@ -3,7 +3,8 @@
 
   namespace Funivan\PhpTokenizer\Query;
 
-  use Funivan\PhpTokenizer\Exception;
+  use Funivan\PhpTokenizer\Exception\Exception;
+  use Funivan\PhpTokenizer\Token;
 
   /**
    * @author Ivan Shcherbak <dev@funivan.com>
@@ -12,8 +13,14 @@
 
     const N = __CLASS__;
 
+    /**
+     * Constant indicate conditions IS equal to values
+     */
     const IS = 1;
 
+    /**
+     * Constant indicate conditions NOT equal to values
+     */
     const NOT = 2;
 
     const GREATER_THAN = 3;
@@ -30,11 +37,15 @@
 
     const FIELD_LINE = 'line';
 
+    const FIELD_INDEX = 'index';
+
     protected $type = array();
 
     protected $value = array();
 
     protected $line = array();
+
+    protected $index = array();
 
     /**
      * @return static
@@ -42,7 +53,7 @@
     public static function create() {
       return new static();
     }
-    
+
 
     /**
      * @param int|array $type
@@ -120,7 +131,7 @@
 
     /**
      * @param string $field
-     * @param string|int $value
+     * @param string|int|array $value
      * @param int $type
      * @throws Exception
      * @return $this
@@ -152,17 +163,15 @@
      */
     public function isValid(\Funivan\PhpTokenizer\Token $token) {
       # check type
-      if (!$this->validate(self::FIELD_TYPE, $token->getType())) {
+      if (!$this->validateType($token)) {
         return false;
       }
 
-      # check value
-      if (!$this->validate(self::FIELD_VALUE, $token->getValue())) {
+      if (!$this->validateLine($token)) {
         return false;
       }
 
-      # check line
-      if (!$this->validate(self::FIELD_LINE, $token->getLine())) {
+      if (!$this->validateValue($token)) {
         return false;
       }
 
@@ -176,40 +185,121 @@
      */
     protected function validate($field, $value) {
 
-      if (!empty($this->{$field}[self::IS]) and !in_array($value, $this->{$field}[self::IS])) {
+      if (!$this->validateIs($field, $value)) {
+        return false;
+      }
+      if (!$this->validateNot($field, $value)) {
         return false;
       }
 
-      if (!empty($this->{$field}[self::NOT]) and in_array($value, $this->{$field}[self::NOT])) {
+      return true;
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     */
+    protected function validateIs($field, $value) {
+      if (!isset($this->{$field}[self::IS])) {
+        # we do not have any conditions
+        return true;
+      }
+      return in_array($value, $this->{$field}[self::IS]);
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @return bool
+     */
+    protected function validateNot($field, $value) {
+
+      if (!isset($this->{$field}[self::NOT])) {
+        # we do not have any conditions
+        return true;
+      }
+      return !in_array($value, $this->{$field}[self::NOT]);
+    }
+
+    /**
+     * @param Token $token
+     * @return bool
+     */
+    private function validateType($token) {
+
+      if (!$this->validateIs(self::FIELD_TYPE, $token->getType())) {
         return false;
       }
 
-      if ($field == self::FIELD_VALUE and !empty($this->{$field}[self::REXEG])) {
-        foreach ($this->{$field}[self::REXEG] as $regex) {
-          if (!preg_match($regex, $value)) {
+      if (!$this->validateNot(self::FIELD_TYPE, $token->getType())) {
+        return false;
+      }
+
+      return true;
+    }
+
+    /**
+     * @param Token $token
+     * @return bool
+     */
+    private function validateLine(Token $token) {
+      $line = $token->getLine();
+
+      $conditions = $this->line;
+
+      # check line
+      if (isset($conditions[static::IS]) and !in_array($line, $conditions[static::IS])) {
+        return false;
+      }
+
+      if (isset($conditions[static::NOT]) and in_array($line, $conditions[static::NOT])) {
+        return false;
+      }
+
+      if (!empty($conditions[self::GREATER_THAN])) {
+        foreach ($conditions[self::GREATER_THAN] as $lineGreaterThan) {
+          if ($token->getLine() <= $lineGreaterThan) {
             return false;
           }
         }
       }
 
-      if (in_array($field, [self::FIELD_LINE])) {
-        if (!empty($this->{$field}[self::GREATER_THAN])) {
-          foreach ($this->{$field}[self::GREATER_THAN] as $lineGreaterThan) {
-            if ($value <= $lineGreaterThan) {
-              return false;
-            }
+      if (!empty($conditions[self::LESS_THAN])) {
+        foreach ($conditions[self::LESS_THAN] as $lineLessThan) {
+          if ($token->getLine() >= $lineLessThan) {
+            return false;
           }
         }
+      }
 
+      return true;
+    }
 
-        if (!empty($this->{$field}[self::LESS_THAN])) {
-          foreach ($this->{$field}[self::LESS_THAN] as $lineLessThan) {
-            if ($value >= $lineLessThan) {
-              return false;
-            }
-          }
+    private function validateValue(Token $token) {
+
+      $value = $token->getValue();
+
+      $conditions = $this->value;
+
+      # check line
+      if (isset($conditions[static::IS]) and !in_array($value, $conditions[static::IS])) {
+        return false;
+      }
+
+      if (isset($conditions[static::NOT]) and in_array($value, $conditions[static::NOT])) {
+        return false;
+      }
+
+      # check value regexp
+      if (empty($conditions[self::REXEG])) {
+        return true;
+      }
+
+      foreach ($conditions[self::REXEG] as $regex) {
+        if (!preg_match($regex, $value)) {
+          return false;
         }
-
       }
 
       return true;

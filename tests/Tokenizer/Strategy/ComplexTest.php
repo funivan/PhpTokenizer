@@ -141,7 +141,7 @@
 
     /**
      * @dataProvider   getComplexTestData
-     * @throws \Funivan\PhpTokenizer\Exception
+     * @throws \Funivan\PhpTokenizer\Exception\Exception
      */
     public function testComplex($code, $contain, $notContain) {
       $code = '<?php ' . $code;

@@ -2,6 +2,8 @@
 
   namespace Funivan\PhpTokenizer;
 
+  use Funivan\PhpTokenizer\Exception\Exception;
+
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 11/26/13
    */
@@ -36,7 +38,7 @@
         $token = new Token($tokenData);
         $token->setIndex($index);
         $tokens[$index] = $token;
-        
+
       }
 
       return $tokens;

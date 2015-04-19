@@ -2,7 +2,7 @@
 
   namespace Funivan\PhpTokenizer;
 
-  use Funivan\PhpTokenizer\Query\Query;
+  use Funivan\PhpTokenizer\Exception\Exception;
 
   /**
    * Represent access and manipulation array of tokens
@@ -19,6 +19,9 @@
    */
   class Collection extends \Fiv\Collection\ObjectCollection {
 
+    /**
+     * You can use this constant for access class name
+     */
     const N = __CLASS__;
 
     /**
@@ -97,13 +100,6 @@
     }
 
     /**
-     * @return Query
-     */
-    public function query() {
-      return new Query($this);
-    }
-
-    /**
      * @return string
      */
     public function getDumpString() {
@@ -150,6 +146,6 @@
     public function extractByTokens(Token $tokenStart, Token $tokenEnd) {
       return $this->extractItems($tokenStart->getIndex(), $tokenEnd->getIndex() - $tokenStart->getIndex() + 1);
     }
-    
+
   }
 

@@ -5,7 +5,10 @@
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
 
   /**
+   * Process token collection and apply any number of StreamProcessors
    *
+   *
+   * @author Ivan Shcherbak <dev@funivan.com> 4/17/15
    */
   class TokenStream {
 
@@ -14,9 +17,9 @@
      */
     private $collection;
 
-    /**        
+    /**
      * Initial position of check
-     * 
+     *
      * @var int
      */
     private $position = 0;

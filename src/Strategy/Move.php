@@ -5,6 +5,17 @@
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
 
   /**
+   * Move forward or backward in collection
+   *
+   * Move forward 12 steps
+   * ```
+   * $result = (new Move(12))->process($collection, 1);
+   * ```                    
+   * 
+   * Move backward 10 steps
+   * ```
+   * $result = (new Move(-10))->process($collection, 1);
+   * ```
    *
    * @package Funivan\PhpTokenizer\BlockExtractor
    */
@@ -39,6 +50,9 @@
     }
 
     /**
+     * You can pass positive and negative numbers
+     * Positive - move forward
+     * Negative - move backward
      *
      * @param int $steps
      */
