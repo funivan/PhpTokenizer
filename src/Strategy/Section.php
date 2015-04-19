@@ -13,12 +13,12 @@
   class Section extends Query implements StrategyInterface {
 
     /**
-     * @var Query
+     * @var QueryInterface
      */
     private $startQuery;
 
     /**
-     * @var Query
+     * @var QueryInterface
      */
     private $endQuery;
 
