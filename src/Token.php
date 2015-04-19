@@ -118,7 +118,7 @@
     }
 
     /**
-     * @return null
+     * @return null|integer
      */
     public function getType() {
       return $this->type;
@@ -132,7 +132,7 @@
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getValue() {
       return $this->value;
