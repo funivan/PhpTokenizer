@@ -8,7 +8,7 @@
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 11/25/13
    */
-  class CollectionTest extends \Test\Funivan\PhpTokenizer\Main {
+  class CollectionTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
 
     public function testBuildFromString() {

@@ -3,8 +3,8 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\TokenStream;
   use Funivan\PhpTokenizer\Strategy\Possible;
+  use Funivan\PhpTokenizer\StreamIterator;
   use Funivan\PhpTokenizer\Token;
 
   class ComplexTest extends \PHPUnit_Framework_TestCase {
@@ -17,10 +17,10 @@
       
       ;
       ';
-      $finder = new TokenStream(Collection::initFromString($code), true);
+      $finder = new StreamIterator(Collection::initFromString($code), true);
 
       $findItems = array();
-      while ($q = $finder->iterate()) {
+      while ($q = $finder->getProcessor()) {
 
         $list = $q->sequence(['echo', '$a', ';']);
         if ($q->isValid()) {
@@ -65,9 +65,9 @@
       $collection = Collection::initFromString($code);
 
       foreach ($sequenceConfiguration as $itemInfo) {
-        $finder = new TokenStream($collection);
+        $finder = new StreamIterator($collection);
         $findItems = array();
-        while ($q = $finder->iterate(false)) {
+        while ($q = $finder->getProcessor(false)) {
 
           $list = $q->sequence($itemInfo['sequence']);
           if ($q->isValid()) {
@@ -148,9 +148,9 @@
 
       $collection = Collection::initFromString($code);
 
-      $finder = new TokenStream($collection, true);
+      $finder = new StreamIterator($collection, true);
 
-      while ($q = $finder->iterate()) {
+      while ($q = $finder->getProcessor()) {
 
         $start = $q->sequence(['if', '(', Possible::create()->valueIs('!'), 'is_array', '(']);
 

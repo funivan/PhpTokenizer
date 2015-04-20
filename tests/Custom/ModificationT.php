@@ -5,7 +5,7 @@
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 12/18/13
    */
-  class ModificationTest extends \Test\Funivan\PhpTokenizer\Main {
+  class ModificationTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
     public function _testExtractVariableFromString() {
 

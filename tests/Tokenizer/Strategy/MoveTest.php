@@ -4,22 +4,21 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Move;
-  use Funivan\PhpTokenizer\Strategy\Strict;
+  use Funivan\PhpTokenizer\StreamIterator;
   use Funivan\PhpTokenizer\Token;
-  use Funivan\PhpTokenizer\TokenStream;
 
   /**
    *
    * @package Test\Funivan\PhpTokenizer\Tokenizer\Query\Strategy
    */
-  class MoveTest extends \Test\Funivan\PhpTokenizer\Main {
+  class MoveTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
     public function testMove() {
       $code = '<? $a';
 
-      $finder = new TokenStream(Collection::initFromString($code));
+      $finder = new StreamIterator(Collection::initFromString($code));
 
-      $q = $finder->iterate();
+      $q = $finder->getProcessor();
       $token = $q->process(Move::create(0));
       $this->assertEquals('<?', $token->getValue());
 

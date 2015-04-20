@@ -5,7 +5,7 @@
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 11/25/13
    */
-  class TokenTest extends \Test\Funivan\PhpTokenizer\Main {
+  class TokenTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
     public function testGetTypeName() {
 

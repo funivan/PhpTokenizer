@@ -17,7 +17,7 @@
 
       $result = new Result();
 
-      # iterate while we can check toke
+      # getProcessor while we can check toke
 
       $index = $currentIndex;
       do {

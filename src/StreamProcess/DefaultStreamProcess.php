@@ -10,12 +10,12 @@
   /**
    * Start from specific position and check token from this position according to strategies
    */
-  class DefaultStreamProcess {
+  class DefaultStreamProcess implements \Iterator {
 
     /**
-     * @var
+     * @var int
      */
-    private $position;
+    protected $position = 0;
 
     /**
      * @var \Funivan\PhpTokenizer\Collection
@@ -34,11 +34,10 @@
 
     /**
      * @param \Funivan\PhpTokenizer\Collection $collection
-     * @param $position
      * @param bool $skipWhitespaces
      */
-    public function __construct(\Funivan\PhpTokenizer\Collection $collection, $position, $skipWhitespaces = false) {
-      $this->position = $position;
+    public function __construct(\Funivan\PhpTokenizer\Collection $collection, $skipWhitespaces = false) {
+      $this->position = 0;
       $this->collection = $collection;
       $this->skipWhitespaces = $skipWhitespaces;
     }
@@ -95,6 +94,7 @@
       }
 
       $result = $strategy->process($this->collection, $this->position);
+      echo "\n***" . __LINE__ . "***\n<pre>" . print_r($result, true) . "</pre>\n";
 
       if ($result->isValid() == false) {
         $this->valid = false;
@@ -146,6 +146,52 @@
       }
 
       return $range;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rewind() {
+      $this->position = 0;
+    }
+
+    /**
+     * @return DefaultStreamProcess
+     */
+    public function current() {
+      $processor = new static($this->collection, $this->skipWhitespaces);
+      $processor->setPosition($this->position);
+      return $processor;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function key() {
+      return $this->position;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function next() {
+      ++$this->position;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function valid() {
+      return isset($this->collection[$this->position]);
+    }
+
+    /**
+     * @param mixed $position
+     * @return $this
+     */
+    protected function setPosition($position) {
+      $this->position = $position;
+      return $this;
     }
 
   }
