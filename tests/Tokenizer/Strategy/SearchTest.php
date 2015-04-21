@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Search;
-  use Funivan\PhpTokenizer\TokenStream;
+  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
@@ -23,11 +23,11 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new TokenStream($collection);
+      $finder = new DefaultStreamProcess($collection);
 
       $linesWithEcho = array();
 
-      while ($q = $finder->iterate()) {
+      foreach ($finder as $q) {
         $start = $q->strict('echo');
         $end = $q->search(';');
 
@@ -58,11 +58,11 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new TokenStream($collection);
+      $finder = new DefaultStreamProcess($collection);
 
       $linesWithEcho = array();
 
-      while ($q = $finder->iterate()) {
+      foreach ($finder as $q) {
 
         $q->strict('echo');
         $q->search(';');
@@ -73,8 +73,8 @@
       }
 
       $this->assertCount(2, $linesWithEcho);
-      $this->assertEquals('$name', (string)$linesWithEcho[0]);
-      $this->assertEquals('$userName', (string)$linesWithEcho[1]);
+      $this->assertEquals('$name', (string) $linesWithEcho[0]);
+      $this->assertEquals('$userName', (string) $linesWithEcho[1]);
 
     }
 
@@ -97,11 +97,11 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new TokenStream($collection);
+      $finder = new DefaultStreamProcess($collection);
 
       $linesWithEcho = array();
 
-      while ($q = $finder->iterate()) {
+      foreach($finder as $q){
 
         $q->strict('echo');
         $q->search(';');
@@ -112,7 +112,7 @@
       }
 
       $this->assertCount(0, $linesWithEcho);
-      
+
     }
 
   }

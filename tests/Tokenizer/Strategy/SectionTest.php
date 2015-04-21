@@ -3,6 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
   use Funivan\PhpTokenizer\TokenStream;
 
   /**
@@ -21,11 +22,11 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new TokenStream($collection);
+      $finder = new DefaultStreamProcess($collection);
 
       $linesWithEcho = array();
 
-      while ($q = $finder->iterate()) {
+      foreach ($finder as $q) {
 
         $start = $q->strict('header');
         $end = $q->section('(', ')');
@@ -49,11 +50,11 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new TokenStream($collection);
+      $finder = new DefaultStreamProcess($collection);
 
       $linesWithEcho = array();
 
-      while ($q = $finder->iterate()) {
+      foreach ($finder as $q) {
 
         $start = $q->strict('return');
         $end = $q->section('(', ')');

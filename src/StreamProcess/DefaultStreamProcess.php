@@ -1,5 +1,5 @@
 <?php
-  
+
   namespace Funivan\PhpTokenizer\StreamProcess;
 
   use Funivan\PhpTokenizer\Collection;
@@ -40,7 +40,6 @@
     /**
      * @param \Funivan\PhpTokenizer\Collection $collection
      * @param Collection $collection
-     * @param $position
      * @param bool $skipWhitespaces
      */
     public function __construct(\Funivan\PhpTokenizer\Collection $collection, $skipWhitespaces = false) {
@@ -73,6 +72,8 @@
     }
 
     /**
+     * @todo return collection instead of single token
+     * 
      * @param string $start
      * @param string $end
      * @return Token
