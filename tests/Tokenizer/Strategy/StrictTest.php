@@ -3,19 +3,22 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\TokenStream;
   use Funivan\PhpTokenizer\Strategy\Strict;
+  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
 
   class StrictTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
 
+    /**
+     *
+     */
     public function testSimple() {
 
       $code = '<?php $a';
 
-      $finder = new TokenStream(Collection::initFromString($code));
+      $finder = new DefaultStreamProcess(Collection::initFromString($code));
 
-      while ($q = $finder->iterate()) {
+      foreach ($finder as $q) {
         $token = $q->process(Strict::create()->typeIs(T_VARIABLE));
       }
 

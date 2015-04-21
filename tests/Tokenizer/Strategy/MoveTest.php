@@ -4,9 +4,8 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Move;
-  use Funivan\PhpTokenizer\Strategy\Strict;
+  use Funivan\PhpTokenizer\StreamIterator;
   use Funivan\PhpTokenizer\Token;
-  use Funivan\PhpTokenizer\TokenStream;
 
   /**
    *
@@ -17,9 +16,9 @@
     public function testMove() {
       $code = '<?php  $a';
 
-      $finder = new TokenStream(Collection::initFromString($code));
+      $finder = new StreamIterator(Collection::initFromString($code));
 
-      $q = $finder->iterate();
+      $q = $finder->getProcessor();
       $token = $q->process(Move::create(0));
       $this->assertEquals('<?php ', $token->getValue());
 
