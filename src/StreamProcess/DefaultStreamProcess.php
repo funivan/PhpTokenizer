@@ -1,4 +1,4 @@
-<?
+<?php
   namespace Funivan\PhpTokenizer\StreamProcess;
 
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
