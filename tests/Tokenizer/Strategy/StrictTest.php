@@ -4,18 +4,21 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Strict;
-  use Funivan\PhpTokenizer\StreamIterator;
+  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
 
   class StrictTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
 
+    /**
+     *
+     */
     public function testSimple() {
 
       $code = '<? $a';
 
-      $finder = new StreamIterator(Collection::initFromString($code));
+      $finder = new DefaultStreamProcess(Collection::initFromString($code));
 
-      while ($q = $finder->getProcessor()) {
+      foreach ($finder as $q) {
         $token = $q->process(Strict::create()->typeIs(T_VARIABLE));
       }
 

@@ -94,7 +94,6 @@
       }
 
       $result = $strategy->process($this->collection, $this->position);
-      echo "\n***" . __LINE__ . "***\n<pre>" . print_r($result, true) . "</pre>\n";
 
       if ($result->isValid() == false) {
         $this->valid = false;
@@ -156,7 +155,7 @@
     }
 
     /**
-     * @return DefaultStreamProcess
+     * @return DefaultStreamProcess|null
      */
     public function current() {
       $processor = new static($this->collection, $this->skipWhitespaces);

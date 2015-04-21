@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Possible;
-  use Funivan\PhpTokenizer\StreamIterator;
+  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
   use Funivan\PhpTokenizer\Token;
 
   class ComplexTest extends \PHPUnit_Framework_TestCase {
@@ -17,16 +17,17 @@
       
       ;
       ';
-      $finder = new StreamIterator(Collection::initFromString($code), true);
+      $finder = new DefaultStreamProcess(Collection::initFromString($code), true);
 
       $findItems = array();
-      while ($q = $finder->getProcessor()) {
-
+      foreach ($finder as $q) {
         $list = $q->sequence(['echo', '$a', ';']);
         if ($q->isValid()) {
           $findItems[] = $list;
         }
+
       }
+
 
       $this->assertCount(3, $findItems);
     }
@@ -65,9 +66,9 @@
       $collection = Collection::initFromString($code);
 
       foreach ($sequenceConfiguration as $itemInfo) {
-        $finder = new StreamIterator($collection);
+        $finder = new DefaultStreamProcess($collection);
         $findItems = array();
-        while ($q = $finder->getProcessor(false)) {
+        foreach ($finder as $q) {
 
           $list = $q->sequence($itemInfo['sequence']);
           if ($q->isValid()) {
@@ -148,9 +149,9 @@
 
       $collection = Collection::initFromString($code);
 
-      $finder = new StreamIterator($collection, true);
+      $finder = new DefaultStreamProcess($collection, true);
 
-      while ($q = $finder->getProcessor()) {
+      foreach ($finder as $q) {
 
         $start = $q->sequence(['if', '(', Possible::create()->valueIs('!'), 'is_array', '(']);
 
@@ -185,7 +186,7 @@
 
       }
 
-      $result = (string)$collection;
+      $result = (string) $collection;
       if ($contain == null and $notContain === null) {
         throw new \Exception("Please provide notContain or contain condition");
       }
