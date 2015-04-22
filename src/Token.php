@@ -34,7 +34,7 @@
     protected $value = null;
 
     /**
-     * @var string
+     * @var int
      */
     protected $line = null;
 
