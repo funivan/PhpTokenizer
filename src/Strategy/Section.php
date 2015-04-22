@@ -46,13 +46,7 @@
      */
     public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
 
-      if (empty($this->startQuery)) {
-        throw new InvalidArgumentException("Empty start Query. ");
-      }
-
-      if (empty($this->endQuery)) {
-        throw new InvalidArgumentException("Empty end Query. ");
-      }
+      $this->requireQueries();
 
       $result = new Result();
       $token = $collection->offsetGet($currentIndex);
@@ -63,11 +57,9 @@
       $blockEndFlag = null;
       $startIndex = null;
 
-      foreach ($collection as $tokenIndex => $token) {
+      $tokens = $collection->extractItems($currentIndex);
 
-        if ($tokenIndex < $currentIndex) {
-          continue;
-        }
+      foreach ($tokens as $tokenIndex => $token) {
 
         if ($this->startQuery->isValid($token)) {
           $blockEndFlag++;
@@ -111,6 +103,16 @@
     public function setEndQuery(QueryInterface $endQuery) {
       $this->endQuery = $endQuery;
       return $this;
+    }
+
+    protected function requireQueries() {
+      if (empty($this->startQuery)) {
+        throw new InvalidArgumentException("Empty start Query. ");
+      }
+
+      if (empty($this->endQuery)) {
+        throw new InvalidArgumentException("Empty end Query. ");
+      }
     }
 
   }
