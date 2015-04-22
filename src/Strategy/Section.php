@@ -56,7 +56,7 @@
 
       $result = new Result();
       $token = $collection->offsetGet($currentIndex);
-      if (empty($token) or $this->startQuery->isValid($token) == false) {
+      if (empty($token) or $this->startQuery->isValid($token) === false) {
         return $result;
       }
 

@@ -20,7 +20,7 @@
     /**
      * @var
      */
-    protected $position = 0;
+    private $position = 0;
 
     /**
      * @var \Funivan\PhpTokenizer\Collection
@@ -141,15 +141,6 @@
     }
 
     /**
-     * Indicate if state of all conditions
-     *
-     * @return bool
-     */
-    public function isValid() {
-      return ($this->valid === true);
-    }
-
-    /**
      * @param StrategyInterface $strategy
      * @return Token
      */
@@ -159,23 +150,24 @@
         return new Token();
       }
 
-      $result = $strategy->process($this->collection, $this->position);
+      $result = $strategy->process($this->collection, $this->getPosition());
 
-      if ($result->isValid() == false) {
-        $this->valid = false;
+      if ($result->isValid() === false) {
+        $this->setValid(false);
         return new Token();
       }
 
-      $this->position = $result->getNexTokenIndex();
+      $position = $result->getNexTokenIndex();
+      $this->setPosition($position);
 
       $token = $result->getToken();
       if ($token === null) {
         $token = new Token();
       }
 
-      if ($this->skipWhitespaces and isset($this->collection[$this->position]) and $this->collection[$this->position]->getType() === T_WHITESPACE) {
+      if ($this->skipWhitespaces and isset($this->collection[$position]) and $this->collection[$position]->getType() === T_WHITESPACE) {
         # skip whitespaces in next check
-        $this->position++;
+        $this->setPosition(($position + 1));
       }
 
       return $token;
@@ -206,7 +198,8 @@
      * @inheritdoc
      */
     public function rewind() {
-      $this->position = 0;
+      $this->setPosition(0);
+      return $this;
     }
 
     /**
@@ -214,7 +207,7 @@
      */
     public function current() {
       $processor = new static($this->collection, $this->skipWhitespaces);
-      $processor->setPosition($this->position);
+      $processor->setPosition($this->getPosition());
       return $processor;
     }
 
@@ -222,21 +215,25 @@
      * @inheritdoc
      */
     public function key() {
-      return $this->position;
+      return $this->getPosition();
     }
 
     /**
      * @inheritdoc
      */
     public function next() {
-      ++$this->position;
+      $position = $this->getPosition();
+      $position++;
+      $this->setPosition($position);
+      return $this;
     }
 
     /**
      * @inheritdoc
      */
     public function valid() {
-      return isset($this->collection[$this->position]);
+      $position = $this->getPosition();
+      return isset($this->collection[$position]);
     }
 
     /**
@@ -246,6 +243,34 @@
     protected function setPosition($position) {
       $this->position = $position;
       return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition() {
+      return $this->position;
+    }
+
+    /**
+     * @param boolean $valid
+     * @return $this
+     */
+    protected function setValid($valid) {
+      if (!is_bool($valid)) {
+        throw new InvalidArgumentException("Invalid valid flag. Expect boolean. Given:" . gettype($valid));
+      }
+      $this->valid = $valid;
+      return $this;
+    }
+
+    /**
+     * Indicate if state of all conditions
+     *
+     * @return bool
+     */
+    public function isValid() {
+      return ($this->valid === true);
     }
 
   }
