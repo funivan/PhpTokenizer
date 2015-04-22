@@ -30,19 +30,19 @@
     protected $type = null;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $value = null;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected $line = null;
 
     /**
      * Indicate position in current collection
      *
-     * @var null
+     * @var null|int
      */
     protected $index = null;
 
