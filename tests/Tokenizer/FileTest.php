@@ -12,6 +12,21 @@
       return new \Funivan\PhpTokenizer\File($tempFile);
     }
 
+    public function testStaticOpen() {
+      $file = $this->getFileObjectWithCode('<?php 
+      echo 1; ');
+
+      $this->assertCount(7, $file->getCollection());
+
+      $this->assertInternalType('string', $file->getPath());
+      $otherFile = \Funivan\PhpTokenizer\File::open($file->getPath());
+      $this->assertCount(7, $otherFile->getCollection());
+
+
+      unlink($file->getPath());
+
+    }
+
     public function testOpen() {
       $file = $this->getFileObjectWithCode('<?php
       echo 1; ');
@@ -30,14 +45,13 @@
     public function testSave() {
 
       $file = $this->getFileObjectWithCode('<?php echo 1;');
-      $query = new Query();
-      $query->valueIs(1);
 
-      foreach ($file->getCollection() as $token) {
-        if ($query->isValid($token)) {
-          $token->setValue(2);
-        }
-      }
+      $tokens = $file->find(Query::create()->valueIs('1'));
+
+      $this->assertCount(1, $tokens);
+      $tokens->map(function (Token $token) {
+        $token->setValue(2);
+      });
 
       $file->save();
 
@@ -52,7 +66,7 @@
       }
 
       $this->assertEquals(0, $itemsNum);
-      
+
       $itemsNum = 0;
       $query = new Query();
       $query->valueIs(2);
@@ -82,12 +96,11 @@
       }
 
 
-
       $this->assertCount(5, $file->getCollection());
       $file->refresh();
 
       $this->assertCount(4, $file->getCollection());
-      
+
       $code = $file->getCollection()->assemble();
       $this->assertEquals('<?php  1;', $code);
 

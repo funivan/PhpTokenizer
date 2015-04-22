@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Possible;
-  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
+  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Funivan\PhpTokenizer\Token;
 
   class ComplexTest extends \PHPUnit_Framework_TestCase {
@@ -17,7 +17,7 @@
       
       ;
       ';
-      $finder = new DefaultStreamProcess(Collection::initFromString($code), true);
+      $finder = new StreamProcess(Collection::initFromString($code), true);
 
       $findItems = array();
       foreach ($finder as $q) {
@@ -66,7 +66,7 @@
       $collection = Collection::initFromString($code);
 
       foreach ($sequenceConfiguration as $itemInfo) {
-        $finder = new DefaultStreamProcess($collection);
+        $finder = new StreamProcess($collection);
         $findItems = array();
         foreach ($finder as $q) {
 
@@ -149,7 +149,7 @@
 
       $collection = Collection::initFromString($code);
 
-      $finder = new DefaultStreamProcess($collection, true);
+      $finder = new StreamProcess($collection, true);
 
       foreach ($finder as $q) {
 

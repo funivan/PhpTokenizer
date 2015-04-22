@@ -3,6 +3,8 @@
 
   namespace Funivan\PhpTokenizer;
 
+  use Funivan\PhpTokenizer\Query\Query;
+
   /**
    * @author Ivan Shcherbak <dev@funivan.com>
    */
@@ -49,7 +51,7 @@
       $this->path = $path;
       $code = file_get_contents($path);
       $this->collection = Collection::initFromString($code);
-      
+
       $this->storeInitialContentHash();
     }
 
@@ -109,6 +111,16 @@
      */
     protected function storeInitialContentHash() {
       $this->initialContentHash = md5($this->collection);
+    }
+
+    /**
+     * Alias for Collection::find
+     *
+     * @param Query $query
+     * @return Collection
+     */
+    public function find(Query $query) {
+      return $this->getCollection()->find($query);
     }
 
   }

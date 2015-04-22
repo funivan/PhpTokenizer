@@ -16,20 +16,20 @@
     /**
      * Constant indicate conditions IS equal to values
      */
-    const IS = 1;
+    const IS = 'is';
 
     /**
      * Constant indicate conditions NOT equal to values
      */
-    const NOT = 2;
+    const NOT = 'no';
 
-    const GREATER_THAN = 3;
+    const GREATER_THAN = 'gt';
 
-    const LESS_THAN = 5;
+    const LESS_THAN = 'lt';
 
-    const LESS_THAN_EQUAL = 6;
+    const LESS_THAN_EQUAL = 'lteq';
 
-    const REXEG = 7;
+    const REXEG = 'regex';
 
     const FIELD_VALUE = 'value';
 
@@ -96,6 +96,7 @@
      * @return $this
      */
     public function valueIs($value) {
+      $value = $this->prepareValues($value);
       return $this->addCondition(self::FIELD_VALUE, $value, self::IS);
     }
 
@@ -104,6 +105,7 @@
      * @return $this
      */
     public function valueNot($value) {
+      $value = $this->prepareValues($value);
       return $this->addCondition(self::FIELD_VALUE, $value, self::NOT);
     }
 
@@ -112,6 +114,7 @@
      * @return $this
      */
     public function valueLike($regexp) {
+      $regexp = $this->prepareValues($regexp);
       return $this->addCondition(self::FIELD_VALUE, $regexp, self::REXEG);
     }
 
@@ -163,17 +166,6 @@
         $this->{$field}[$type] = array();
       }
 
-      # Check value type. Must be string
-      if ($field == self::FIELD_VALUE) {
-        foreach ($value as $k => $val) {
-          if (!is_string($val) and !is_numeric($val)) {
-            throw new Exception('Invalid value. Must be string');
-          }
-
-          $value[$k] = (string) $val;
-        }
-      }
-
       $this->{$field}[$type] = array_merge($this->{$field}[$type], $value);
       return $this;
     }
@@ -182,16 +174,17 @@
      * @inheritdoc
      */
     public function isValid(\Funivan\PhpTokenizer\Token $token) {
+
       # check type
-      if (!$this->validateType($token)) {
+      if (!empty($this->type) and !$this->validateType($token)) {
         return false;
       }
 
-      if (!$this->validateLine($token)) {
+      if (!empty($this->line) and !$this->validateLine($token)) {
         return false;
       }
 
-      if (!$this->validateValue($token)) {
+      if (!empty($this->value) and !$this->validateValue($token)) {
         return false;
       }
 
@@ -268,18 +261,19 @@
 
       $conditions = $this->line;
 
+
       # check line
-      if (isset($conditions[static::IS]) and !in_array($line, $conditions[static::IS])) {
+      if (!$this->validateIsCondition($conditions, $line)) {
         return false;
       }
 
-      if (isset($conditions[static::NOT]) and in_array($line, $conditions[static::NOT])) {
+      if (!$this->validateNotCondition($conditions, $line)) {
         return false;
       }
 
       if (!empty($conditions[self::GREATER_THAN])) {
         foreach ($conditions[self::GREATER_THAN] as $lineGreaterThan) {
-          if ($token->getLine() <= $lineGreaterThan) {
+          if ($line <= $lineGreaterThan) {
             return false;
           }
         }
@@ -307,11 +301,11 @@
       $conditions = $this->value;
 
       # check line
-      if (isset($conditions[static::IS]) and !in_array($value, $conditions[static::IS])) {
+      if (!$this->validateIsCondition($conditions, $value)) {
         return false;
       }
 
-      if (isset($conditions[static::NOT]) and in_array($value, $conditions[static::NOT])) {
+      if (!$this->validateNotCondition($conditions, $value)) {
         return false;
       }
 
@@ -327,6 +321,41 @@
       }
 
       return true;
+    }
+
+    /**
+     * @param string|int|array $value
+     * @return array Array<String>
+     * @throws Exception
+     */
+    protected function prepareValues($value) {
+      $value = (array) $value;
+      foreach ($value as $k => $val) {
+        if (!is_string($val) and !is_numeric($val)) {
+          throw new Exception('Invalid value. Must be string');
+        }
+
+        $value[$k] = (string) $val;
+      }
+      return $value;
+    }
+
+    /**
+     * @param $conditions
+     * @param $value
+     * @return bool
+     */
+    private function validateIsCondition($conditions, $value) {
+      return (!isset($conditions[static::IS]) or in_array($value, $conditions[static::IS]));
+    }
+
+    /**
+     * @param $conditions
+     * @param $line
+     * @return bool
+     */
+    private function validateNotCondition($conditions, $line) {
+      return (!isset($conditions[static::NOT]) or !in_array($line, $conditions[static::NOT]));
     }
 
   }

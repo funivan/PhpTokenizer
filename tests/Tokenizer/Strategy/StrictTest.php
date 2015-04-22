@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Strict;
-  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
+  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
 
   class StrictTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
@@ -16,7 +16,7 @@
 
       $code = '<?php $a';
 
-      $finder = new DefaultStreamProcess(Collection::initFromString($code));
+      $finder = new StreamProcess(Collection::initFromString($code));
 
       foreach ($finder as $q) {
         $token = $q->process(Strict::create()->typeIs(T_VARIABLE));

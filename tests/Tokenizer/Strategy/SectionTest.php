@@ -3,7 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
+  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Funivan\PhpTokenizer\TokenStream;
 
   /**
@@ -22,7 +22,7 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new DefaultStreamProcess($collection);
+      $finder = new StreamProcess($collection);
 
       $linesWithEcho = array();
 
@@ -50,7 +50,7 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new DefaultStreamProcess($collection);
+      $finder = new StreamProcess($collection);
 
       $linesWithEcho = array();
 

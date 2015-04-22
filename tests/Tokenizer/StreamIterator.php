@@ -3,7 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
+  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
   class StreamIterator extends MainTestCase {
@@ -15,7 +15,7 @@
       echo $a;
       echo $a;
       ';
-      $finder = new DefaultStreamProcess(Collection::initFromString($code));
+      $finder = new StreamProcess(Collection::initFromString($code));
 
       $findItems = array();
       foreach ($finder as $processor) {

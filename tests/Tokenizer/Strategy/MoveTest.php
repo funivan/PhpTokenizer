@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Move;
-  use Funivan\PhpTokenizer\StreamProcess\DefaultStreamProcess;
+  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Funivan\PhpTokenizer\Token;
 
   /**
@@ -16,7 +16,7 @@
     public function testMove() {
       $code = '<?php  $a';
 
-      $finder = new DefaultStreamProcess(Collection::initFromString($code));
+      $finder = new StreamProcess(Collection::initFromString($code));
 
       $token = $finder->process(Move::create(0));
       $this->assertEquals('<?php ', $token->getValue());

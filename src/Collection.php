@@ -3,6 +3,7 @@
   namespace Funivan\PhpTokenizer;
 
   use Funivan\PhpTokenizer\Exception\Exception;
+  use Funivan\PhpTokenizer\Query\Query;
 
   /**
    * Represent access and manipulation array of tokens
@@ -145,6 +146,16 @@
      */
     public function extractByTokens(Token $tokenStart, Token $tokenEnd) {
       return $this->extractItems($tokenStart->getIndex(), $tokenEnd->getIndex() - $tokenStart->getIndex() + 1);
+    }
+
+
+    /**
+     * @param Query $query
+     * @return Collection
+     */
+    public function find(Query $query) {
+      $finder = new TokenFinder($this);
+      return $finder->find($query);
     }
 
   }
