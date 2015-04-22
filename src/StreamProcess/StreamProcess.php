@@ -72,16 +72,28 @@
     }
 
     /**
-     * @todo return collection instead of single token
-     *
      * @param string $start
      * @param string $end
-     * @return Token
+     * @return Collection
      */
     public function section($start, $end) {
+
+      $token = $this->search($start);
+      if (!$token->isValid()) {
+        # cant find start position
+        return new Collection();
+      }
+
+      $this->moveTo($token->getIndex());
+
       $section = new \Funivan\PhpTokenizer\Strategy\Section();
       $section->setDelimiters($start, $end);
-      return $this->process($section);
+      $lastToken = $this->process($section);
+      if (!$lastToken->isValid()) {
+        return new Collection();
+      }
+
+      return $this->collection->extractByTokens($token, $lastToken);
     }
 
     /**
@@ -109,24 +121,38 @@
     }
 
     /**
+     * Move to specific position
+     *
+     * @param $position
+     * @return Token|null
+     */
+    public function moveTo($position) {
+      $this->setPosition($position);
+
+      $token = $this->collection->offsetGet($position);
+      if ($token !== null) {
+        return $token;
+      }
+
+      return new Token();
+    }
+
+
+    /**
      * @param array $conditions
      * @return Collection
      */
     public function sequence(array $conditions) {
       $range = new Collection();
       foreach ($conditions as $value) {
-        $token = $this->check($value);
-        if ($token === null) {
-          $token = new Token();
-        }
-        $range[] = $token;
+        $range[] = $this->check($value);
       }
 
       return $range;
     }
 
     /**
-     * @param string|int|$value
+     * @param string|int|StrategyInterface $value
      * @return Token
      */
     private function check($value) {
@@ -141,8 +167,7 @@
     }
 
     /**
-     * @param StrategyInterface $strategy
-     * @return Token
+     * @inheritdoc
      */
     public function process(StrategyInterface $strategy) {
 
@@ -240,7 +265,7 @@
      * @param int $position
      * @return $this
      */
-    protected function setPosition($position) {
+    public function setPosition($position) {
       $this->position = $position;
       return $this;
     }

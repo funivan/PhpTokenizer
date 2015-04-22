@@ -5,13 +5,13 @@
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
 
   /**
-   * Move forward or backward in collection
+   * Move forward or backward in collection with relative position
    *
    * Move forward 12 steps
    * ```
    * $result = (new Move(12))->process($collection, 1);
-   * ```                    
-   * 
+   * ```
+   *
    * Move backward 10 steps
    * ```
    * $result = (new Move(-10))->process($collection, 1);
@@ -21,15 +21,6 @@
    */
   class Move implements StrategyInterface {
 
-    /**
-     * Direction forward flag
-     */
-    const DIRECTION_FORWARD = 1;
-
-    /**
-     * Direction back flag
-     */
-    const DIRECTION_BACK = 2;
 
     /**
      * @var int

@@ -11,8 +11,18 @@
    */
   class Search extends Query implements StrategyInterface {
 
+    /**
+     * Move forward flag
+     *
+     * @var int
+     */
     const FORWARD = 1;
 
+    /**
+     * Move backward flag
+     *
+     * @var int
+     */
     const BACKWARD = -1;
 
     /**
@@ -53,7 +63,7 @@
       return $result;
     }
 
-    /**
+    /**   
      * @param int $direction
      * @return $this
      */

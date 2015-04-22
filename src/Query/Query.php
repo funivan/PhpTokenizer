@@ -3,7 +3,7 @@
 
   namespace Funivan\PhpTokenizer\Query;
 
-  use Funivan\PhpTokenizer\Exception\Exception;
+  use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\Token;
 
   /**
@@ -47,7 +47,7 @@
     protected $type = array();
 
     /**
-     * Storage of value conditions
+     * Storage of conditions conditions
      *
      * @var array
      */
@@ -76,46 +76,53 @@
 
 
     /**
-     * @param int|array $type
+     * @param int|array $type Array<Int>|Int
      * @return $this
      */
     public function typeIs($type) {
-      return $this->addCondition(self::FIELD_TYPE, $type, self::IS);
+      $types = $this->prepareIntValues($type);
+      $this->type[static::IS] = $types;
+      return $this;
     }
 
     /**
-     * @param int|array $type
+     * @param int|array $type Array<Int>|Int
      * @return $this
      */
     public function typeNot($type) {
-      return $this->addCondition(self::FIELD_TYPE, $type, self::NOT);
+      $types = $this->prepareIntValues($type);
+      $this->type[static::NOT] = $types;
+      return $this;
     }
 
     /**
-     * @param string $value
+     * @param string $value Array<String>|String
      * @return $this
      */
     public function valueIs($value) {
       $value = $this->prepareValues($value);
-      return $this->addCondition(self::FIELD_VALUE, $value, self::IS);
+      $this->value[self::IS] = $value;
+      return $this;
     }
 
     /**
-     * @param string $value
+     * @param string $value Array<String>|String
      * @return $this
      */
     public function valueNot($value) {
       $value = $this->prepareValues($value);
-      return $this->addCondition(self::FIELD_VALUE, $value, self::NOT);
+      $this->value[self::NOT] = $value;
+      return $this;
     }
 
     /**
-     * @param string $regexp
+     * @param string $regexp Array<String>|String
      * @return $this
      */
     public function valueLike($regexp) {
       $regexp = $this->prepareValues($regexp);
-      return $this->addCondition(self::FIELD_VALUE, $regexp, self::REXEG);
+      $this->value[self::REXEG] = $regexp;
+      return $this;
     }
 
 
@@ -124,7 +131,9 @@
      * @return $this
      */
     public function lineIs($lineNumber) {
-      return $this->addCondition(self::FIELD_LINE, $lineNumber, self::IS);
+      $lineNumbers = $this->prepareIntValues($lineNumber);
+      $this->line[self::IS] = $lineNumbers;
+      return $this;
     }
 
     /**
@@ -132,7 +141,9 @@
      * @return $this
      */
     public function lineNot($lineNumber) {
-      return $this->addCondition(self::FIELD_LINE, $lineNumber, self::NOT);
+      $lineNumbers = $this->prepareIntValues($lineNumber);
+      $this->line[self::NOT] = $lineNumbers;
+      return $this;
     }
 
     /**
@@ -140,7 +151,9 @@
      * @return $this
      */
     public function lineGt($lineNumber) {
-      return $this->addCondition(self::FIELD_LINE, $lineNumber, self::GREATER_THAN);
+      $lineNumbers = $this->prepareIntValues($lineNumber);
+      $this->line[self::GREATER_THAN] = $lineNumbers[0];
+      return $this;
     }
 
     /**
@@ -148,27 +161,11 @@
      * @return $this
      */
     public function lineLt($lineNumber) {
-      return $this->addCondition(self::FIELD_LINE, $lineNumber, self::LESS_THAN);
-    }
-
-
-    /**
-     * @param string $field
-     * @param string|int|array $value
-     * @param int $type
-     * @throws Exception
-     * @return $this
-     */
-    protected function addCondition($field, $value, $type) {
-      $value = (array) $value;
-
-      if (!isset($this->{$field}[$type])) {
-        $this->{$field}[$type] = array();
-      }
-
-      $this->{$field}[$type] = array_merge($this->{$field}[$type], $value);
+      $lineNumbers = $this->prepareIntValues($lineNumber);
+      $this->line[self::LESS_THAN] = $lineNumbers[0];
       return $this;
     }
+
 
     /**
      * @inheritdoc
@@ -176,63 +173,19 @@
     public function isValid(\Funivan\PhpTokenizer\Token $token) {
 
       # check type
-      if (!empty($this->type) and !$this->validateType($token)) {
+      if (!$this->validateType($token)) {
         return false;
       }
 
-      if (!empty($this->line) and !$this->validateLine($token)) {
+      if (!$this->validateLine($token)) {
         return false;
       }
 
-      if (!empty($this->value) and !$this->validateValue($token)) {
-        return false;
-      }
-
-      return true;
-    }
-
-    /**
-     * @param string $field
-     * @param string $value
-     * @return bool
-     */
-    protected function validate($field, $value) {
-
-      if (!$this->validateIs($field, $value)) {
-        return false;
-      }
-      if (!$this->validateNot($field, $value)) {
+      if (!$this->validateValue($token)) {
         return false;
       }
 
       return true;
-    }
-
-    /**
-     * @param $field
-     * @param $value
-     * @return bool
-     */
-    protected function validateIs($field, $value) {
-      if (!isset($this->{$field}[self::IS])) {
-        # we do not have any conditions
-        return true;
-      }
-      return in_array($value, $this->{$field}[self::IS]);
-    }
-
-    /**
-     * @param $field
-     * @param $value
-     * @return bool
-     */
-    protected function validateNot($field, $value) {
-
-      if (!isset($this->{$field}[self::NOT])) {
-        # we do not have any conditions
-        return true;
-      }
-      return !in_array($value, $this->{$field}[self::NOT]);
     }
 
     /**
@@ -241,11 +194,15 @@
      */
     private function validateType($token) {
 
-      if (!$this->validateIs(self::FIELD_TYPE, $token->getType())) {
+      if (empty($this->type)) {
+        return true;
+      }
+
+      if (!$this->validateIsCondition($this->type, $token->getType())) {
         return false;
       }
 
-      if (!$this->validateNot(self::FIELD_TYPE, $token->getType())) {
+      if (!$this->validateNotCondition($this->type, $token->getType())) {
         return false;
       }
 
@@ -257,35 +214,30 @@
      * @return bool
      */
     private function validateLine(Token $token) {
+
+      if (empty($this->line)) {
+        return true;
+      }
+
       $line = $token->getLine();
 
-      $conditions = $this->line;
-
-
       # check line
-      if (!$this->validateIsCondition($conditions, $line)) {
+      if (!$this->validateIsCondition($this->line, $line)) {
         return false;
       }
 
-      if (!$this->validateNotCondition($conditions, $line)) {
+      if (!$this->validateNotCondition($this->line, $line)) {
         return false;
       }
 
-      if (!empty($conditions[self::GREATER_THAN])) {
-        foreach ($conditions[self::GREATER_THAN] as $lineGreaterThan) {
-          if ($line <= $lineGreaterThan) {
-            return false;
-          }
-        }
+      if (array_key_exists(static::GREATER_THAN, $this->line) and $line <= $this->line[static::GREATER_THAN]) {
+        return false;
       }
 
-      if (!empty($conditions[self::LESS_THAN])) {
-        foreach ($conditions[self::LESS_THAN] as $lineLessThan) {
-          if ($token->getLine() >= $lineLessThan) {
-            return false;
-          }
-        }
+      if (array_key_exists(static::LESS_THAN, $this->line) and $line >= $this->line[static::LESS_THAN]) {
+        return false;
       }
+
 
       return true;
     }
@@ -295,21 +247,108 @@
      * @return bool
      */
     private function validateValue(Token $token) {
+      
+      if (empty($this->value)) {
+        return true;
+      }
 
       $value = $token->getValue();
 
-      $conditions = $this->value;
-
       # check line
-      if (!$this->validateIsCondition($conditions, $value)) {
+      if (!$this->validateIsCondition($this->value, $value)) {
         return false;
       }
 
-      if (!$this->validateNotCondition($conditions, $value)) {
+      if (!$this->validateNotCondition($this->value, $value)) {
         return false;
       }
 
-      # check value regexp
+      if (!$this->validateRegexpCondition($this->value, $value)) {
+        return false;
+      }
+
+      return true;
+    }
+
+    /**
+     * @param string|int|array $value String|Int|Array<String>|Array<Int>
+     * @return array Array<String>
+     * @throws \Exception
+     */
+    protected function prepareValues($value) {
+
+      if ($value == null) {
+        return array($value);
+      }
+
+      if (is_object($value)) {
+        throw new InvalidArgumentException('Invalid conditions. Must be string or array of string');
+      }
+
+      $value = array_values((array) $value);
+
+      foreach ($value as $k => $val) {
+        if (!is_string($val) and !is_numeric($val)) {
+          throw new InvalidArgumentException('Invalid conditions. Must be string');
+        }
+
+        $value[$k] = (string) $val;
+      }
+      return $value;
+    }
+
+    /**
+     * @param array|int $value Array<Int>|Int
+     * @return array
+     * @throws \Exception
+     */
+    protected function prepareIntValues($value) {
+
+      if ($value === null) {
+        return array($value);
+      }
+
+      if (is_object($value)) {
+        throw new InvalidArgumentException('Invalid condition value. Must be int. Object given');
+      }
+
+      $value = array_values((array) $value);
+
+
+      foreach ($value as $intValue) {
+        if (!is_int($intValue)) {
+          throw new InvalidArgumentException('Invalid conditions. Must be integer. Given:' . gettype($intValue));
+        }
+      }
+      return $value;
+    }
+
+    /**
+     * @param $conditions
+     * @param $value
+     * @return bool
+     */
+    private function validateIsCondition($conditions, $value) {
+      return (!isset($conditions[static::IS]) or in_array($value, $conditions[static::IS], true));
+    }
+
+    /**
+     * @param $conditions
+     * @param $line
+     * @return bool
+     */
+    private function validateNotCondition($conditions, $line) {
+      return (!isset($conditions[static::NOT]) or !in_array($line, $conditions[static::NOT], true));
+    }
+
+    /**
+     * @param array $conditions
+     * @param string $value
+     * @return bool
+     */
+    private function validateRegexpCondition($conditions, $value) {
+
+      # check conditions regexp
       if (empty($conditions[self::REXEG])) {
         return true;
       }
@@ -321,41 +360,6 @@
       }
 
       return true;
-    }
-
-    /**
-     * @param string|int|array $value
-     * @return array Array<String>
-     * @throws Exception
-     */
-    protected function prepareValues($value) {
-      $value = (array) $value;
-      foreach ($value as $k => $val) {
-        if (!is_string($val) and !is_numeric($val)) {
-          throw new Exception('Invalid value. Must be string');
-        }
-
-        $value[$k] = (string) $val;
-      }
-      return $value;
-    }
-
-    /**
-     * @param $conditions
-     * @param $value
-     * @return bool
-     */
-    private function validateIsCondition($conditions, $value) {
-      return (!isset($conditions[static::IS]) or in_array($value, $conditions[static::IS]));
-    }
-
-    /**
-     * @param $conditions
-     * @param $line
-     * @return bool
-     */
-    private function validateNotCondition($conditions, $line) {
-      return (!isset($conditions[static::NOT]) or !in_array($line, $conditions[static::NOT]));
     }
 
   }

@@ -90,10 +90,9 @@
         $result->setValid(true);
         $result->setNexTokenIndex(++$endIndex);
         $result->setToken($token);
-        return $result;
       }
 
-      return new Result();
+      return $result;
     }
 
     /**

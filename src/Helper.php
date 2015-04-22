@@ -22,9 +22,6 @@
         if (!is_array($tokenData)) {
           $previousIndex = $index - 1;
 
-          if (!isset($tokens[$previousIndex])) {
-            throw new Exception("Cant detect previous token and extract line from it. Possible invalid string. Previous index:" . $previousIndex);
-          }
           /** @var Token $previousToken */
           $previousToken = $tokens[$previousIndex];
 

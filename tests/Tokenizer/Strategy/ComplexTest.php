@@ -166,7 +166,9 @@
           }
         }
 
-        $last = $q->sequence(array(')', '{', $token->getValue(), '=', '(array)', $token->getValue(), ';', '}'));
+        $s = array(')', '{', $token->getValue(), '=', '(array)', $token->getValue(), ';', '}');
+
+        $last = $q->sequence($s);
 
         if ($q->isValid()) {
           $start = $start->getFirst()->getIndex();

@@ -3,6 +3,7 @@
   namespace Funivan\PhpTokenizer;
 
   use Funivan\PhpTokenizer\Exception\Exception;
+  use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
 
   /**
    *
@@ -21,7 +22,7 @@
 
     const INVALID_VALUE = null;
 
-    const INVALID_INDEX = null;
+    const INVALID_INDEX = -1;
 
     /**
      * @var null|int
@@ -77,20 +78,20 @@
      * @throws Exception
      */
     protected function setData(array $data) {
-      if (!isset($data[0])) {
-        throw new Exception("Please provide type of token");
+      if (!array_key_exists(0, $data)) {
+        throw new InvalidArgumentException("Please provide type of token");
       }
 
       $this->setType($data[0]);
 
       if (!isset($data[1])) {
-        throw new Exception("Please provide value of token");
+        throw new InvalidArgumentException("Please provide value of token");
       }
 
       $this->setValue($data[1]);
 
-      if (!isset($data[2])) {
-        throw new Exception("Please provide line of token");
+      if (!array_key_exists(2, $data)) {
+        throw new InvalidArgumentException("Please provide line of token");
       }
 
       $this->setLine($data[2]);
@@ -106,7 +107,7 @@
      * @return array
      */
     public function getData() {
-      return [$this->getType(), $this->getValue(), $this->getLine()];
+      return [$this->getType(), $this->getValue(), $this->getLine(), $this->getIndex()];
     }
 
 
@@ -201,12 +202,13 @@
      * @throws Exception
      */
     public function appendToValue($part) {
+
       if (!is_string($part) and !is_numeric($part)) {
-        throw new Exception('You can append only string to value');
+        throw new InvalidArgumentException('You can append only string to value');
       }
 
       $this->value = $this->value . $part;
-
+      
       return $this;
     }
 
@@ -218,8 +220,9 @@
      * @throws Exception
      */
     public function prependToValue($part) {
+      
       if (!is_string($part) and !is_numeric($part)) {
-        throw new Exception('You can prepend only string to value');
+        throw new InvalidArgumentException('You can prepend only string to value');
       }
 
       $this->value = $part . $this->value;

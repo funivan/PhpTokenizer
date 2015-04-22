@@ -3,6 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\TokenFinder;
 
@@ -23,7 +24,6 @@
 
       $query = new Query();
       $query->lineIs(10);
-
       $this->assertCount(0, $finder->find($query));
 
       $query = new Query();
@@ -49,37 +49,103 @@
       $query = new Query();
       $query->typeIs(T_ECHO);
       $this->assertCount(1, $finder->find($query));
-      
+
       $query = new Query();
-      $query->typeIs([T_ECHO,T_VARIABLE]);
+      $query->typeIs([T_ECHO, T_VARIABLE]);
       $this->assertCount(2, $finder->find($query));
 
       $query = new Query();
       $query->typeNot(T_ECHO);
       $this->assertCount(count($collection) - 1, $finder->find($query));
 
-      
     }
 
     /**
      * @return array
      */
-    public function _testValue() {
+    public function testValue() {
 
-      $collection = $this->getTestCollection();
-      $q = $collection->query()->valueNot('echo');
-      $this->assertEquals($collection->count() - 1, $q->getTokensNum());
+      $collection = Collection::initFromString('<?php 
+        echo 1; 
+      
+      ');
 
-      $q = $collection->query()->valueLike('!e[ch]{2}o!');
-      $this->assertEquals(1, $q->getTokensNum());
+      $query = new Query();
+      $query->valueNot('echo');
+      $this->assertCount($collection->count() - 1, $collection->find($query));
 
-      $error = null;
-      try {
-        $collection->query()->valueLike(array(new \stdClass()));
-      } catch (\Exception $error) {
 
-      }
-      $this->assertInstanceOf('Exception', $error);
+      $collection = Collection::initFromString('<?php echo "123"; echo "132";');
+      $this->assertCount(4, $collection->find(Query::create()->valueIs(['echo', ';'])));
+
+
+      $q = Query::create();
+      $this->assertCount(2, $collection->find($q->valueLike('/\d+/')));
+
+      $this->assertCount(1, $collection->find($q->valueLike('/12\d+/')));
+
+      $this->assertCount(0, $collection->find($q->valueIs(null)));
+
+    }
+
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testWithInvalidValue() {
+      $query = new Query();
+      $query->valueNot(new \stdClass());
+    }
+
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testWithInvalidArrayValue() {
+      $query = new Query();
+      $query->valueNot(array(new \stdClass()));
+
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInvalidLineGreaterThen() {
+      $query = new Query();
+      $query->lineGt(1.343);
+    }
+
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInvalidLineLessThen() {
+      $query = new Query();
+      $query->lineLt(array(new \stdClass()));
+    }
+
+
+    public function testQueryWithoutConditions() {
+      $query = new Query();
+      $token = new \Funivan\PhpTokenizer\Token();
+      $this->assertTrue($query->isValid($token));
+    }
+
+    public function testLineEmptyCheck() {
+      $query = new Query();
+      $query->lineIs(null);
+      $token = new \Funivan\PhpTokenizer\Token();
+      $token->setLine(10);
+
+      $this->assertFalse($query->isValid($token));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInvalidLineCheck() {
+      $query = new Query();
+      $query->lineIs(new \stdClass());
 
     }
 

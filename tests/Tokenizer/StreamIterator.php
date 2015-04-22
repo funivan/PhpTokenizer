@@ -19,13 +19,25 @@
 
       $findItems = array();
       foreach ($finder as $processor) {
-        $token = $processor->valueIs('echo');
+        $token = $processor->strict('echo');
         if ($processor->isValid()) {
           $findItems[] = $token;
         }
       }
 
       $this->assertCount(3, $findItems);
+    }
+
+    public function testMoveTo() {
+      $code = '<? echo $a;';
+      $collection = Collection::initFromString($code);
+
+      $lastToken = $collection->getLast();
+
+
+      $finder = new StreamProcess($collection);
+      $token = $finder->moveTo($lastToken->getIndex());
+      $this->assertEquals($lastToken, $token);
     }
 
   }
