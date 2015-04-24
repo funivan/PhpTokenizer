@@ -26,6 +26,32 @@
     const N = __CLASS__;
 
     /**
+     * @var string
+     */
+    protected $initialContentHash;
+
+    public function __construct(array $items = array()) {
+      parent::__construct($items);
+      $this->storeContentHash();
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isChanged() {
+      return ($this->getContentHash() !== $this->initialContentHash);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getContentHash() {
+      return md5($this->assemble());
+    }
+
+
+    /**
      * Extract each value from token
      *
      * @return string
@@ -140,6 +166,19 @@
     }
 
     /**
+     * Remove all tokens in collection
+     *
+     * @return $this
+     */
+
+    public function remove() {
+      foreach ($this as $token) {
+        $token->remove();
+      }
+      return $this;
+    }
+
+    /**
      * @param Token $tokenStart
      * @param Token $tokenEnd
      * @return Collection
@@ -158,5 +197,12 @@
       return $finder->find($query);
     }
 
-  }
+    /**
+     * @return $this
+     */
+    public function storeContentHash() {
+      $this->initialContentHash = $this->getContentHash();
+      return $this;
+    }
 
+  }

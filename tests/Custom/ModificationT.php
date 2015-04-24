@@ -23,7 +23,7 @@
           'echo "`".$f."`";',
       );
 
-      $optimizer = new \Test\Funivan\PhpTokenizer\Demo\ConcatenationOptimize();
+      $optimizer = new \Test\Funivan\PhpTokenizer\Demo\ConcatenationOptimizeTest();
 
       foreach ($lines as $current => $expect) {
         $current = '<?php ' . $current;
@@ -50,7 +50,7 @@
           'echo "123";',
       );
 
-      $optimizer = new \Test\Funivan\PhpTokenizer\Demo\ConcatenationOptimize();
+      $optimizer = new \Test\Funivan\PhpTokenizer\Demo\ConcatenationOptimizeTest();
 
       foreach ($lines as $current => $expect) {
         $current = '<?php ' . $current;
@@ -93,7 +93,7 @@
       //  '"object ".$this->table."+other"',
       //  '$this->table."+new"',
 
-      $optimizer = new \Test\Funivan\PhpTokenizer\Demo\ConcatenationOptimize();
+      $optimizer = new \Test\Funivan\PhpTokenizer\Demo\ConcatenationOptimizeTest();
 
       foreach ($lines as $current => $expect) {
         $current = '<?php ' . $current;
@@ -146,7 +146,7 @@
       );
 
 
-      $optimizer = new \Test\Funivan\PhpTokenizer\Demo\ConcatenationOptimize();
+      $optimizer = new \Test\Funivan\PhpTokenizer\Demo\ConcatenationOptimizeTest();
 
       foreach ($lines as $current => $expect) {
         $current = '<?php ' . $current;

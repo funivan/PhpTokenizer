@@ -281,7 +281,7 @@
      * @param boolean $valid
      * @return $this
      */
-    protected function setValid($valid) {
+    public function setValid($valid) {
       if (!is_bool($valid)) {
         throw new InvalidArgumentException("Invalid valid flag. Expect boolean. Given:" . gettype($valid));
       }
@@ -298,4 +298,33 @@
       return ($this->valid === true);
     }
 
+    /**
+     * Get processor over and over again while our collection changed
+     *
+     * @return StreamProcess|null
+     */
+    public function getProcessor() {
+
+      $position = $this->getPosition();
+
+      if (!$this->collection->offsetExists($position)) {
+        # we are at the end of the collection
+
+        if ($this->collection->isChanged()) {
+          $position = 0;
+          $this->collection->refresh();
+          $this->collection->storeContentHash();
+        } else {
+          return null;
+        }
+      }
+
+      $processor = new static($this->collection, $this->skipWhitespaces);
+      $processor->setPosition($position);
+
+      $this->setPosition(++$position);
+
+
+      return $processor;
+    }
   }

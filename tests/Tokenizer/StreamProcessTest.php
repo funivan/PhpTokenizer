@@ -6,7 +6,7 @@
   use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
-  class StreamIterator extends MainTestCase {
+  class StreamProcessTest extends MainTestCase {
 
 
     public function testSimpleIterate() {

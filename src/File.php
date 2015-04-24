@@ -16,11 +16,6 @@
     protected $path = null;
 
     /**
-     * @var string
-     */
-    protected $initialContentHash = null;
-
-    /**
      * @var Collection
      */
     protected $collection = null;
@@ -51,8 +46,6 @@
       $this->path = $path;
       $code = file_get_contents($path);
       $this->collection = Collection::initFromString($code);
-
-      $this->storeInitialContentHash();
     }
 
 
@@ -102,15 +95,7 @@
      * @return bool
      */
     public function isChanged() {
-      $newCode = $this->collection->assemble();
-      return (md5($newCode) != $this->initialContentHash);
-    }
-
-    /**
-     * @return $this
-     */
-    protected function storeInitialContentHash() {
-      $this->initialContentHash = md5($this->collection);
+      return $this->collection->isChanged();
     }
 
     /**

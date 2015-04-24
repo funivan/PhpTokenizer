@@ -19,6 +19,12 @@
     /**
      * @return StreamProcess|null
      */
+    public function getProcessor();
+
+
+    /**
+     * @return StreamProcess|null
+     */
     public function current();
 
   }
