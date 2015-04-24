@@ -29,7 +29,7 @@
     }
 
     public function testMoveTo() {
-      $code = '<? echo $a;';
+      $code = '<?php echo $a;';
       $collection = Collection::initFromString($code);
 
       $lastToken = $collection->getLast();
