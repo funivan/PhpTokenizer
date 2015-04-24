@@ -10,7 +10,7 @@
 
 
     public function testSimpleIterate() {
-      $code = '<? 
+      $code = '<?php 
       echo $a;
       echo $a;
       echo $a;
