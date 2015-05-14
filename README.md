@@ -14,19 +14,36 @@ Wrapper around token_get_all. Easy to extract and modify tokens
 Via Composer
 
 ``` bash
-$ composer require funivan/php-tokenizer
+composer require funivan/php-tokenizer
 ```
 
 ## Usage
-
+Reformat our code like PhpStorm. Lets create rule: place single spaces after `while`
+  
 ``` php
+  
+  $file = new \Funivan\PhpTokenizer\File(__FILE__);
+  $stream = new Funivan\PhpTokenizer\StreamProcess\StreamProcess($file->getCollection());
+    
+  while ($p = $stream->getProcessor()) {
+    $while = $p->strict('while');
+    $space = $p->possible(T_WHITESPACE);
+    
+    if ($p->isValid()) {
+      $space->remove();
+      $while->appendToValue(" ");
+    }
+  
+  }
+
+  echo $file->getCollection();
 
 ```
 
 ## Testing
 
 ``` bash
-    ./vendor/bin/phpunit
+./vendor/bin/phpunit
 ```
 
 ## Contributing
