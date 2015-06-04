@@ -309,14 +309,7 @@
 
       if (!$this->collection->offsetExists($position)) {
         # we are at the end of the collection
-
-        if ($this->collection->isChanged()) {
-          $position = 0;
-          $this->collection->refresh();
-          $this->collection->storeContentHash();
-        } else {
-          return null;
-        }
+        return null;
       }
 
       $processor = new static($this->collection, $this->skipWhitespaces);
