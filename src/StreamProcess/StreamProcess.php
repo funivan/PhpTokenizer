@@ -123,15 +123,16 @@
     /**
      * Move to specific position
      *
-     * @param $position
+     * @param int $tokenIndex
      * @return Token|null
      */
-    public function moveTo($position) {
-      $this->setPosition($position);
+    public function moveTo($tokenIndex) {
 
-      $token = $this->collection->offsetGet($position);
-      if ($token !== null) {
-        return $token;
+      foreach ($this->collection as $index => $token) {
+        if ($token->getIndex() == $tokenIndex) {
+          $this->setPosition($index);
+          return $token;
+        }
       }
 
       return new Token();

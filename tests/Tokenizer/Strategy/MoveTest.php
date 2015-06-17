@@ -40,4 +40,16 @@
       Move::create(null);
     }
 
+    public function testMoveToTokenIndex() {
+      $code = '<?php echo $a;';
+
+      $collection = Collection::initFromString($code);
+      $newCollection = $collection->extractItems(1);
+
+      $finder = new StreamProcess($newCollection);
+
+      $this->assertEquals('$a', $finder->moveTo(3)->getValue());
+      $this->assertEquals(null, $finder->moveTo(14)->getValue());
+    }
+
   }
