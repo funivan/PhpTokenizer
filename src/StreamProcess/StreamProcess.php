@@ -249,8 +249,7 @@
      */
     public function next() {
       $position = $this->getPosition();
-      $position++;
-      $this->setPosition($position);
+      $this->setPosition(++$position);
       return $this;
     }
 
@@ -291,7 +290,7 @@
     }
 
     /**
-     * Indicate if state of all conditions
+     * Indicate state of all conditions
      *
      * @return bool
      */

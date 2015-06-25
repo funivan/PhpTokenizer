@@ -3,6 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\Strategy\Strict;
   use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
@@ -34,10 +35,28 @@
 
       $lastToken = $collection->getLast();
 
-
       $finder = new StreamProcess($collection);
       $token = $finder->moveTo($lastToken->getIndex());
       $this->assertEquals($lastToken, $token);
     }
 
+    /**
+     * Prototype for new version
+     */
+//    public function testChecker() {
+//      (new StreamProcess(Collection::initFromString($code)))
+//        ->filter(function (StreamProcess $processor) {
+//          $newCollections = [];
+//      
+//          foreach ($processor as $p) {
+//            $p->strict('class');
+//            $p->process(Strict::create()->valueIs("!.*!"));
+//            $body = $p->section('{', '}');
+//            $newCollections[] = $body;
+//          }
+  
+//          return $newCollections;
+//        });
+//
+//    }
   }
