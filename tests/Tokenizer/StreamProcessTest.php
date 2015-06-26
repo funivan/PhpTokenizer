@@ -40,23 +40,5 @@
       $this->assertEquals($lastToken, $token);
     }
 
-    /**
-     * Prototype for new version
-     */
-//    public function testChecker() {
-//      (new StreamProcess(Collection::initFromString($code)))
-//        ->filter(function (StreamProcess $processor) {
-//          $newCollections = [];
-//      
-//          foreach ($processor as $p) {
-//            $p->strict('class');
-//            $p->process(Strict::create()->valueIs("!.*!"));
-//            $body = $p->section('{', '}');
-//            $newCollections[] = $body;
-//          }
   
-//          return $newCollections;
-//        });
-//
-//    }
   }
