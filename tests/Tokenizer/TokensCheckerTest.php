@@ -3,7 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Strategy\Possible;
+  use Funivan\PhpTokenizer\Exception\Exception;
   use Funivan\PhpTokenizer\Strategy\Strict;
   use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Funivan\PhpTokenizer\StreamProcess\TokensChecker;
@@ -69,20 +69,29 @@
       $this->assertCount(1, $tokensChecker->getCollections());
     }
 
+
     public function testWithNestedPatterns() {
       # find class with property 
-      $code = '<?php class A { public $user = null; } class customUser { }';
+      $code = '<?php class A { public $user = null; static $name;} class customUser { $value; }';
       $tokensChecker = new TokensChecker(Collection::initFromString($code));
       $tokensChecker->pattern(new ClassPattern())
         ->pattern(function (StreamProcess $process) {
 
           $result = array();
           foreach ($process as $p) {
-            $p->process(Strict::create()->valueIs(array('public', 'protected', 'private')));
-            $p->process(Possible::create()->valueIs(array('static')));
+
+            $p->process(Strict::create()->valueIs(
+              array(
+                'public',
+                'protected',
+                'private',
+                'static',
+              )
+            ));
+
             $name = $p->strict(T_VARIABLE);
             if ($p->isValid()) {
-              $result[] = $name;
+              $result[] = new Collection(array($name));
             }
 
           }
@@ -90,8 +99,37 @@
           return $result;
         });
 
-      $this->assertCount(1, $tokensChecker->getCollections());
+      $collections = $tokensChecker->getCollections();
+      $this->assertCount(2, $collections);
+
+      $this->assertEquals('$user', (string) $collections[0]);
+      $this->assertEquals('$name', (string) $collections[1]);
 
     }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testInvalidPatternResult() {
+      $tokensChecker = new TokensChecker(Collection::initFromString('<?php echo 1;'));
+      /** @noinspection PhpUnusedParameterInspection */
+      $tokensChecker->pattern(function (StreamProcess $process) {
+        return new \stdClass();
+      });
+
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testInvalidPatternResultArray() {
+      $tokensChecker = new TokensChecker(Collection::initFromString('<?php echo 1;'));
+      /** @noinspection PhpUnusedParameterInspection */
+      $tokensChecker->pattern(function (StreamProcess $process) {
+        return array(new \stdClass());
+      });
+
+    }
+    
 
   }
