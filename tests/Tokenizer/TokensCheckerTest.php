@@ -6,6 +6,7 @@
   use Funivan\PhpTokenizer\Strategy\Strict;
   use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Funivan\PhpTokenizer\StreamProcess\TokensChecker;
+  use Test\Funivan\PhpTokenizer\Custom\ClassPattern;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
@@ -16,7 +17,7 @@
     /**
      * Prototype for new version
      */
-    public function testChecker() {
+    public function testWithCallbackPattern() {
       $code = '<? class A { public $user = null; }';
       $tokensChecker = new TokensChecker(Collection::initFromString($code));
 
@@ -37,4 +38,34 @@
 
       $this->assertCount(1, $tokensChecker->getCollections());
     }
+
+    public function testWithClassPattern() {
+      $code = '<? class A { public $user = null; } class customUser { }';
+      $tokensChecker = new TokensChecker(Collection::initFromString($code));
+      $tokensChecker->pattern(new ClassPattern());
+
+      $this->assertCount(2, $tokensChecker->getCollections());
+      
+      $tokensChecker = new TokensChecker(Collection::initFromString($code));
+      $classPattern = new ClassPattern();
+      $classPattern->nameIs('B');
+      $tokensChecker->pattern($classPattern);
+
+      $this->assertCount(0, $tokensChecker->getCollections());
+      
+      $tokensChecker = new TokensChecker(Collection::initFromString($code));
+      $classPattern = new ClassPattern();
+      $classPattern->nameIs('A');
+      $tokensChecker->pattern($classPattern);
+
+      $this->assertCount(1, $tokensChecker->getCollections());
+      
+      $tokensChecker = new TokensChecker(Collection::initFromString($code));
+      $classPattern = new ClassPattern();
+      $classPattern->nameIs('customUser');
+      $tokensChecker->pattern($classPattern);
+
+      $this->assertCount(1, $tokensChecker->getCollections());
+    }
+
   }
