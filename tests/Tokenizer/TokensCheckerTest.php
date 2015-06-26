@@ -130,6 +130,37 @@
       });
 
     }
-    
+
+    /**
+     * @requires PHP 5.5
+     */
+    public function testFluentInterface() {
+
+      $code = '<?php 
+      class UsersController extends Base { 
+        public function test(){
+          header("123");
+        }
+      }
+      
+      ';
+      $collection = Collection::initFromString($code);
+      $tokensChecker = new TokensChecker($collection);
+      $tokensChecker->pattern(
+        (new ClassPattern())->nameIs('UsersController')
+      )->pattern(function (StreamProcess $process) {
+
+        foreach ($process as $p) {
+          $function = $p->strict('header');
+          $p->strict('(');
+          if ($p->isValid()) {
+            $function->setValue('$this->response()->redirect');
+          }
+        }
+      });
+
+      $this->assertContains('$this->response()->redirect("123")', (string) $collection);
+      
+    }
 
   }

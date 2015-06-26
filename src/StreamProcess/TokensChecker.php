@@ -44,17 +44,19 @@
         $processor = $this->createStreamProcessor($collection);
 
         $collectionsResult = $pattern($processor);
-        if ($collectionsResult !== null and !is_array($collectionsResult)) {
+        if (is_array($collectionsResult)) {
+          foreach ($collectionsResult as $resultCollection) {
+            if (!($resultCollection instanceof Collection)) {
+              throw new Exception("Invalid result from pattern callback. Expect array of collections");
+            }
+
+            $this->collections[] = $resultCollection;
+          }
+
+        } elseif ($collectionsResult !== null) {
           throw new Exception('Invalid result from pattern callback. Expect null or array of collections');
         }
 
-        foreach ($collectionsResult as $resultCollection) {
-          if (!($resultCollection instanceof Collection)) {
-            throw new Exception("Invalid result from pattern callback. Expect array of collections");
-          }
-          
-          $this->collections[] = $resultCollection;
-        }
       }
 
       return $this;
