@@ -19,7 +19,7 @@
      * Prototype for new version
      */
     public function testWithCallbackPattern() {
-      $code = '<? class A { public $user = null; }';
+      $code = '<?php class A { public $user = null; }';
       $tokensChecker = new TokensChecker(Collection::initFromString($code));
 
       $tokensChecker->pattern(function (StreamProcess $processor) {
@@ -41,7 +41,7 @@
     }
 
     public function testWithClassPattern() {
-      $code = '<? class A { public $user = null; } class customUser { }';
+      $code = '<?php class A { public $user = null; } class customUser { }';
       $tokensChecker = new TokensChecker(Collection::initFromString($code));
       $tokensChecker->pattern(new ClassPattern());
 
@@ -71,7 +71,7 @@
 
     public function testWithNestedPatterns() {
       # find class with property 
-      $code = '<? class A { public $user = null; } class customUser { }';
+      $code = '<?php class A { public $user = null; } class customUser { }';
       $tokensChecker = new TokensChecker(Collection::initFromString($code));
       $tokensChecker->pattern(new ClassPattern())
         ->pattern(function (StreamProcess $process) {
