@@ -1,4 +1,5 @@
-<?
+<?php
+  
   namespace Funivan\PhpTokenizer\Pattern;
 
   use Funivan\PhpTokenizer\Collection;
