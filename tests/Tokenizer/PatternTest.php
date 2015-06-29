@@ -13,23 +13,7 @@
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 6/26/15
    */
-  class TokensCheckerTest extends MainTestCase {
-
-    public function _testQuerySequence() {
-      $code = '<?php class A { public $user = null; }';
-      $collection = Collection::initFromString($code);
-      //
-      //foreach ($collection as $index => $token) {
-      //  $querySequence = new QuerySequence($collection, $index);
-      //  $querySequence->st
-      //  if ($patternResult === null) {
-      //    continue;
-      //  }
-      //
-      //  $result[] = $patternResult;
-      //}
-
-    }
+  class PatternTest extends MainTestCase {
 
     /**
      * Prototype for new version
@@ -81,33 +65,26 @@
     }
 
 
-    public function _testWithNestedPatterns() {
+    public function testWithNestedPatterns() {
       # find class with property 
       $code = '<?php class A { public $user = null; static $name;} class customUser { $value; }';
       $tokensChecker = new Pattern(Collection::initFromString($code));
-      $tokensChecker->apply(new ClassPattern())
-        ->apply(function (QuerySequence $process) {
-
-          $result = array();
-          foreach ($process as $p) {
-
-            $p->process(Strict::create()->valueIs(
-              array(
-                'public',
-                'protected',
-                'private',
-                'static',
-              )
-            ));
-
-            $name = $p->strict(T_VARIABLE);
-            if ($p->isValid()) {
-              $result[] = new Collection(array($name));
-            }
-
+      $tokensChecker
+        ->apply(new ClassPattern())
+        ->apply(function (QuerySequence $p) {
+          $p->process(Strict::create()->valueIs(
+            array(
+              'public',
+              'protected',
+              'private',
+              'static',
+            )
+          ));
+          $p->strict(T_WHITESPACE);
+          $name = $p->strict(T_VARIABLE);
+          if ($p->isValid()) {
+            return new Collection(array($name));
           }
-
-          return $result;
         });
 
       $collections = $tokensChecker->getCollections();
@@ -121,7 +98,7 @@
     /**
      * @expectedException Exception
      */
-    public function _testInvalidPatternResult() {
+    public function testInvalidPatternResult() {
       $tokensChecker = new Pattern(Collection::initFromString('<?php echo 1;'));
       /** @noinspection PhpUnusedParameterInspection */
       $tokensChecker->apply(function (QuerySequence $process) {
@@ -133,7 +110,7 @@
     /**
      * @expectedException Exception
      */
-    public function _testInvalidPatternResultArray() {
+    public function testInvalidPatternResultArray() {
       $tokensChecker = new Pattern(Collection::initFromString('<?php echo 1;'));
       /** @noinspection PhpUnusedParameterInspection */
       $tokensChecker->apply(function (QuerySequence $process) {
