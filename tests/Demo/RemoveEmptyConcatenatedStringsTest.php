@@ -2,9 +2,9 @@
 
   namespace Test\Funivan\PhpTokenizer\Demo;
 
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Strategy\Strict;
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
 
   class RemoveEmptyConcatenatedStringsTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
@@ -63,14 +63,12 @@
      * @param string $code
      * @param string $expectCode
      */
-    public function testRemoveString($code, $expectCode) {
+    public function testRemoveEmptyString($code, $expectCode) {
       $collection = \Funivan\PhpTokenizer\Collection::initFromString("<?php " . $code);
 
 
-      $stream = new StreamProcess($collection);
-
-      while ($p = $stream->getProcessor()) {
-        $startFrom = $p->getPosition();
+      foreach ($collection as $index => $token) {
+        $p = new QuerySequence($collection, $index);
 
         # remove empty string and dot    
         $sequence = $p->sequence(array(
@@ -85,7 +83,9 @@
         }
 
         # remove empty dot and empty string
-        $p->setValid(true)->moveTo($startFrom);
+
+        $p->setValid(true)->setPosition($index);
+        
         $sequence = $p->sequence(array(
           Possible::create()->typeIs(T_WHITESPACE),
           Strict::create()->valueIs('.'),

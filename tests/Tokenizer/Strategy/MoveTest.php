@@ -3,8 +3,8 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Move;
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Funivan\PhpTokenizer\Token;
 
   /**
@@ -16,7 +16,7 @@
     public function testMove() {
       $code = '<?php  $a';
 
-      $finder = new StreamProcess(Collection::initFromString($code));
+      $finder = new QuerySequence(Collection::initFromString($code));
 
       $token = $finder->process(Move::create(0));
       $this->assertEquals('<?php ', $token->getValue());
@@ -46,7 +46,7 @@
       $collection = Collection::initFromString($code);
       $newCollection = $collection->extractItems(1);
 
-      $finder = new StreamProcess($newCollection);
+      $finder = new QuerySequence($newCollection);
 
       $this->assertEquals('$a', $finder->moveTo(3)->getValue());
       $this->assertEquals(null, $finder->moveTo(14)->getValue());

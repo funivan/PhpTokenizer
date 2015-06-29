@@ -3,8 +3,8 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Section;
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
 
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 4/18/15
@@ -38,17 +38,19 @@
 
     /**
      * @dataProvider functionCallDataProvider
+     * @param $code
+     * @param $functionName
+     * @param $expectCode
      */
     public function testFunctionCall($code, $functionName, $expectCode) {
       $code = '<?php ' . $code;
 
       $collection = Collection::initFromString($code);
-      $finder = new StreamProcess($collection);
 
       $lines = array();
 
-      foreach ($finder as $q) {
-
+      foreach ($collection as $index => $token) {
+        $q = new QuerySequence($collection, $index);
         $start = $q->strict($functionName);
         $end = $q->section('(', ')');
 
@@ -61,6 +63,7 @@
       $this->assertEquals($expectCode, $lines[0]);
     }
 
+    
     public function testWithEmptySection() {
       $code = '<?php 
       
@@ -71,12 +74,10 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new StreamProcess($collection);
-
       $linesWithEcho = array();
 
-      foreach ($finder as $q) {
-
+      foreach ($collection as $index => $token) {
+        $q = new QuerySequence($collection, $index);
         $start = $q->strict('return');
         $end = $q->section('(', ')');
 
@@ -99,12 +100,12 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new StreamProcess($collection);
+
 
       $linesWithEcho = array();
 
-      foreach ($finder as $q) {
-
+      foreach ($collection as $index => $token) {
+        $q = new QuerySequence($collection, $index);
         $start = $q->strict('return');
         $lastToken = $q->process(Section::create()->setDelimiters('(', ')'));
 

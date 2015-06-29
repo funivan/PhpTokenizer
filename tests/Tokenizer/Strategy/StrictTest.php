@@ -4,7 +4,6 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Strict;
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
 
   class StrictTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
@@ -14,15 +13,22 @@
      */
     public function testSimple() {
 
-      $code = '<?php $a';
+      $code = '<?php echo $a; foreach($users as $user){}';
 
-      $finder = new StreamProcess(Collection::initFromString($code));
+      $variables = array();
+      $collection = Collection::initFromString($code);
 
-      foreach ($finder as $q) {
-        $token = $q->process(Strict::create()->typeIs(T_VARIABLE));
+      $query = Strict::create()->typeIs(T_VARIABLE);
+
+      foreach ($collection as $index => $token) {
+
+        if ($query->isValid($token)) {
+          $variables[] = $token;
+        }
+
       }
 
-      $this->assertEquals('$a', $token->getValue());
+      $this->assertCount(3, $variables);
 
     }
   }

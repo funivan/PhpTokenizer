@@ -2,7 +2,7 @@
 
   namespace Test\Funivan\PhpTokenizer\Demo;
 
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
   class ExtractVariablesFromCurlyBracketsTest extends \PHPUnit_Framework_TestCase {
 
@@ -40,12 +40,10 @@
     public function testExtract($code, $expectCode) {
       $collection = \Funivan\PhpTokenizer\Collection::initFromString("<?php " . $code);
 
-      $stream = new StreamProcess($collection);
-
 
       # remove empty string and dot    
-      while ($p = $stream->getProcessor()) {
-
+      foreach ($collection as $index => $token) {
+        $p = new QuerySequence($collection, $index);
         $quote = $p->possible('"');
         if ($quote->isValid() == false) {
           $p->strict(T_ENCAPSED_AND_WHITESPACE);

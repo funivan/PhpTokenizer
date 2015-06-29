@@ -1,6 +1,6 @@
 <?php
 
-  namespace Funivan\PhpTokenizer\StreamProcess;
+  namespace Funivan\PhpTokenizer\QuerySequence;
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
@@ -15,17 +15,7 @@
   /**
    * Start from specific position and check token from this position according to strategies
    */
-  class StreamProcess implements StreamProcessInterface {
-
-    /**
-     * @var
-     */
-    private $position = 0;
-
-    /**
-     * @var \Funivan\PhpTokenizer\Collection
-     */
-    private $collection;
+  class QuerySequence implements QuerySequenceInterface {
 
     /**
      * @var bool
@@ -33,21 +23,51 @@
     private $valid = true;
 
     /**
-     * @var bool
+     * @var int
+     */
+    private $position = 0;
+
+    /**
+     * @var Collection
+     */
+    private $collection;
+
+    /**
+     * @var
      */
     private $skipWhitespaces = false;
 
     /**
-     * @param \Funivan\PhpTokenizer\Collection $collection
-     * @param Collection $collection
-     * @param bool $skipWhitespaces
+     * @inheritdoc
      */
-    public function __construct(\Funivan\PhpTokenizer\Collection $collection, $skipWhitespaces = false) {
-      $this->position = 0;
+    public function __construct(Collection $collection, $initialPosition = 0) {
       $this->collection = $collection;
-      $this->skipWhitespaces = $skipWhitespaces;
+      $this->position = $initialPosition;
     }
 
+    /**
+     * @return Collection
+     */
+    public function getCollection() {
+      return $this->collection;
+    }
+
+
+    /**
+     * @param int $position
+     * @return QuerySequence
+     */
+    public function setPosition($position) {
+      $this->position = $position;
+      return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition() {
+      return $this->position;
+    }
 
     /**
      * Strict validation of condition
@@ -220,38 +240,6 @@
       return $query;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rewind() {
-      $this->setPosition(0);
-      return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function current() {
-      $processor = new static($this->collection, $this->skipWhitespaces);
-      $processor->setPosition($this->getPosition());
-      return $processor;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function key() {
-      return $this->getPosition();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function next() {
-      $position = $this->getPosition();
-      $this->setPosition(++$position);
-      return $this;
-    }
 
     /**
      * @inheritdoc
@@ -261,21 +249,6 @@
       return isset($this->collection[$position]);
     }
 
-    /**
-     * @param int $position
-     * @return $this
-     */
-    public function setPosition($position) {
-      $this->position = $position;
-      return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPosition() {
-      return $this->position;
-    }
 
     /**
      * @param boolean $valid
@@ -283,7 +256,7 @@
      */
     public function setValid($valid) {
       if (!is_bool($valid)) {
-        throw new InvalidArgumentException("Invalid valid flag. Expect boolean. Given:" . gettype($valid));
+        throw new InvalidArgumentException("Invalid flag. Expect boolean. Given:" . gettype($valid));
       }
       $this->valid = $valid;
       return $this;
@@ -299,25 +272,12 @@
     }
 
     /**
-     * Get processor over and over again while our collection changed
-     *
-     * @return StreamProcess|null
+     * @param boolean $skipWhitespaces
+     * @return $this
      */
-    public function getProcessor() {
-
-      $position = $this->getPosition();
-
-      if (!$this->collection->offsetExists($position)) {
-        # we are at the end of the collection
-        return null;
-      }
-
-      $processor = new static($this->collection, $this->skipWhitespaces);
-      $processor->setPosition($position);
-
-      $this->setPosition(++$position);
-
-
-      return $processor;
+    public function setSkipWhitespaces($skipWhitespaces) {
+      $this->skipWhitespaces = $skipWhitespaces;
+      return $this;
     }
+    
   }

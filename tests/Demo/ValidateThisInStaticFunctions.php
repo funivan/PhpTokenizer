@@ -3,8 +3,8 @@
   namespace Test\Funivan\PhpTokenizer\Demo;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Possible;
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
 
   class ValidateThisInStaticFunctions extends \PHPUnit_Framework_TestCase {
 
@@ -41,7 +41,7 @@
      */
     public function testExtract($code, $expectThis) {
       $collection = Collection::initFromString("<?php " . $code);
-      $stream = new StreamProcess($collection, true);
+      $stream = new QuerySequence($collection, true);
 
       $containThis = false;
       # remove empty string and dot    

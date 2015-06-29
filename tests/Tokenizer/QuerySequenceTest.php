@@ -3,8 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Strategy\Strict;
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
   class StreamProcessTest extends MainTestCase {
@@ -16,12 +15,13 @@
       echo $a;
       echo $a;
       ';
-      $finder = new StreamProcess(Collection::initFromString($code));
+      $collection = Collection::initFromString($code);
 
       $findItems = array();
-      foreach ($finder as $processor) {
-        $token = $processor->strict('echo');
-        if ($processor->isValid()) {
+      foreach ($collection as $index => $token) {
+        $querySequence = new QuerySequence($collection, $index);
+        $token = $querySequence->strict('echo');
+        if ($querySequence->isValid()) {
           $findItems[] = $token;
         }
       }
@@ -29,16 +29,17 @@
       $this->assertCount(3, $findItems);
     }
 
+    /**
+     * 
+     */
     public function testMoveTo() {
       $code = '<?php echo $a;';
       $collection = Collection::initFromString($code);
-
       $lastToken = $collection->getLast();
 
-      $finder = new StreamProcess($collection);
+      $finder = new QuerySequence($collection);
       $token = $finder->moveTo($lastToken->getIndex());
       $this->assertEquals($lastToken, $token);
     }
 
-  
   }

@@ -4,10 +4,10 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Exception\Exception;
+  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Strict;
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
-  use Funivan\PhpTokenizer\StreamProcess\TokensChecker;
-  use Test\Funivan\PhpTokenizer\Custom\ClassPattern;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
@@ -15,26 +15,36 @@
    */
   class TokensCheckerTest extends MainTestCase {
 
+    public function _testQuerySequence() {
+      $code = '<?php class A { public $user = null; }';
+      $collection = Collection::initFromString($code);
+      //
+      //foreach ($collection as $index => $token) {
+      //  $querySequence = new QuerySequence($collection, $index);
+      //  $querySequence->st
+      //  if ($patternResult === null) {
+      //    continue;
+      //  }
+      //
+      //  $result[] = $patternResult;
+      //}
+
+    }
+
     /**
      * Prototype for new version
      */
     public function testWithCallbackPattern() {
       $code = '<?php class A { public $user = null; }';
-      $tokensChecker = new TokensChecker(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::initFromString($code));
 
-      $tokensChecker->pattern(function (StreamProcess $processor) {
-        $newCollections = [];
-
-        foreach ($processor as $p) {
-          $p->strict('class');
-          $p->process(Strict::create()->valueLike("!.*!"));
-          $body = $p->section('{', '}');
-          if ($p->isValid()) {
-            $newCollections[] = $body->extractItems(1, -1);
-          }
+      $tokensChecker->apply(function (QuerySequence $processor) {
+        $processor->strict('class');
+        $processor->process(Strict::create()->valueLike("!.*!"));
+        $body = $processor->section('{', '}');
+        if ($processor->isValid()) {
+          return $body->extractItems(1, -1);
         }
-
-        return $newCollections;
       });
 
       $this->assertCount(1, $tokensChecker->getCollections());
@@ -42,40 +52,41 @@
 
     public function testWithClassPattern() {
       $code = '<?php class A { public $user = null; } class customUser { }';
-      $tokensChecker = new TokensChecker(Collection::initFromString($code));
-      $tokensChecker->pattern(new ClassPattern());
+      $tokensChecker = new Pattern(Collection::initFromString($code));
+      $tokensChecker->apply(new ClassPattern());
+
 
       $this->assertCount(2, $tokensChecker->getCollections());
 
-      $tokensChecker = new TokensChecker(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::initFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->nameIs('B');
-      $tokensChecker->pattern($classPattern);
+      $tokensChecker->apply($classPattern);
 
       $this->assertCount(0, $tokensChecker->getCollections());
 
-      $tokensChecker = new TokensChecker(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::initFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->nameIs('A');
-      $tokensChecker->pattern($classPattern);
+      $tokensChecker->apply($classPattern);
 
       $this->assertCount(1, $tokensChecker->getCollections());
 
-      $tokensChecker = new TokensChecker(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::initFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->nameIs('customUser');
-      $tokensChecker->pattern($classPattern);
+      $tokensChecker->apply($classPattern);
 
       $this->assertCount(1, $tokensChecker->getCollections());
     }
 
 
-    public function testWithNestedPatterns() {
+    public function _testWithNestedPatterns() {
       # find class with property 
       $code = '<?php class A { public $user = null; static $name;} class customUser { $value; }';
-      $tokensChecker = new TokensChecker(Collection::initFromString($code));
-      $tokensChecker->pattern(new ClassPattern())
-        ->pattern(function (StreamProcess $process) {
+      $tokensChecker = new Pattern(Collection::initFromString($code));
+      $tokensChecker->apply(new ClassPattern())
+        ->apply(function (QuerySequence $process) {
 
           $result = array();
           foreach ($process as $p) {
@@ -110,10 +121,10 @@
     /**
      * @expectedException Exception
      */
-    public function testInvalidPatternResult() {
-      $tokensChecker = new TokensChecker(Collection::initFromString('<?php echo 1;'));
+    public function _testInvalidPatternResult() {
+      $tokensChecker = new Pattern(Collection::initFromString('<?php echo 1;'));
       /** @noinspection PhpUnusedParameterInspection */
-      $tokensChecker->pattern(function (StreamProcess $process) {
+      $tokensChecker->apply(function (QuerySequence $process) {
         return new \stdClass();
       });
 
@@ -122,10 +133,10 @@
     /**
      * @expectedException Exception
      */
-    public function testInvalidPatternResultArray() {
-      $tokensChecker = new TokensChecker(Collection::initFromString('<?php echo 1;'));
+    public function _testInvalidPatternResultArray() {
+      $tokensChecker = new Pattern(Collection::initFromString('<?php echo 1;'));
       /** @noinspection PhpUnusedParameterInspection */
-      $tokensChecker->pattern(function (StreamProcess $process) {
+      $tokensChecker->apply(function (QuerySequence $process) {
         return array(new \stdClass());
       });
 
@@ -145,17 +156,14 @@
       
       ';
       $collection = Collection::initFromString($code);
-      $tokensChecker = new TokensChecker($collection);
-      $tokensChecker->pattern(
+      $tokensChecker = new Pattern($collection);
+      $tokensChecker->apply(
         (new ClassPattern())->nameIs('UsersController')
-      )->pattern(function (StreamProcess $process) {
-
-        foreach ($process as $p) {
-          $function = $p->strict('header');
-          $p->strict('(');
-          if ($p->isValid()) {
-            $function->setValue('$this->response()->redirect');
-          }
+      )->apply(function (QuerySequence $q) {
+        $function = $q->strict('header');
+        $q->strict('(');
+        if ($q->isValid()) {
+          $function->setValue('$this->response()->redirect');
         }
       });
 

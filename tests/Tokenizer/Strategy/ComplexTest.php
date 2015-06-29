@@ -3,8 +3,8 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Possible;
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Funivan\PhpTokenizer\Token;
 
   class ComplexTest extends \PHPUnit_Framework_TestCase {
@@ -17,10 +17,14 @@
       
       ;
       ';
-      $finder = new StreamProcess(Collection::initFromString($code), true);
+      $collection = Collection::initFromString($code);
+
 
       $findItems = array();
-      foreach ($finder as $q) {
+      foreach ($collection as $index => $token) {
+        $q = new QuerySequence($collection, $index);
+        $q->setSkipWhitespaces(true);
+
         $list = $q->sequence(['echo', '$a', ';']);
         if ($q->isValid()) {
           $findItems[] = $list;
@@ -32,16 +36,8 @@
       $this->assertCount(3, $findItems);
     }
 
-    public function testWithoutWhitespaceSkip() {
-      $code = '<?php 
-      echo $a;
-      echo $a  ;
-      echo $a
-      
-      ;
-      ';
-
-      $sequenceConfiguration = array(
+    public function getTestWithoutWhitespaceSkipDataProvider() {
+      return array(
         array(
           'sequence' => array('echo', '$a', ';'),
           'items' => 0
@@ -61,23 +57,33 @@
           'sequence' => array('echo', T_WHITESPACE, '$a', T_WHITESPACE, ';'),
           'items' => 2
         ),
-
       );
+    }
+
+    /**
+     * @dataProvider getTestWithoutWhitespaceSkipDataProvider
+     */
+    public function testWithoutWhitespaceSkip($sequence, $expectItems) {
+      $code = '<?php 
+      echo $a;
+      echo $a  ;
+      echo $a
+      
+      ;
+      ';
+
       $collection = Collection::initFromString($code);
 
-      foreach ($sequenceConfiguration as $itemInfo) {
-        $finder = new StreamProcess($collection);
-        $findItems = array();
-        foreach ($finder as $q) {
-
-          $list = $q->sequence($itemInfo['sequence']);
-          if ($q->isValid()) {
-            $findItems[] = $list;
-          }
+      $findItems = array();
+      foreach ($collection as $index => $token) {
+        $q = new QuerySequence($collection, $index);
+        $list = $q->sequence($sequence);
+        if ($q->isValid()) {
+          $findItems[] = $list;
         }
-
-        $this->assertEquals($itemInfo['items'], count($findItems));
       }
+
+      $this->assertCount($expectItems, $findItems);
 
     }
 
@@ -149,10 +155,9 @@
 
       $collection = Collection::initFromString($code);
 
-      $finder = new StreamProcess($collection, true);
-
-      foreach ($finder as $q) {
-
+      foreach ($collection as $index => $token) {
+        $q = new QuerySequence($collection, $index);
+        $q->setSkipWhitespaces(true);
         $start = $q->sequence(['if', '(', Possible::create()->valueIs('!'), 'is_array', '(']);
 
         $token = $q->strict(T_VARIABLE);

@@ -2,7 +2,8 @@
 
   namespace Test\Funivan\PhpTokenizer\Demo;
 
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
+  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
   /**
    *
@@ -65,31 +66,30 @@
     public function testExtract($code, $expectCode) {
       $collection = \Funivan\PhpTokenizer\Collection::initFromString("<?php " . $code);
 
-      $stream = new StreamProcess($collection);
+      $checker = new Pattern($collection);
+      $checker->apply(function (QuerySequence $q) {
 
-
-      # extract variable from string  
-      while ($p = $stream->getProcessor()) {
-        $p->strict('"');
-        $p->possible(T_ENCAPSED_AND_WHITESPACE);
-        $variable = $p->strict(T_VARIABLE);
-        $arrow = $p->possible('->');
+        $q->strict('"');
+        $q->possible(T_ENCAPSED_AND_WHITESPACE);
+        $variable = $q->strict(T_VARIABLE);
+        $arrow = $q->possible('->');
         if ($arrow->isValid()) {
-          $property = $p->strict(T_STRING);
+          $property = $q->strict(T_STRING);
         }
 
 
-        if ($p->isValid()) {
+        if ($q->isValid()) {
           $variable->prependToValue('".');
           if (!empty($property) and $property->isValid()) {
             $property->appendToValue('."');
           } else {
             $variable->appendToValue('."');
           }
-          $collection->refresh();
-        }
 
-      }
+          $q->getCollection()->refresh();
+        }
+        
+      });
 
       $collection[0]->remove();
       $this->assertEquals($expectCode, (string) $collection);

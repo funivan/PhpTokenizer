@@ -3,8 +3,8 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Search;
-  use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
@@ -23,11 +23,10 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new StreamProcess($collection);
-
       $linesWithEcho = array();
 
-      foreach ($finder as $q) {
+      foreach ($collection as $index => $token) {
+        $q = new QuerySequence($collection, $index);
         $start = $q->strict('echo');
         $end = $q->search(';');
 
@@ -58,11 +57,11 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new StreamProcess($collection);
 
       $linesWithEcho = array();
 
-      foreach ($finder as $q) {
+      foreach ($collection as $index => $token) {
+        $q = new QuerySequence($collection, $index);
 
         $q->strict('echo');
         $q->search(';');
@@ -97,11 +96,11 @@
       ';
 
       $collection = Collection::initFromString($code);
-      $finder = new StreamProcess($collection);
+      $finder = new QuerySequence($collection);
 
       $linesWithEcho = array();
 
-      foreach($finder as $q){
+      foreach ($finder as $q) {
 
         $q->strict('echo');
         $q->search(';');
