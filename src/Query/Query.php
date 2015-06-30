@@ -31,13 +31,6 @@
 
     const REXEG = 'regex';
 
-    const FIELD_VALUE = 'value';
-
-    const FIELD_TYPE = 'type';
-
-    const FIELD_LINE = 'line';
-
-    const FIELD_INDEX = 'index';
 
     /**
      * Storage of type conditions
@@ -127,42 +120,82 @@
 
 
     /**
-     * @param int $lineNumber
+     * @param int $line
      * @return $this
      */
-    public function lineIs($lineNumber) {
-      $lineNumbers = $this->prepareIntValues($lineNumber);
+    public function lineIs($line) {
+      $lineNumbers = $this->prepareIntValues($line);
       $this->line[self::IS] = $lineNumbers;
       return $this;
     }
 
     /**
-     * @param int $lineNumber
+     * @param int $line
      * @return $this
      */
-    public function lineNot($lineNumber) {
-      $lineNumbers = $this->prepareIntValues($lineNumber);
+    public function lineNot($line) {
+      $lineNumbers = $this->prepareIntValues($line);
       $this->line[self::NOT] = $lineNumbers;
       return $this;
     }
 
     /**
-     * @param int $lineNumber
+     * @param int $line
      * @return $this
      */
-    public function lineGt($lineNumber) {
-      $lineNumbers = $this->prepareIntValues($lineNumber);
-      $this->line[self::GREATER_THAN] = $lineNumbers[0];
+    public function lineGt($line) {
+      $lineNumbers = $this->prepareIntValues($line);
+      $this->line[self::GREATER_THAN] = max($lineNumbers);
       return $this;
     }
 
     /**
-     * @param int $lineNumber
+     * @param int $line
      * @return $this
      */
-    public function lineLt($lineNumber) {
-      $lineNumbers = $this->prepareIntValues($lineNumber);
-      $this->line[self::LESS_THAN] = $lineNumbers[0];
+    public function lineLt($line) {
+      $lineNumbers = $this->prepareIntValues($line);
+      $this->line[self::LESS_THAN] = min($lineNumbers);
+      return $this;
+    }
+
+    /**
+     * @param int|int[] $index
+     * @return $this
+     */
+    public function indexIs($index) {
+      $indexNumbers = $this->prepareIntValues($index);
+      $this->index[self::IS] = $indexNumbers;
+      return $this;
+    }
+
+    /**
+     * @param int|int[] $index
+     * @return $this
+     */
+    public function indexNot($index) {
+      $indexNumbers = $this->prepareIntValues($index);
+      $this->index[self::NOT] = $indexNumbers;
+      return $this;
+    }
+
+    /**
+     * @param int|int[] $index
+     * @return $this
+     */
+    public function indexGt($index) {
+      $indexNumbers = $this->prepareIntValues($index);
+      $this->index[self::GREATER_THAN] = max($indexNumbers);
+      return $this;
+    }
+
+    /**
+     * @param int|int[] $index
+     * @return $this
+     */
+    public function indexLt($index) {
+      $indexNumbers = $this->prepareIntValues($index);
+      $this->index[self::LESS_THAN] = min($indexNumbers);
       return $this;
     }
 
@@ -172,16 +205,19 @@
      */
     public function isValid(\Funivan\PhpTokenizer\Token $token) {
 
-      # check type
       if (!$this->validateType($token)) {
         return false;
       }
 
-      if (!$this->validateLine($token)) {
+      if (!$this->validateValue($token)) {
         return false;
       }
 
-      if (!$this->validateValue($token)) {
+      if (!$this->validateIndex($token)) {
+        return false;
+      }
+
+      if (!$this->validateLine($token)) {
         return false;
       }
 
@@ -219,27 +255,20 @@
         return true;
       }
 
-      $line = $token->getLine();
+      return $this->validateIntegerProperty($this->line, $token->getLine());
+    }
 
-      # check line
-      if (!$this->validateIsCondition($this->line, $line)) {
-        return false;
+    /**
+     * @param Token $token
+     * @return bool
+     */
+    private function validateIndex(Token $token) {
+
+      if (empty($this->index)) {
+        return true;
       }
 
-      if (!$this->validateNotCondition($this->line, $line)) {
-        return false;
-      }
-
-      if (array_key_exists(static::GREATER_THAN, $this->line) and $line <= $this->line[static::GREATER_THAN]) {
-        return false;
-      }
-
-      if (array_key_exists(static::LESS_THAN, $this->line) and $line >= $this->line[static::LESS_THAN]) {
-        return false;
-      }
-
-
-      return true;
+      return $this->validateIntegerProperty($this->index, $token->getIndex());
     }
 
     /**
@@ -247,7 +276,7 @@
      * @return bool
      */
     private function validateValue(Token $token) {
-      
+
       if (empty($this->value)) {
         return true;
       }
@@ -358,6 +387,34 @@
           return false;
         }
       }
+
+      return true;
+    }
+
+    /**
+     * @param array $conditions
+     * @param int $value
+     * @return bool
+     */
+    private function validateIntegerProperty($conditions, $value) {
+
+      # check line
+      if (!$this->validateIsCondition($conditions, $value)) {
+        return false;
+      }
+
+      if (!$this->validateNotCondition($conditions, $value)) {
+        return false;
+      }
+
+      if (array_key_exists(static::GREATER_THAN, $conditions) and $value <= $conditions[static::GREATER_THAN]) {
+        return false;
+      }
+
+      if (array_key_exists(static::LESS_THAN, $conditions) and $value >= $conditions[static::LESS_THAN]) {
+        return false;
+      }
+
 
       return true;
     }

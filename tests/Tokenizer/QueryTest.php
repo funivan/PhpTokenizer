@@ -5,6 +5,7 @@
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\Query\Query;
+  use Funivan\PhpTokenizer\Token;
   use Funivan\PhpTokenizer\TokenFinder;
 
   /**
@@ -127,14 +128,14 @@
 
     public function testQueryWithoutConditions() {
       $query = new Query();
-      $token = new \Funivan\PhpTokenizer\Token();
+      $token = new Token();
       $this->assertTrue($query->isValid($token));
     }
 
     public function testLineEmptyCheck() {
       $query = new Query();
       $query->lineIs(null);
-      $token = new \Funivan\PhpTokenizer\Token();
+      $token = new Token();
       $token->setLine(10);
 
       $this->assertFalse($query->isValid($token));
@@ -147,6 +148,99 @@
       $query = new Query();
       $query->lineIs(new \stdClass());
 
+    }
+
+    public function testIndexIs() {
+      $query = new Query();
+      $query->indexIs(1);
+      $token = new Token();
+      $token->setIndex(1);
+
+      $this->assertTrue($query->isValid($token));
+      $token->setIndex(3);
+      $this->assertFalse($query->isValid($token));
+    }
+
+    public function testIndexIsMultipleDefinition() {
+      $query = new Query();
+      $query->indexIs([4, 5, 6, 1]);
+      $token = new Token();
+      $token->setIndex(1);
+
+      $this->assertTrue($query->isValid($token));
+      $token->setIndex(10);
+      $this->assertFalse($query->isValid($token));
+    }
+
+    public function testIndexNot() {
+      $query = new Query();
+      $query->indexIs(1);
+      $token = new Token();
+      $token->setIndex(10);
+
+      $this->assertFalse($query->isValid($token));
+      $token->setIndex(1);
+      $this->assertTrue($query->isValid($token));
+    }
+
+
+    public function testIndexNotMultipleDefinition() {
+      $query = new Query();
+      $query->indexNot([4, 5, 6, 1]);
+      $token = new Token();
+      $token->setIndex(2);
+
+      $this->assertTrue($query->isValid($token));
+
+      $token->setIndex(4);
+      $this->assertFalse($query->isValid($token));
+    }
+
+    public function testLt() {
+      $query = new Query();
+      $query->indexLt(10);
+      $token = new Token();
+      $token->setIndex(10);
+
+      $this->assertFalse($query->isValid($token));
+      $token->setIndex(8);
+      $this->assertTrue($query->isValid($token));
+
+      $query = new Query();
+      $query->indexLt([40, 30, 20]);
+      $this->assertTrue($query->isValid($token));
+
+      $token->setIndex(35);
+      $this->assertFalse($query->isValid($token));
+      
+    }
+    
+    public function testGt() {
+      $query = new Query();
+      $query->indexGt(10);
+      
+      $token = new Token();
+      $token->setIndex(10);
+
+      $this->assertFalse($query->isValid($token));
+      
+      
+      $token->setIndex(11);
+      $this->assertTrue($query->isValid($token));
+
+      $query = new Query();
+      $query->indexGt([40, 30, 20]);
+      $this->assertFalse($query->isValid($token));
+
+      $token->setIndex(21);
+      $this->assertFalse($query->isValid($token));
+      
+      $token->setIndex(40);
+      $this->assertFalse($query->isValid($token));
+      
+      $token->setIndex(41);
+      $this->assertTrue($query->isValid($token));
+      
     }
 
   }
