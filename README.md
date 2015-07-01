@@ -22,26 +22,30 @@ Reformat our code like PhpStorm. Lets create rule: place single spaces after `wh
   
 ``` php
 
-   use Funivan\PhpTokenizer\File;
-   use Funivan\PhpTokenizer\StreamProcess\StreamProcess;
- 
    require __DIR__.'/vendor/autoload.php';
- 
-   $file = new File(__FILE__);
-   $stream = new StreamProcess($file->getCollection());
- 
-   while ($p = $stream->getProcessor()) {
-     $while = $p->strict('while');
-     $space = $p->possible(T_WHITESPACE);
- 
-     if ($p->isValid()) {
-       $space->remove();
-       $while->appendToValue(" ");
-     }
- 
-   }
- 
-   echo $file->getCollection();
+   
+  use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
+
+
+  $source = "<?php while(){}"; // while (){}
+  
+  $collection = Collection::initFromString($source);
+  
+  (new Pattern($collection))->apply(function (QuerySequence $checker) {
+
+    $while = $checker->strict('while');
+    $space = $checker->possible(T_WHITESPACE);
+
+    if ($checker->isValid()) {
+      $space->remove();
+      $while->appendToValue(" ");
+    }
+
+  });
+
+  echo (string) $collection;
    
 
 
