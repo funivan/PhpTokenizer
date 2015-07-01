@@ -4,7 +4,11 @@
 
   use Funivan\PhpTokenizer\Token;
 
-  class Result {
+  /**
+   *
+   * @package Funivan\PhpTokenizer\Strategy
+   */
+  class StrategyResult {
 
     /**
      * @var Token

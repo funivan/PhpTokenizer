@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
-  use Funivan\PhpTokenizer\Query\QueryInterface;
+  use Funivan\PhpTokenizer\Strategy\BaseStrategy;
   use Funivan\PhpTokenizer\Strategy\Move;
   use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Strategy\Search;
@@ -72,22 +72,22 @@
     /**
      * Strict validation of condition
      *
-     * @param int|string $condition
+     * @param int|string|Strict $condition
      * @return Token
      */
     public function strict($condition) {
-      $query = $this->buildQuery($condition, Strict::create());
+      $query = $this->buildStrategyConditions($condition, Strict::create());
       return $this->process($query);
     }
 
     /**
      * Check if token possible valid for our condition
      *
-     * @param int|string $condition
+     * @param int|string|Possible $condition
      * @return Token
      */
     public function possible($condition) {
-      $query = $this->buildQuery($condition, Possible::create());
+      $query = $this->buildStrategyConditions($condition, Possible::create());
       return $this->process($query);
     }
 
@@ -119,7 +119,7 @@
     /**
      * By default we search forward
      *
-     * @param int|string $condition
+     * @param int|string|Search $condition
      * @param null $direction
      * @return Token
      */
@@ -128,11 +128,15 @@
       if ($direction !== null) {
         $strategy->setDirection($direction);
       }
-      $query = $this->buildQuery($condition, $strategy);
+      $query = $this->buildStrategyConditions($condition, $strategy);
       return $this->process($query);
     }
 
-    /**
+    /**     
+     * Relative move 
+     * +10 move forward 10 tokens       
+     * -5 move backward 5 tokens       
+     * 
      * @param int $steps
      * @return Token
      */
@@ -159,14 +163,16 @@
     }
 
 
-    /**
+    /**                                   
+     * Array may contain Int, String or any StrategyInterface object
+     * 
      * @param array $conditions
      * @return Collection
      */
     public function sequence(array $conditions) {
       $range = new Collection();
       foreach ($conditions as $value) {
-        $range[] = $this->check($value);
+        $range[] = $this->checkFromSequence($value);
       }
 
       return $range;
@@ -176,11 +182,11 @@
      * @param string|int|StrategyInterface $value
      * @return Token
      */
-    private function check($value) {
+    private function checkFromSequence($value) {
       if ($value instanceof StrategyInterface) {
         $query = $value;
       } else {
-        $query = $this->buildQuery($value, Strict::create());
+        $query = $this->buildStrategyConditions($value, Strict::create());
       }
 
       $token = $this->process($query);
@@ -220,33 +226,31 @@
     }
 
     /**
-     * @todo change queryInterface
      *
      * @param StrategyInterface|string|int $value
-     * @param QueryInterface $defaultStrategy
-     * @return StrategyInterface
+     * @param BaseStrategy $defaultStrategy
+     * @return BaseStrategy
      */
-    private function buildQuery($value, QueryInterface $defaultStrategy) {
+    private function buildStrategyConditions($value, BaseStrategy $defaultStrategy) {
+      
+      if (is_object($value) and get_class($value) == get_class($defaultStrategy)) {
+        return $value;
+      }
+
       if (is_string($value) or $value === null) {
         $query = $defaultStrategy;
         $query->valueIs($value);
-      } elseif (is_int($value)) {
-        $query = $defaultStrategy;
-        $query->typeIs($value);
-      } else {
-        throw new InvalidArgumentException("Invalid token condition. Expect string or int or StrategyInterface");
+        return $query;
       }
 
-      return $query;
-    }
+      if (is_int($value)) {
+        $query = $defaultStrategy;
+        $query->typeIs($value);
+        return $query;
+      }
 
 
-    /**
-     * @inheritdoc
-     */
-    public function valid() {
-      $position = $this->getPosition();
-      return isset($this->collection[$position]);
+      throw new InvalidArgumentException("Invalid token condition. Expect string or int or StrategyInterface");
     }
 
 

@@ -3,13 +3,12 @@
   namespace Funivan\PhpTokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
-  use Funivan\PhpTokenizer\Query\Query;
 
   /**
    *
    * @package Funivan\PhpTokenizer\Query\Strategy
    */
-  class Search extends Query implements StrategyInterface {
+  class Search extends BaseStrategy {
 
     /**
      * Move forward flag
@@ -36,7 +35,7 @@
      */
     public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
 
-      $result = new Result();
+      $result = new StrategyResult();
 
       # getProcessor while we can check toke
 
@@ -63,7 +62,7 @@
       return $result;
     }
 
-    /**   
+    /**
      * @param int $direction
      * @return $this
      */

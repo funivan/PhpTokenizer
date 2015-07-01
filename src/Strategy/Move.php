@@ -62,7 +62,7 @@
      * @inheritdoc
      */
     public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
-      $result = new Result();
+      $result = new StrategyResult();
 
       $endIndex = $currentIndex + $this->steps;
 

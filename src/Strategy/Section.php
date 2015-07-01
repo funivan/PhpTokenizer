@@ -10,7 +10,7 @@
    *
    * @package Funivan\PhpTokenizer\Query\Strategy
    */
-  class Section extends Query implements StrategyInterface {
+  class Section extends BaseStrategy {
 
     /**
      * @var QueryInterface
@@ -48,7 +48,7 @@
 
       $this->requireQueries();
 
-      $result = new Result();
+      $result = new StrategyResult();
       $token = $collection->offsetGet($currentIndex);
       if (empty($token) or $this->startQuery->isValid($token) === false) {
         return $result;
@@ -78,7 +78,7 @@
       }
 
       if (isset($startIndex) and isset($endIndex)) {
-        $result = new Result();
+        $result = new StrategyResult();
         $result->setValid(true);
         $result->setNexTokenIndex(++$endIndex);
         $result->setToken($token);

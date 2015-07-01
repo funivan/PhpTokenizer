@@ -16,7 +16,7 @@
      * 
      * @param Collection $collection
      * @param int $currentIndex
-     * @return Result
+     * @return StrategyResult
      */
     public function process(Collection $collection, $currentIndex);
 
