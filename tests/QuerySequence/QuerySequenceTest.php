@@ -48,7 +48,7 @@
       $lastToken = $collection->getLast();
 
       $finder = new QuerySequence($collection);
-      $token = $finder->moveTo($lastToken->getIndex());
+      $token = $finder->moveToToken($lastToken);
       $this->assertEquals($lastToken, $token);
     }
 

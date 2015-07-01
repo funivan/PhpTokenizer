@@ -13,6 +13,9 @@
    */
   class MoveTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
+    /**
+     *
+     */
     public function testMove() {
       $code = '<?php  $a';
 
@@ -40,16 +43,31 @@
       Move::create(null);
     }
 
-    public function testMoveToTokenIndex() {
+    /**
+     *
+     */
+    public function testMoveToToken() {
       $code = '<?php echo $a;';
 
       $collection = Collection::initFromString($code);
-      $newCollection = $collection->extractItems(1);
 
-      $finder = new QuerySequence($newCollection);
+      $finder = new QuerySequence($collection);
+      $token = $collection[3];
+      
+      $this->assertEquals('$a', $finder->moveToToken($token)->getValue());
+      $this->assertTrue($finder->isValid());
+      
+      # token is connected to collection
+      # so when we modify token index we can find this token in collection
+      $token->setIndex(125);
+      $this->assertEquals('$a', $finder->moveToToken($token)->getValue());
+      $this->assertTrue($finder->isValid());
 
-      $this->assertEquals('$a', $finder->moveTo(3)->getValue());
-      $this->assertEquals(null, $finder->moveTo(14)->getValue());
+      # disconnect token from collection
+      $token = clone $token;
+      $token->setIndex(4525);
+      $this->assertEquals(null, $finder->moveToToken($token)->getValue());
+      $this->assertFalse($finder->isValid());
     }
 
   }

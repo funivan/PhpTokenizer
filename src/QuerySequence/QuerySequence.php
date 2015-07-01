@@ -104,7 +104,7 @@
         return new Collection();
       }
 
-      $this->moveTo($token->getIndex());
+      $this->moveToToken($token);
 
       $section = new \Funivan\PhpTokenizer\Strategy\Section();
       $section->setDelimiters($start, $end);
@@ -147,18 +147,27 @@
     /**
      * Move to specific position
      *
-     * @param int $tokenIndex
+     * @param Token $token
      * @return Token|null
      */
-    public function moveTo($tokenIndex) {
+    public function moveToToken(Token $token) {
 
-      foreach ($this->collection as $index => $token) {
-        if ($token->getIndex() == $tokenIndex) {
+      if (!$token->isValid()) {
+        $this->setValid(false);
+        return new Token();
+      }
+
+      $tokenIndex = $token->getIndex();
+      
+
+      foreach ($this->collection as $index => $collectionToken) {
+        if ($collectionToken->getIndex() == $tokenIndex) {
           $this->setPosition($index);
-          return $token;
+          return $collectionToken;
         }
       }
 
+      $this->setValid(false);
       return new Token();
     }
 
