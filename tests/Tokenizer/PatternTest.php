@@ -29,6 +29,7 @@
         if ($processor->isValid()) {
           return $body->extractItems(1, -1);
         }
+        return null;
       });
 
       $this->assertCount(1, $tokensChecker->getCollections());
@@ -85,6 +86,7 @@
           if ($p->isValid()) {
             return new Collection(array($name));
           }
+          return null;
         });
 
       $collections = $tokensChecker->getCollections();
@@ -145,7 +147,28 @@
       });
 
       $this->assertContains('$this->response()->redirect("123")', (string) $collection);
+
+    }
+
+    /**
+     * @expectedException \Funivan\PhpTokenizer\Exception\Exception
+     */
+    public function testPatternWithNullResult() {
+      $code = '<?php 
+      class UsersController extends Base { 
+        public function test(){
+          header("123");
+        }
+      }
       
+      ';
+      $collection = Collection::initFromString($code);
+      $tokensChecker = new Pattern($collection);
+      $tokensChecker->apply(function (QuerySequence $q) {
+        $q->setSkipWhitespaces(true);
+        return array();
+      });
+
     }
 
   }

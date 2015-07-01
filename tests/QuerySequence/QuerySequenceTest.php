@@ -7,6 +7,7 @@
   use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Strategy\Search;
   use Funivan\PhpTokenizer\Strategy\Strict;
+  use Funivan\PhpTokenizer\Token;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
@@ -42,7 +43,7 @@
     /**
      *
      */
-    public function testMoveTo() {
+    public function testMoveToToken() {
       $code = '<?php echo $a;';
       $collection = Collection::initFromString($code);
       $lastToken = $collection->getLast();
@@ -50,6 +51,12 @@
       $finder = new QuerySequence($collection);
       $token = $finder->moveToToken($lastToken);
       $this->assertEquals($lastToken, $token);
+      
+      
+      $finder = new QuerySequence($collection);
+      $token = $finder->moveToToken(new Token());
+      $this->assertNull($token->getValue());
+      $this->assertFalse($finder->isValid());
     }
 
 

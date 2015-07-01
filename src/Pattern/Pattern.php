@@ -40,21 +40,6 @@
 
         $collectionsResult = $this->iterateOverCollections($pattern, $collection);
 
-        if ($collectionsResult === null) {
-          $collectionsResult = array();
-        }
-
-        if (!is_array($collectionsResult)) {
-          throw new Exception('Invalid result from pattern callback. Expect null or array of collections');
-        }
-
-        foreach ($collectionsResult as $resultCollection) {
-          if (!($resultCollection instanceof Collection)) {
-            throw new Exception("Invalid result from pattern callback. Expect array of collections");
-          }
-        }
-
-
         foreach ($collectionsResult as $resultCollection) {
           $this->collections[] = $resultCollection;
         }
@@ -76,7 +61,8 @@
     /**
      * @param callable $pattern
      * @param Collection $collection
-     * @return mixed
+     * @return array
+     * @throws Exception
      */
     protected function iterateOverCollections(callable $pattern, Collection $collection) {
       $result = array();
@@ -85,6 +71,10 @@
         $patternResult = $pattern($querySequence);
         if ($patternResult === null) {
           continue;
+        }
+
+        if (!($patternResult instanceof Collection)) {
+          throw new Exception('Invalid result from pattern callback. Expect Collection. Given:' . gettype($patternResult));
         }
 
         $result[] = $patternResult;

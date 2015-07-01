@@ -39,10 +39,13 @@
       $previousToken = $collection->getPrevious(2);
       $this->assertInstanceOf(Token::N, $previousToken);
 
-      $previousToken = $collection->getNext(100);
-      $this->assertInstanceOf(Token::N, $previousToken);
-
-      $this->assertEquals(null, $previousToken->getValue());
+      $next = $collection->getNext(100);
+      $this->assertInstanceOf(Token::N, $next);
+      $this->assertEquals(null, $next->getValue());
+      
+      $previous = $collection->getPrevious(100);
+      $this->assertInstanceOf(Token::N, $previous);
+      $this->assertEquals(null, $previous->getValue());
     }
 
     public function testAssemble() {
