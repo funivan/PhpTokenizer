@@ -76,7 +76,7 @@
      * @return Token
      */
     public function strict($condition) {
-      $query = $this->buildStrategyConditions($condition, Strict::create());
+      $query = $this->buildStrategyCondition($condition, Strict::create());
       return $this->process($query);
     }
 
@@ -87,7 +87,7 @@
      * @return Token
      */
     public function possible($condition) {
-      $query = $this->buildStrategyConditions($condition, Possible::create());
+      $query = $this->buildStrategyCondition($condition, Possible::create());
       return $this->process($query);
     }
 
@@ -128,15 +128,15 @@
       if ($direction !== null) {
         $strategy->setDirection($direction);
       }
-      $query = $this->buildStrategyConditions($condition, $strategy);
+      $query = $this->buildStrategyCondition($condition, $strategy);
       return $this->process($query);
     }
 
-    /**     
-     * Relative move 
-     * +10 move forward 10 tokens       
-     * -5 move backward 5 tokens       
-     * 
+    /**
+     * Relative move
+     * +10 move forward 10 tokens
+     * -5 move backward 5 tokens
+     *
      * @param int $steps
      * @return Token
      */
@@ -163,9 +163,9 @@
     }
 
 
-    /**                                   
+    /**
      * Array may contain Int, String or any StrategyInterface object
-     * 
+     *
      * @param array $conditions
      * @return Collection
      */
@@ -186,7 +186,7 @@
       if ($value instanceof StrategyInterface) {
         $query = $value;
       } else {
-        $query = $this->buildStrategyConditions($value, Strict::create());
+        $query = $this->buildStrategyCondition($value, Strict::create());
       }
 
       $token = $this->process($query);
@@ -231,20 +231,20 @@
      * @param BaseStrategy $defaultStrategy
      * @return BaseStrategy
      */
-    private function buildStrategyConditions($value, BaseStrategy $defaultStrategy) {
-      
+    private function buildStrategyCondition($value, BaseStrategy $defaultStrategy) {
+
       if (is_object($value) and get_class($value) == get_class($defaultStrategy)) {
         return $value;
       }
 
+      $query = $defaultStrategy;
+
       if (is_string($value) or $value === null) {
-        $query = $defaultStrategy;
         $query->valueIs($value);
         return $query;
       }
 
       if (is_int($value)) {
-        $query = $defaultStrategy;
         $query->typeIs($value);
         return $query;
       }
