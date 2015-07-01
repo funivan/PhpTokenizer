@@ -20,5 +20,5 @@ script:
   - phpunit --coverage-text --coverage-clover=./build/coverage.clover
 
 after_script:
-  - wget https://scrutinizer-ci.com/ocular.phar  -O build/ocular.phar 
-  - php ./build/ocular.phar code-coverage:upload --format=php-clover ./build/coverage.clover
+  - if [ "$TRAVIS_PHP_VERSION" != "nightly" ]; then wget https://scrutinizer-ci.com/ocular.phar  -O build/ocular.phar; fi
+  - if [ "$TRAVIS_PHP_VERSION" != "nightly" ]; then php ./build/ocular.phar code-coverage:upload --format=php-clover ./build/coverage.clover; fi
