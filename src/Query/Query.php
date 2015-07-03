@@ -3,6 +3,7 @@
 
   namespace Funivan\PhpTokenizer\Query;
 
+  use Funivan\PhpTokenizer\Exception\Exception;
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\Token;
 
@@ -31,6 +32,14 @@
 
     const REXEG = 'regex';
 
+    /**
+     * Array of check functions
+     * As first argument accept token
+     * Return boolean
+     *
+     * @var callable[]
+     */
+    protected $checkFunctions = array();
 
     /**
      * Storage of type conditions
@@ -73,8 +82,13 @@
      * @return $this
      */
     public function typeIs($type) {
+
       $types = $this->prepareIntValues($type);
-      $this->type[static::IS] = $types;
+
+      $this->checkFunctions[] = function (Token $token) use ($types) {
+        return in_array($token->getType(), $types, true);
+      };
+
       return $this;
     }
 
@@ -83,8 +97,13 @@
      * @return $this
      */
     public function typeNot($type) {
+
       $types = $this->prepareIntValues($type);
-      $this->type[static::NOT] = $types;
+
+      $this->checkFunctions[] = function (Token $token) use ($types) {
+        return !in_array($token->getType(), $types, true);
+      };
+
       return $this;
     }
 
@@ -93,8 +112,12 @@
      * @return $this
      */
     public function valueIs($value) {
-      $value = $this->prepareValues($value);
-      $this->value[self::IS] = $value;
+      $values = $this->prepareValues($value);
+
+      $this->checkFunctions[] = function (Token $token) use ($values) {
+        return in_array($token->getValue(), $values, true);
+      };
+
       return $this;
     }
 
@@ -103,69 +126,55 @@
      * @return $this
      */
     public function valueNot($value) {
-      $value = $this->prepareValues($value);
-      $this->value[self::NOT] = $value;
+
+      $values = $this->prepareValues($value);
+
+      $this->checkFunctions[] = function (Token $token) use ($values) {
+        return !in_array($token->getValue(), $values, true);
+      };
+
       return $this;
     }
 
     /**
-     * @param string $regexp Array<String>|String
+     * @param string $regex Array<String>|String
      * @return $this
      */
-    public function valueLike($regexp) {
-      $regexp = $this->prepareValues($regexp);
-      $this->value[self::REXEG] = $regexp;
+    public function valueLike($regex) {
+      $regexConditions = $this->prepareValues($regex);
+
+      if (empty($regexConditions)) {
+        return $this;
+      }
+
+      $this->checkFunctions[] = function (Token $token) use ($regexConditions) {
+        $value = $token->getValue();
+
+        foreach ($regexConditions as $regex) {
+          if (!preg_match($regex, $value)) {
+            return false;
+          }
+        }
+
+        return true;
+      };
+
       return $this;
     }
 
-
-    /**
-     * @param int $line
-     * @return $this
-     */
-    public function lineIs($line) {
-      $lineNumbers = $this->prepareIntValues($line);
-      $this->line[self::IS] = $lineNumbers;
-      return $this;
-    }
-
-    /**
-     * @param int $line
-     * @return $this
-     */
-    public function lineNot($line) {
-      $lineNumbers = $this->prepareIntValues($line);
-      $this->line[self::NOT] = $lineNumbers;
-      return $this;
-    }
-
-    /**
-     * @param int $line
-     * @return $this
-     */
-    public function lineGt($line) {
-      $lineNumbers = $this->prepareIntValues($line);
-      $this->line[self::GREATER_THAN] = max($lineNumbers);
-      return $this;
-    }
-
-    /**
-     * @param int $line
-     * @return $this
-     */
-    public function lineLt($line) {
-      $lineNumbers = $this->prepareIntValues($line);
-      $this->line[self::LESS_THAN] = min($lineNumbers);
-      return $this;
-    }
 
     /**
      * @param int|int[] $index
      * @return $this
      */
     public function indexIs($index) {
+
       $indexNumbers = $this->prepareIntValues($index);
-      $this->index[self::IS] = $indexNumbers;
+
+      $this->checkFunctions[] = function (Token $token) use ($indexNumbers) {
+        return in_array($token->getIndex(), $indexNumbers, true);
+      };
+
       return $this;
     }
 
@@ -175,7 +184,11 @@
      */
     public function indexNot($index) {
       $indexNumbers = $this->prepareIntValues($index);
-      $this->index[self::NOT] = $indexNumbers;
+
+      $this->checkFunctions[] = function (Token $token) use ($indexNumbers) {
+        return !in_array($token->getIndex(), $indexNumbers, true);
+      };
+
       return $this;
     }
 
@@ -185,7 +198,12 @@
      */
     public function indexGt($index) {
       $indexNumbers = $this->prepareIntValues($index);
-      $this->index[self::GREATER_THAN] = max($indexNumbers);
+
+      $this->checkFunctions[] = function (Token $token) use ($indexNumbers) {
+        return ($token->getIndex() > max($indexNumbers));
+      };
+
+
       return $this;
     }
 
@@ -195,7 +213,11 @@
      */
     public function indexLt($index) {
       $indexNumbers = $this->prepareIntValues($index);
-      $this->index[self::LESS_THAN] = min($indexNumbers);
+
+      $this->checkFunctions[] = function (Token $token) use ($indexNumbers) {
+        return ($token->getIndex() < min($indexNumbers));
+      };
+
       return $this;
     }
 
@@ -205,96 +227,17 @@
      */
     public function isValid(\Funivan\PhpTokenizer\Token $token) {
 
-      if (!$this->validateType($token)) {
-        return false;
-      }
+      foreach ($this->checkFunctions as $check) {
 
-      if (!$this->validateValue($token)) {
-        return false;
-      }
+        $result = $check($token);
+        if (!is_bool($result)) {
+          throw new Exception("Check function should return boolean value. Given:" . gettype($result));
+        }
 
-      if (!$this->validateIndex($token)) {
-        return false;
-      }
+        if ($result === false) {
+          return false;
+        }
 
-
-      return true;
-    }
-
-    /**
-     * @param Token $token
-     * @return bool
-     */
-    private function validateType($token) {
-
-      if (empty($this->type)) {
-        return true;
-      }
-
-      if (!$this->validateIsCondition($this->type, $token->getType())) {
-        return false;
-      }
-
-      if (!$this->validateNotCondition($this->type, $token->getType())) {
-        return false;
-      }
-
-      return true;
-    }
-
-    /**
-     * @param Token $token
-     * @return bool
-     */
-    private function validateIndex(Token $token) {
-
-      if (empty($this->index)) {
-        return true;
-      }
-
-      # check token index
-      if (!$this->validateIsCondition($this->index, $token->getIndex())) {
-        return false;
-      }
-
-      if (!$this->validateNotCondition($this->index, $token->getIndex())) {
-        return false;
-      }
-
-      if (array_key_exists(static::GREATER_THAN, $this->index) and $token->getIndex() <= $this->index[static::GREATER_THAN]) {
-        return false;
-      }
-
-      if (array_key_exists(static::LESS_THAN, $this->index) and $token->getIndex() >= $this->index[static::LESS_THAN]) {
-        return false;
-      }
-
-      return true;
-    }
-
-    /**
-     * @param Token $token
-     * @return bool
-     */
-    private function validateValue(Token $token) {
-
-      if (empty($this->value)) {
-        return true;
-      }
-
-      $value = $token->getValue();
-
-      # check line
-      if (!$this->validateIsCondition($this->value, $value)) {
-        return false;
-      }
-
-      if (!$this->validateNotCondition($this->value, $value)) {
-        return false;
-      }
-
-      if (!$this->validateRegexpCondition($this->value, $value)) {
-        return false;
       }
 
       return true;
@@ -308,7 +251,7 @@
     protected function prepareValues($value) {
 
       if ($value == null) {
-        return array($value);
+        return array();
       }
 
       if (is_object($value)) {
@@ -335,7 +278,7 @@
     protected function prepareIntValues($value) {
 
       if ($value === null) {
-        return array($value);
+        return array();
       }
 
       if (is_object($value)) {
@@ -350,47 +293,19 @@
           throw new InvalidArgumentException('Invalid conditions. Must be integer. Given:' . gettype($intValue));
         }
       }
+
       return $value;
     }
 
     /**
-     * @param $conditions
-     * @param $value
-     * @return bool
+     * Under development
+     *
+     * @param callable $checkFunction
+     * @return $this
      */
-    private function validateIsCondition($conditions, $value) {
-      return (!isset($conditions[static::IS]) or in_array($value, $conditions[static::IS], true));
+    public function custom(callable $checkFunction) {
+      $this->checkFunctions[] = $checkFunction;
+      return $this;
     }
-
-    /**
-     * @param $conditions
-     * @param $line
-     * @return bool
-     */
-    private function validateNotCondition($conditions, $line) {
-      return (!isset($conditions[static::NOT]) or !in_array($line, $conditions[static::NOT], true));
-    }
-
-    /**
-     * @param array $conditions
-     * @param string $value
-     * @return bool
-     */
-    private function validateRegexpCondition($conditions, $value) {
-
-      # check conditions regexp
-      if (empty($conditions[self::REXEG])) {
-        return true;
-      }
-
-      foreach ($conditions[self::REXEG] as $regex) {
-        if (!preg_match($regex, $value)) {
-          return false;
-        }
-      }
-
-      return true;
-    }
-
 
   }
