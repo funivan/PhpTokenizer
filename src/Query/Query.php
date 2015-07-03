@@ -217,9 +217,6 @@
         return false;
       }
 
-      if (!$this->validateLine($token)) {
-        return false;
-      }
 
       return true;
     }
@@ -249,26 +246,30 @@
      * @param Token $token
      * @return bool
      */
-    private function validateLine(Token $token) {
-
-      if (empty($this->line)) {
-        return true;
-      }
-
-      return $this->validateIntegerProperty($this->line, $token->getLine());
-    }
-
-    /**
-     * @param Token $token
-     * @return bool
-     */
     private function validateIndex(Token $token) {
 
       if (empty($this->index)) {
         return true;
       }
 
-      return $this->validateIntegerProperty($this->index, $token->getIndex());
+      # check token index
+      if (!$this->validateIsCondition($this->index, $token->getIndex())) {
+        return false;
+      }
+
+      if (!$this->validateNotCondition($this->index, $token->getIndex())) {
+        return false;
+      }
+
+      if (array_key_exists(static::GREATER_THAN, $this->index) and $token->getIndex() <= $this->index[static::GREATER_THAN]) {
+        return false;
+      }
+
+      if (array_key_exists(static::LESS_THAN, $this->index) and $token->getIndex() >= $this->index[static::LESS_THAN]) {
+        return false;
+      }
+
+      return true;
     }
 
     /**
@@ -391,32 +392,5 @@
       return true;
     }
 
-    /**
-     * @param array $conditions
-     * @param int $value
-     * @return bool
-     */
-    private function validateIntegerProperty($conditions, $value) {
-
-      # check line
-      if (!$this->validateIsCondition($conditions, $value)) {
-        return false;
-      }
-
-      if (!$this->validateNotCondition($conditions, $value)) {
-        return false;
-      }
-
-      if (array_key_exists(static::GREATER_THAN, $conditions) and $value <= $conditions[static::GREATER_THAN]) {
-        return false;
-      }
-
-      if (array_key_exists(static::LESS_THAN, $conditions) and $value >= $conditions[static::LESS_THAN]) {
-        return false;
-      }
-
-
-      return true;
-    }
 
   }

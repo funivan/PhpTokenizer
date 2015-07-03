@@ -14,33 +14,6 @@
   class QueryTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
 
-    public function testLine() {
-
-      $collection = Collection::initFromString('<?php echo 1;');
-      $finder = new TokenFinder($collection);
-
-      $query = new Query();
-      $query->lineIs(1);
-      $this->assertCount($collection->count(), $finder->find($query));
-
-      $query = new Query();
-      $query->lineIs(10);
-      $this->assertCount(0, $finder->find($query));
-
-      $query = new Query();
-      $query->lineNot(1);
-      $this->assertCount(0, $finder->find($query));
-
-      $query = new Query();
-      $query->lineGt(1);
-      $this->assertCount(0, $finder->find($query));
-
-      $query = new Query();
-      $query->lineLt(1);
-      $this->assertCount(0, $finder->find($query));
-
-    }
-
 
     public function testType() {
 
@@ -130,15 +103,6 @@
       $query = new Query();
       $token = new Token();
       $this->assertTrue($query->isValid($token));
-    }
-
-    public function testLineEmptyCheck() {
-      $query = new Query();
-      $query->lineIs(null);
-      $token = new Token();
-      $token->setLine(10);
-
-      $this->assertFalse($query->isValid($token));
     }
 
     /**
