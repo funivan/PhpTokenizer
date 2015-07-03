@@ -12,25 +12,6 @@
    */
   class Query implements QueryInterface {
 
-    const N = __CLASS__;
-
-    /**
-     * Constant indicate conditions IS equal to values
-     */
-    const IS = 'is';
-
-    /**
-     * Constant indicate conditions NOT equal to values
-     */
-    const NOT = 'no';
-
-    const GREATER_THAN = 'gt';
-
-    const LESS_THAN = 'lt';
-
-    const LESS_THAN_EQUAL = 'lteq';
-
-    const REXEG = 'regex';
 
     /**
      * Array of check functions
@@ -143,11 +124,11 @@
     public function valueLike($regex) {
       $regexConditions = $this->prepareValues($regex);
 
-      if (empty($regexConditions)) {
-        return $this;
-      }
-
       $this->checkFunctions[] = function (Token $token) use ($regexConditions) {
+        if (empty($regexConditions)) {
+          return false;
+        }
+
         $value = $token->getValue();
 
         foreach ($regexConditions as $regex) {

@@ -56,7 +56,7 @@
       $q = Query::create();
       $this->assertCount(2, $collection->find($q->valueLike('/\d+/')));
 
-      $this->assertCount(1, $collection->find($q->valueLike('/12\d+/')));
+      $this->assertCount(0, $collection->find($q->valueLike(null)));
 
       $this->assertCount(0, $collection->find($q->valueIs(null)));
 
