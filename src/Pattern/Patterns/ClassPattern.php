@@ -2,12 +2,14 @@
 
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
+  use Funivan\PhpTokenizer\Query\QueryInterface;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\StrategyInterface;
   use Funivan\PhpTokenizer\Strategy\Strict;
 
   /**
-   * 
+   * Class pattern used to finding classes in tour source code
+   * This class find only class definition
    */
   class ClassPattern implements PatternInterface {
 
@@ -28,17 +30,31 @@
      * @return $this
      */
     public function nameIs($name) {
-      $this->nameQuery = Strict::create()->valueIs($name);
+      if (is_string($name)) {
+        $this->whereName(Strict::create()->valueIs($name));
+      } elseif ($name instanceof QueryInterface) {
+        $this->whereName($name);
+      } else {
+        throw new \InvalidArgumentException('Expect string or QueryInterface');
+      }
+
       return $this;
+    }
+
+    /**
+     * @param QueryInterface $strategy
+     */
+    public function whereName(QueryInterface $strategy) {
+      $this->nameQuery = $strategy;
     }
 
     /**
      * @inheritdoc
      */
     public function __invoke(QuerySequence $querySequence) {
-      $querySequence->setSkipWhitespaces(true);
 
       $querySequence->strict('class');
+      $querySequence->strict(T_WHITESPACE);
       $querySequence->process($this->nameQuery);
       $body = $querySequence->section('{', '}');
 

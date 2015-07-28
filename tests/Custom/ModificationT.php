@@ -28,7 +28,7 @@
       foreach ($lines as $current => $expect) {
         $current = '<?php ' . $current;
         $expect = '<?php ' . $expect;
-        $collection = \Funivan\PhpTokenizer\Collection::initFromString($current);
+        $collection = \Funivan\PhpTokenizer\Collection::createFromString($current);
 
         $optimizer->extractVariableFromString($collection);
 
@@ -55,7 +55,7 @@
       foreach ($lines as $current => $expect) {
         $current = '<?php ' . $current;
         $expect = '<?php ' . $expect;
-        $collection = \Funivan\PhpTokenizer\Collection::initFromString($current);
+        $collection = \Funivan\PhpTokenizer\Collection::createFromString($current);
 
         $optimizer->testRemoveEmptyConcatenatedStrings($collection);
 
@@ -98,7 +98,7 @@
       foreach ($lines as $current => $expect) {
         $current = '<?php ' . $current;
         $expect = '<?php ' . $expect;
-        $collection = \Funivan\PhpTokenizer\Collection::initFromString($current);
+        $collection = \Funivan\PhpTokenizer\Collection::createFromString($current);
 
         $i = 10;
         do {
@@ -151,7 +151,7 @@
       foreach ($lines as $current => $expect) {
         $current = '<?php ' . $current;
         $expect = '<?php ' . $expect;
-        $collection = \Funivan\PhpTokenizer\Collection::initFromString($current);
+        $collection = \Funivan\PhpTokenizer\Collection::createFromString($current);
 
         $optimizer->extractVariablesFromCurlyBrackets($collection);
         $this->assertEquals($expect, (string) $collection);

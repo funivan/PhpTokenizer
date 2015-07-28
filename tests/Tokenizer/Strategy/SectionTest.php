@@ -45,7 +45,7 @@
     public function testFunctionCall($code, $functionName, $expectCode) {
       $code = '<?php ' . $code;
 
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $lines = array();
 
@@ -73,7 +73,7 @@
       
       ';
 
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
       $linesWithEcho = array();
 
       foreach ($collection as $index => $token) {
@@ -99,7 +99,7 @@
       
       ';
 
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
 
       $linesWithEcho = array();

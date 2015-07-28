@@ -22,7 +22,7 @@
       
       ';
 
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
       $linesWithEcho = array();
 
       foreach ($collection as $index => $token) {
@@ -56,7 +56,7 @@
       
       ';
 
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $linesWithEcho = array();
 
@@ -95,7 +95,7 @@
       
       ';
 
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
       $finder = new QuerySequence($collection);
 
       $linesWithEcho = array();

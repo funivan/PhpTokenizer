@@ -64,7 +64,7 @@
      * @param string $expectCode
      */
     public function testExtract($code, $expectCode) {
-      $collection = \Funivan\PhpTokenizer\Collection::initFromString("<?php " . $code);
+      $collection = \Funivan\PhpTokenizer\Collection::createFromString("<?php " . $code);
 
       $checker = new Pattern($collection);
       $checker->apply(function (QuerySequence $q) {

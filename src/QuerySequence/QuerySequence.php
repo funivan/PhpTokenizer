@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
-  use Funivan\PhpTokenizer\Strategy\BaseStrategy;
+  use Funivan\PhpTokenizer\Strategy\QueryStrategy;
   use Funivan\PhpTokenizer\Strategy\Move;
   use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Strategy\Search;
@@ -237,10 +237,10 @@
     /**
      *
      * @param StrategyInterface|string|int $value
-     * @param BaseStrategy $defaultStrategy
-     * @return BaseStrategy
+     * @param QueryStrategy $defaultStrategy
+     * @return QueryStrategy
      */
-    private function buildStrategyCondition($value, BaseStrategy $defaultStrategy) {
+    private function buildStrategyCondition($value, QueryStrategy $defaultStrategy) {
 
       if (is_object($value) and get_class($value) == get_class($defaultStrategy)) {
         return $value;

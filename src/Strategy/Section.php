@@ -10,7 +10,7 @@
    *
    * @package Funivan\PhpTokenizer\Query\Strategy
    */
-  class Section extends BaseStrategy {
+  class Section extends QueryStrategy {
 
     /**
      * @var QueryInterface
@@ -57,9 +57,10 @@
       $blockEndFlag = null;
       $startIndex = null;
 
-      $tokens = $collection->extractItems($currentIndex);
-
-      foreach ($tokens as $tokenIndex => $token) {
+      foreach ($collection as $tokenIndex => $token) {
+        if ($tokenIndex < $currentIndex) {
+          continue;
+        }
 
         if ($this->startQuery->isValid($token)) {
           $blockEndFlag++;

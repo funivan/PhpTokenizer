@@ -17,7 +17,7 @@
 
     public function testType() {
 
-      $collection = Collection::initFromString('<?php echo $user;');
+      $collection = Collection::createFromString('<?php echo $user;');
       $finder = new TokenFinder($collection);
 
       $query = new Query();
@@ -39,7 +39,7 @@
      */
     public function testValue() {
 
-      $collection = Collection::initFromString('<?php 
+      $collection = Collection::createFromString('<?php 
         echo 1; 
       
       ');
@@ -49,7 +49,7 @@
       $this->assertCount($collection->count() - 1, $collection->find($query));
 
 
-      $collection = Collection::initFromString('<?php echo "123"; echo "132";');
+      $collection = Collection::createFromString('<?php echo "123"; echo "132";');
       $this->assertCount(4, $collection->find(Query::create()->valueIs(['echo', ';'])));
 
 

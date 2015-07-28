@@ -37,6 +37,28 @@
 
 
     /**
+     * Extract each value from token
+     *
+     * @return string
+     */
+    public function __toString() {
+      return $this->assemble();
+    }
+
+
+    /**
+     *
+     * @param string $string
+     * @return Collection
+     * @throws Exception
+     */
+    public static function createFromString($string) {
+      $tokens = Helper::getTokensFromString($string);
+      return new static($tokens);
+    }
+
+
+    /**
      * @return bool
      */
     public function isChanged() {
@@ -46,18 +68,8 @@
     /**
      * @return string
      */
-    protected function getContentHash() {
+    private function getContentHash() {
       return md5($this->assemble());
-    }
-
-
-    /**
-     * Extract each value from token
-     *
-     * @return string
-     */
-    public function __toString() {
-      return $this->assemble();
     }
 
     /**
@@ -126,27 +138,15 @@
       return $item;
     }
 
-    /**
-     * @return string
-     */
-    public function getDumpString() {
-      $string = "<pre>\n";
-      foreach ($this as $token) {
-        $string .= '[' . $token->getTypeName() . ']' . "\n" . print_r($token->getData(), true) . "\n";
-      }
-      $string .= " </pre > ";
-      return $string;
-    }
 
-    /**
-     *
-     * @param string $string
-     * @return Collection
-     * @throws Exception
+    /**       
+     *  
+     * @deprecated
+     * @see createFromString
      */
     public static function initFromString($string) {
-      $tokens = Helper::getTokensFromString($string);
-      return new static($tokens);
+      trigger_error(__CLASS__ . '::' . __METHOD__ . ' deprecated and will be removed in 0.1.3 Use ' . __CLASS__ . '::createFromString', E_USER_DEPRECATED);
+      return self::createFromString($string);
     }
 
     /**
@@ -154,7 +154,7 @@
      *
      * @return $this
      */
-    protected function cleanCollection() {
+    private function cleanCollection() {
       foreach ($this as $index => $token) {
         if ($token->isValid()) {
           continue;

@@ -40,7 +40,7 @@
      * @param boolean $expectThis
      */
     public function testExtract($code, $expectThis) {
-      $collection = Collection::initFromString("<?php " . $code);
+      $collection = Collection::createFromString("<?php " . $code);
       $stream = new QuerySequence($collection, true);
 
       $containThis = false;

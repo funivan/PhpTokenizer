@@ -8,7 +8,7 @@
    *
    * @package Funivan\PhpTokenizer\Query\Strategy
    */
-  class Search extends BaseStrategy {
+  class Search extends QueryStrategy {
 
     /**
      * Move forward flag

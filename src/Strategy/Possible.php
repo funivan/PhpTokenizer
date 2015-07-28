@@ -7,7 +7,7 @@
    *
    * @package Funivan\PhpTokenizer\Query\Strategy
    */
-  class Possible extends BaseStrategy {
+  class Possible extends QueryStrategy {
 
     /**
      * @inheritdoc

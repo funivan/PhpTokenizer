@@ -26,7 +26,7 @@
       echo $a;
       echo $a;
       ';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $findItems = array();
       foreach ($collection as $index => $token) {
@@ -45,7 +45,7 @@
      */
     public function testMoveToToken() {
       $code = '<?php echo $a;';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
       $lastToken = $collection->getLast();
 
       $finder = new QuerySequence($collection);
@@ -87,7 +87,7 @@
     public function testStrictInvalidCondition($condition) {
 
       $code = '<?php echo $a;';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $q = new QuerySequence($collection, 3);
       $q->strict($condition);
@@ -145,7 +145,7 @@
     public function testStrictCondition($condition, $isValid) {
 
       $code = '<?php echo $a;';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
 
       $q = new QuerySequence($collection, 3);
@@ -203,7 +203,7 @@
     public function testPossibleCondition($condition, $isValidToken) {
 
       $code = '<?php echo $a;';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
 
       $q = new QuerySequence($collection, 3);
@@ -245,7 +245,7 @@
     public function testPossibleInvalidCondition($condition) {
 
       $code = '<?php echo $a;';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $q = new QuerySequence($collection, 3);
       $q->possible($condition);
@@ -257,7 +257,7 @@
      */
     public function testSectionWithoutEndDelimiter() {
       $code = '<?php foreach($users as $user ){ $a;';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $q = new QuerySequence($collection, 0);
       $section = $q->section('{', '}');
@@ -271,7 +271,7 @@
      */
     public function testMove() {
       $code = '<?php echo 1';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $q = new QuerySequence($collection, 0);
 

@@ -20,7 +20,7 @@
      */
     public function testWithCallbackPattern() {
       $code = '<?php class A { public $user = null; }';
-      $tokensChecker = new Pattern(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::createFromString($code));
 
       $tokensChecker->apply(function (QuerySequence $processor) {
         $processor->strict('class');
@@ -35,29 +35,82 @@
       $this->assertCount(1, $tokensChecker->getCollections());
     }
 
+    public function getStrictSectionAndSequencePatternDataProvider() {
+      return array(
+        array(
+          '(preg_match("!a!", $b)) $this->item["test"] = 123;',
+          true,
+        ),
+        array(
+          '(preg_match (         "!a!", $b))               $this -> item [ " test " ] = 123;',
+          true,
+        ),
+        array(
+          '(preg_match ($b))$this->item[$key] = 123;',
+          false,
+        ),
+
+      );
+    }
+
+    /**
+     * @dataProvider getStrictSectionAndSequencePatternDataProvider
+     * @param string $data
+     * @param boolean $expectResult
+     */
+    public function testStrictSectionAndSequencePattern($data, $expectResult) {
+
+      $code = '<?php 
+      ' . $data;
+      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $result = array();
+      $tokensChecker->apply(function (QuerySequence $q) use (&$result) {
+        $q->setSkipWhitespaces(true);
+        $start = $q->strict('preg_match');
+        $q->section('(', ')');
+        $sequence = $q->sequence(array(
+          ')',
+          '$this',
+          '->',
+          'item',
+          '[',
+          T_CONSTANT_ENCAPSED_STRING,
+          ']',
+          '=',
+        ));
+
+        if ($q->isValid()) {
+          $result = $q->getCollection()->extractByTokens($start, $sequence->getLast());
+        }
+
+      });
+
+      $this->assertEquals($expectResult, !empty($result));
+    }
+
+
     public function testWithClassPattern() {
       $code = '<?php class A { public $user = null; } class customUser { }';
-      $tokensChecker = new Pattern(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::createFromString($code));
       $tokensChecker->apply(new ClassPattern());
-
 
       $this->assertCount(2, $tokensChecker->getCollections());
 
-      $tokensChecker = new Pattern(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::createFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->nameIs('B');
       $tokensChecker->apply($classPattern);
 
       $this->assertCount(0, $tokensChecker->getCollections());
 
-      $tokensChecker = new Pattern(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::createFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->nameIs('A');
       $tokensChecker->apply($classPattern);
 
       $this->assertCount(1, $tokensChecker->getCollections());
 
-      $tokensChecker = new Pattern(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::createFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->nameIs('customUser');
       $tokensChecker->apply($classPattern);
@@ -69,7 +122,7 @@
     public function testWithNestedPatterns() {
       # find class with property 
       $code = '<?php class A { public $user = null; static $name;} class customUser { $value; }';
-      $tokensChecker = new Pattern(Collection::initFromString($code));
+      $tokensChecker = new Pattern(Collection::createFromString($code));
       $tokensChecker
         ->apply(new ClassPattern())
         ->apply(function (QuerySequence $p) {
@@ -101,7 +154,7 @@
      * @expectedException Exception
      */
     public function testInvalidPatternResult() {
-      $tokensChecker = new Pattern(Collection::initFromString('<?php echo 1;'));
+      $tokensChecker = new Pattern(Collection::createFromString('<?php echo 1;'));
       /** @noinspection PhpUnusedParameterInspection */
       $tokensChecker->apply(function (QuerySequence $process) {
         return new \stdClass();
@@ -113,7 +166,7 @@
      * @expectedException Exception
      */
     public function testInvalidPatternResultArray() {
-      $tokensChecker = new Pattern(Collection::initFromString('<?php echo 1;'));
+      $tokensChecker = new Pattern(Collection::createFromString('<?php echo 1;'));
       /** @noinspection PhpUnusedParameterInspection */
       $tokensChecker->apply(function (QuerySequence $process) {
         return array(new \stdClass());
@@ -134,7 +187,7 @@
       }
       
       ';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
       $tokensChecker = new Pattern($collection);
       $tokensChecker->apply(
         (new ClassPattern())->nameIs('UsersController')
@@ -162,7 +215,7 @@
       }
       
       ';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
       $tokensChecker = new Pattern($collection);
       $tokensChecker->apply(function (QuerySequence $q) {
         $q->setSkipWhitespaces(true);

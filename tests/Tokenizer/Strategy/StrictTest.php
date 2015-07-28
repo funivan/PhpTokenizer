@@ -16,7 +16,7 @@
       $code = '<?php echo $a; foreach($users as $user){}';
 
       $variables = array();
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $query = Strict::create()->typeIs(T_VARIABLE);
 

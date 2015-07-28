@@ -17,7 +17,7 @@
       
       ;
       ';
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
 
       $findItems = array();
@@ -72,7 +72,7 @@
       ;
       ';
 
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $findItems = array();
       foreach ($collection as $index => $token) {
@@ -153,7 +153,7 @@
     public function testComplex($code, $contain, $notContain) {
       $code = '<?php ' . $code;
 
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       foreach ($collection as $index => $token) {
         $q = new QuerySequence($collection, $index);

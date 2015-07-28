@@ -8,6 +8,6 @@
    *
    * @package Funivan\PhpTokenizer\Strategy
    */
-  abstract class BaseStrategy extends Query implements StrategyInterface {
+  abstract class QueryStrategy extends Query implements StrategyInterface {
 
   }

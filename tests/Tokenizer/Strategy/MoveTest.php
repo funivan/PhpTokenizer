@@ -3,6 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Move;
   use Funivan\PhpTokenizer\Token;
@@ -19,7 +20,7 @@
     public function testMove() {
       $code = '<?php  $a';
 
-      $finder = new QuerySequence(Collection::initFromString($code));
+      $finder = new QuerySequence(Collection::createFromString($code));
 
       $token = $finder->process(Move::create(0));
       $this->assertEquals('<?php ', $token->getValue());
@@ -37,26 +38,23 @@
     }
 
     /**
-     * @expectedException \Funivan\PhpTokenizer\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testInvalidStepsValue() {
       Move::create(null);
     }
 
-    /**
-     *
-     */
     public function testMoveToToken() {
       $code = '<?php echo $a;';
 
-      $collection = Collection::initFromString($code);
+      $collection = Collection::createFromString($code);
 
       $finder = new QuerySequence($collection);
       $token = $collection[3];
-      
+
       $this->assertEquals('$a', $finder->moveToToken($token)->getValue());
       $this->assertTrue($finder->isValid());
-      
+
       # token is connected to collection
       # so when we modify token index we can find this token in collection
       $token->setIndex(125);

@@ -64,7 +64,7 @@
      * @param string $expectCode
      */
     public function testRemoveEmptyString($code, $expectCode) {
-      $collection = \Funivan\PhpTokenizer\Collection::initFromString("<?php " . $code);
+      $collection = \Funivan\PhpTokenizer\Collection::createFromString("<?php " . $code);
 
 
       foreach ($collection as $index => $token) {

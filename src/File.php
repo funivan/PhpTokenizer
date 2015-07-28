@@ -45,7 +45,7 @@
     public function __construct($path) {
       $this->path = $path;
       $code = file_get_contents($path);
-      $this->collection = Collection::initFromString($code);
+      $this->collection = Collection::createFromString($code);
     }
 
 
