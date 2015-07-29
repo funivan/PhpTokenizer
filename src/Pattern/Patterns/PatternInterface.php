@@ -12,7 +12,7 @@
 
     /**
      * @param QuerySequence $querySequence
-     * @return Collection
+     * @return Collection|null
      */
     public function __invoke(QuerySequence $querySequence);
 

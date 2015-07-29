@@ -2,9 +2,8 @@
 
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
-  use Funivan\PhpTokenizer\Query\QueryInterface;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
-  use Funivan\PhpTokenizer\Strategy\StrategyInterface;
+  use Funivan\PhpTokenizer\Strategy\QueryStrategy;
   use Funivan\PhpTokenizer\Strategy\Strict;
 
   /**
@@ -14,7 +13,7 @@
   class ClassPattern implements PatternInterface {
 
     /**
-     * @var QueryInterface
+     * @var QueryStrategy
      */
     private $nameQuery = null;
 
@@ -32,7 +31,7 @@
     public function nameIs($name) {
       if (is_string($name)) {
         $this->whereName(Strict::create()->valueIs($name));
-      } elseif ($name instanceof QueryInterface) {
+      } elseif ($name instanceof QueryStrategy) {
         $this->whereName($name);
       } else {
         throw new \InvalidArgumentException('Expect string or QueryInterface');
@@ -42,9 +41,9 @@
     }
 
     /**
-     * @param QueryInterface $strategy
+     * @param QueryStrategy $strategy
      */
-    public function whereName(QueryInterface $strategy) {
+    public function whereName(QueryStrategy $strategy) {
       $this->nameQuery = $strategy;
     }
 
@@ -61,6 +60,8 @@
       if ($querySequence->isValid()) {
         return $body->extractItems(1, -1);
       }
+
+      return null;
     }
 
   }
