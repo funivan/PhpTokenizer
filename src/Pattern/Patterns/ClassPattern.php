@@ -14,15 +14,15 @@
   class ClassPattern implements PatternInterface {
 
     /**
-     * @var StrategyInterface
+     * @var QueryInterface
      */
     private $nameQuery = null;
 
     /**
-     *
+     * By default we search for classes with any name
      */
     public function __construct() {
-      $this->nameQuery = Strict::create()->valueLike('!.*!');
+      $this->nameQuery = Strict::create()->valueLike('!.+!');
     }
 
     /**
