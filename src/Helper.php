@@ -10,12 +10,14 @@
   class Helper {
 
     /**
-     * @param $string
+     * Convert php code to array of tokens
+     *
+     * @param string $code
      * @return Token[]
      * @throws Exception
      */
-    public static function getTokensFromString($string) {
-      $tokens = token_get_all($string);
+    public static function getTokensFromString($code) {
+      $tokens = token_get_all($code);
 
       foreach ($tokens as $index => $tokenData) {
 
@@ -24,12 +26,12 @@
 
           /** @var Token $previousToken */
           $previousToken = $tokens[$previousIndex];
-
-          $tokenData = array(
+          $line = $previousToken->getLine() + substr_count($previousToken->getValue(), "\n");
+          $tokenData = [
             Token::INVALID_TYPE,
             $tokenData,
-            $previousToken->getLine(),
-          );
+            $line,
+          ];
         }
 
         $token = new Token($tokenData);
@@ -40,6 +42,7 @@
 
       return $tokens;
     }
+
 
     /**
      * @param Collection $collection
