@@ -15,16 +15,16 @@
      * @void
      */
     public function testCheckLines() {
-      $code = "<?php return [
-      ];";
+      $code = '<?php return [
+      ];';
 
       $collection = Collection::createFromString($code);
       $this->assertEquals(2, $collection->getLast()->getLine());
 
-      $code = "<?php 
+      $code = '<?php 
       
       return [
-      ];";
+      ];';
 
       $collection = Collection::createFromString($code);
       $this->assertEquals(4, $collection->getLast()->getLine());
