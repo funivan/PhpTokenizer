@@ -8,7 +8,7 @@
 
   /**
    * Class pattern used to finding classes in tour source code
-   * This class find only class definition
+   *
    */
   class ClassPattern implements PatternInterface {
 
@@ -32,9 +32,9 @@
      */
     public function nameIs($name) {
       if (is_string($name)) {
-        $this->whereName(Strict::create()->valueIs($name));
+        $this->withName(Strict::create()->valueIs($name));
       } elseif ($name instanceof QueryStrategy) {
-        $this->whereName($name);
+        $this->withName($name);
       } else {
         throw new \InvalidArgumentException('Expect string or QueryInterface');
       }
@@ -47,9 +47,20 @@
      * @param QueryStrategy $strategy
      * @return $this
      */
-    public function whereName(QueryStrategy $strategy) {
+    public function withName(QueryStrategy $strategy) {
       $this->nameQuery = $strategy;
       return $this;
+    }
+
+
+    /**
+     * @deprecated
+     * @param QueryStrategy $strategy
+     * @return $this
+     */
+    public function whereName(QueryStrategy $strategy) {
+      trigger_error("Deprecated. Use withName", E_USER_DEPRECATED);
+      return $this->withName($strategy);
     }
 
 

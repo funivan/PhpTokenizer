@@ -49,7 +49,7 @@
     public function testNameCustomCheck() {
       $tokensChecker = new Pattern($this->getDemoCollection());
       $checker = new ClassPattern();
-      $checker->whereName(Strict::create()->valueLike('![a-z]+!i'));
+      $checker->withName(Strict::create()->valueLike('![a-z]+!i'));
       $tokensChecker->apply($checker);
 
       $this->assertCount(2, $tokensChecker->getCollections());
@@ -76,6 +76,16 @@
       }
       ');
       return $collection;
+    }
+
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidNameCondition() {
+      $pattern = new ClassPattern();
+      $pattern->nameIs(new \stdClass());
+
     }
 
 
