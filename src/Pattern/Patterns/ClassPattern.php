@@ -17,12 +17,14 @@
      */
     private $nameQuery = null;
 
+
     /**
      * By default we search for classes with any name
      */
     public function __construct() {
       $this->nameQuery = Strict::create()->valueLike('!.+!');
     }
+
 
     /**
      * @param string $name
@@ -40,12 +42,16 @@
       return $this;
     }
 
+
     /**
      * @param QueryStrategy $strategy
+     * @return $this
      */
     public function whereName(QueryStrategy $strategy) {
       $this->nameQuery = $strategy;
+      return $this;
     }
+
 
     /**
      * @inheritdoc
