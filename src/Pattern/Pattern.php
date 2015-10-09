@@ -12,7 +12,7 @@
   class Pattern implements PatternCheckerInterface {
 
     /**
-     * @var array
+     * @var Collection[]
      */
     protected $collections = array();
 
@@ -61,11 +61,13 @@
     /**
      * @param callable $pattern
      * @param Collection $collection
-     * @return array
+     * @return Collection[]
      * @throws Exception
      */
     protected function iterateOverCollections(callable $pattern, Collection $collection) {
       $result = array();
+
+      $collection->rewind();
       foreach ($collection as $index => $token) {
         $querySequence = new QuerySequence($collection, $index);
         $patternResult = $pattern($querySequence);

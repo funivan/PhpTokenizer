@@ -19,7 +19,8 @@
 
       $tokensChecker = new Pattern($this->getDemoCollection());
       $tokensChecker->apply((new ClassPattern()));
-      $this->assertCount(2, $tokensChecker->getCollections());
+      $collections = $tokensChecker->getCollections();
+      $this->assertCount(2, $collections);
     }
 
 
@@ -27,19 +28,19 @@
 
       $tokensChecker = new Pattern($this->getDemoCollection());
       $checker = new ClassPattern();
-      $checker->nameIs('B');
+      $checker->withName('B');
       $tokensChecker->apply($checker);
       $this->assertCount(1, $tokensChecker->getCollections());
 
       $tokensChecker = new Pattern($this->getDemoCollection());
       $checker = new ClassPattern();
-      $checker->nameIs(Strict::create()->valueIs('b'));
+      $checker->withName(Strict::create()->valueIs('b'));
       $tokensChecker->apply($checker);
       $this->assertCount(0, $tokensChecker->getCollections());
 
       $tokensChecker = new Pattern($this->getDemoCollection());
       $checker = new ClassPattern();
-      $checker->nameIs(Strict::create()->valueIs('B'));
+      $checker->withName(Strict::create()->valueIs('B'));
       $tokensChecker->apply($checker);
       $this->assertCount(1, $tokensChecker->getCollections());
 
@@ -51,6 +52,7 @@
       $checker = new ClassPattern();
       $checker->withName(Strict::create()->valueLike('![a-z]+!i'));
       $tokensChecker->apply($checker);
+
 
       $this->assertCount(2, $tokensChecker->getCollections());
 
@@ -84,8 +86,64 @@
      */
     public function testInvalidNameCondition() {
       $pattern = new ClassPattern();
-      $pattern->nameIs(new \stdClass());
+      $pattern->withName(new \stdClass());
 
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getForSimpleDetectionProvider() {
+      return [
+        [
+          0, '<?php
+      
+      function test(){
+            
+      }
+      ',
+        ],
+        [
+          1, '<?php 
+        class abc{}
+        function a(){
+        }
+        ',
+        ],
+
+        [
+          2, '<?php 
+        class abc{}
+        
+        class dfg{
+          function a(){
+          
+          }
+        
+        }
+        ',
+        ],
+      ];
+    }
+
+
+    /**
+     *
+     * @dataProvider getForSimpleDetectionProvider
+     * @param int $expectItems
+     * @param string $code
+     */
+    public function testSimpleDetection($expectItems, $code) {
+
+
+      $collection = Collection::createFromString($code);
+      $checker = new Pattern($collection);
+      $pattern = new ClassPattern();
+
+      $checker->apply($pattern);
+
+      $this->assertCount($expectItems, $checker->getCollections());
     }
 
 

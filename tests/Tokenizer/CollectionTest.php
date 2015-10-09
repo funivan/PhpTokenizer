@@ -17,6 +17,7 @@
       $this->assertInstanceOf(Collection::N, $collection);
     }
 
+
     public function testGetNext() {
       $collection = Collection::createFromString('<?php echo 123;');
       $nextToken = $collection->getNext();
@@ -30,6 +31,7 @@
 
       $this->assertEquals(null, $nextToken->getValue());
     }
+
 
     public function testGetPrevious() {
       $collection = Collection::createFromString('<?php echo 123;');
@@ -49,12 +51,14 @@
       $this->assertEquals(null, $previous->getValue());
     }
 
+
     public function testAssemble() {
       $code = '<?php echo 123;';
       $collection = Collection::createFromString($code);
 
       $this->assertEquals($code, (string) $collection);
     }
+
 
     public function testSetToken() {
       $collection = Collection::createFromString('<?php echo 123;');
@@ -74,13 +78,14 @@
 
     }
 
+
     public function testAddTokenAfter() {
       $collection = Collection::createFromString('<?php echo 123;');
 
       $newToken = new Token();
       $newToken->setValue("echo");
 
-      $collection->addAfter(4, array($newToken));
+      $collection->addAfter(4, [$newToken]);
 
       $this->assertEquals($newToken, $collection->getLast());
 
@@ -91,6 +96,7 @@
       }
       $this->assertInstanceOf('Exception', $exception);
     }
+
 
     public function testAddCollectionAfter() {
       $collection = Collection::createFromString('<?php echo 123;');
@@ -107,6 +113,7 @@
 
     }
 
+
     public function testDump() {
       $collection = Collection::createFromString("<?php echo 123;");
       $dumpString = Helper::dump($collection);
@@ -114,6 +121,7 @@
       $this->assertContains("T_ECHO", $dumpString);
 
     }
+
 
     public function testRefresh() {
       $collection = Collection::createFromString("<?php function();");
@@ -129,18 +137,57 @@
 
     }
 
+
     public function testNewCollection() {
 
       $error = null;
       try {
         $collection = new \Funivan\PhpTokenizer\Collection();
-        $collection->setItems(array(
-          'test'
-        ));
+        $collection->setItems([
+          'test',
+        ]);
       } catch (\Exception $error) {
 
       }
       $this->assertInstanceOf('Exception', $error);
     }
 
+
+    public function testExtractByTokens() {
+
+      $collection = new Collection();
+
+      $token = new Token();
+      $token->setIndex(10);
+
+      $collection->offsetSet(1, $token);
+
+
+      $first = new Token();
+      $first->setIndex(11);
+      $collection->append($first);
+
+
+      $next = new Token();
+      $next->setIndex(12);
+      $collection->append($next);
+
+
+      $last = new Token();
+      $last->setIndex(19);
+      $collection->append($last);
+
+
+      $token = new Token();
+      $token->setIndex(25);
+      $collection->append($token);
+
+      $newCollection = $collection->extractByTokens($first, $last);
+
+      $this->assertCount(3, $newCollection);
+      $this->assertEquals($first, $newCollection->getFirst());
+      $this->assertEquals($next, $newCollection->offsetGet(1));
+      $this->assertEquals($last, $newCollection->getLast());
+
+    }
   }

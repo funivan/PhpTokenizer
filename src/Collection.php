@@ -30,6 +30,10 @@
      */
     protected $initialContentHash;
 
+
+    /**
+     * @param array $items
+     */
     public function __construct(array $items = array()) {
       parent::__construct($items);
       $this->storeContentHash();
@@ -65,12 +69,14 @@
       return ($this->getContentHash() !== $this->initialContentHash);
     }
 
+
     /**
      * @return string
      */
     private function getContentHash() {
       return md5($this->assemble());
     }
+
 
     /**
      * Used for validation
@@ -80,6 +86,7 @@
     public function objectsClassName() {
       return Token::N;
     }
+
 
     /**
      * @return string
@@ -96,6 +103,7 @@
 
       return $string;
     }
+
 
     /**
      * Remove all invalid tokens in collection
@@ -114,6 +122,7 @@
       return $this;
     }
 
+
     /**
      * @param int $step
      * @return Token
@@ -125,6 +134,7 @@
       }
       return $item;
     }
+
 
     /**
      * @param int $step
@@ -139,8 +149,8 @@
     }
 
 
-    /**       
-     *  
+    /**
+     * @codeCoverageIgnore
      * @deprecated
      * @see createFromString
      */
@@ -148,6 +158,7 @@
       trigger_error(__CLASS__ . '::' . __METHOD__ . ' deprecated and will be removed in 0.1.3 Use ' . __CLASS__ . '::createFromString', E_USER_DEPRECATED);
       return self::createFromString($string);
     }
+
 
     /**
      * Remove invalid tokens from collection
@@ -165,6 +176,7 @@
       return $this;
     }
 
+
     /**
      * Remove all tokens in collection
      *
@@ -178,13 +190,26 @@
       return $this;
     }
 
+
     /**
      * @param Token $tokenStart
      * @param Token $tokenEnd
      * @return Collection
      */
     public function extractByTokens(Token $tokenStart, Token $tokenEnd) {
-      return $this->extractItems($tokenStart->getIndex(), $tokenEnd->getIndex() - $tokenStart->getIndex() + 1);
+
+      $collection = new Collection();
+      $startIndex = $tokenStart->getIndex();
+      $endIndex = $tokenEnd->getIndex();
+
+      foreach ($this->getItems() as $token) {
+        if ($token->getIndex() >= $startIndex and $token->getIndex() <= $endIndex) {
+          $collection->append($token);
+        }
+      }
+
+
+      return $collection;
     }
 
 
@@ -196,6 +221,7 @@
       $finder = new TokenFinder($this);
       return $finder->find($query);
     }
+
 
     /**
      * @return $this

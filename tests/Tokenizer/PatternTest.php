@@ -6,6 +6,7 @@
   use Funivan\PhpTokenizer\Exception\Exception;
   use Funivan\PhpTokenizer\Pattern\Pattern;
   use Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern;
+  use Funivan\PhpTokenizer\Pattern\Patterns\MethodPattern;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Strict;
   use Test\Funivan\PhpTokenizer\MainTestCase;
@@ -35,23 +36,28 @@
       $this->assertCount(1, $tokensChecker->getCollections());
     }
 
+
+    /**
+     * @return array
+     */
     public function getStrictSectionAndSequencePatternDataProvider() {
-      return array(
-        array(
+      return [
+        [
           '(preg_match("!a!", $b)) $this->item["test"] = 123;',
           true,
-        ),
-        array(
+        ],
+        [
           '(preg_match (         "!a!", $b))               $this -> item [ " test " ] = 123;',
           true,
-        ),
-        array(
+        ],
+        [
           '(preg_match ($b))$this->item[$key] = 123;',
           false,
-        ),
+        ],
 
-      );
+      ];
     }
+
 
     /**
      * @dataProvider getStrictSectionAndSequencePatternDataProvider
@@ -63,12 +69,12 @@
       $code = '<?php 
       ' . $data;
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $result = array();
+      $result = [];
       $tokensChecker->apply(function (QuerySequence $q) use (&$result) {
         $q->setSkipWhitespaces(true);
         $start = $q->strict('preg_match');
         $q->section('(', ')');
-        $sequence = $q->sequence(array(
+        $sequence = $q->sequence([
           ')',
           '$this',
           '->',
@@ -77,7 +83,7 @@
           T_CONSTANT_ENCAPSED_STRING,
           ']',
           '=',
-        ));
+        ]);
 
         if ($q->isValid()) {
           $result = $q->getCollection()->extractByTokens($start, $sequence->getLast());
@@ -98,21 +104,21 @@
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
       $classPattern = new ClassPattern();
-      $classPattern->nameIs('B');
+      $classPattern->withName('B');
       $tokensChecker->apply($classPattern);
 
       $this->assertCount(0, $tokensChecker->getCollections());
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
       $classPattern = new ClassPattern();
-      $classPattern->nameIs('A');
+      $classPattern->withName('A');
       $tokensChecker->apply($classPattern);
 
       $this->assertCount(1, $tokensChecker->getCollections());
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
       $classPattern = new ClassPattern();
-      $classPattern->nameIs('customUser');
+      $classPattern->withName('customUser');
       $tokensChecker->apply($classPattern);
 
       $this->assertCount(1, $tokensChecker->getCollections());
@@ -127,17 +133,17 @@
         ->apply(new ClassPattern())
         ->apply(function (QuerySequence $p) {
           $p->process(Strict::create()->valueIs(
-            array(
+            [
               'public',
               'protected',
               'private',
               'static',
-            )
+            ]
           ));
           $p->strict(T_WHITESPACE);
           $name = $p->strict(T_VARIABLE);
           if ($p->isValid()) {
-            return new Collection(array($name));
+            return new Collection([$name]);
           }
           return null;
         });
@@ -149,6 +155,7 @@
       $this->assertEquals('$name', (string) $collections[1]);
 
     }
+
 
     /**
      * @expectedException Exception
@@ -162,6 +169,7 @@
 
     }
 
+
     /**
      * @expectedException Exception
      */
@@ -169,10 +177,11 @@
       $tokensChecker = new Pattern(Collection::createFromString('<?php echo 1;'));
       /** @noinspection PhpUnusedParameterInspection */
       $tokensChecker->apply(function (QuerySequence $process) {
-        return array(new \stdClass());
+        return [new \stdClass()];
       });
 
     }
+
 
     /**
      * @requires PHP 5.5
@@ -190,7 +199,7 @@
       $collection = Collection::createFromString($code);
       $tokensChecker = new Pattern($collection);
       $tokensChecker->apply(
-        (new ClassPattern())->nameIs('UsersController')
+        (new ClassPattern())->withName('UsersController')
       )->apply(function (QuerySequence $q) {
         $function = $q->strict('header');
         $q->strict('(');
@@ -202,6 +211,7 @@
       $this->assertContains('$this->response()->redirect("123")', (string) $collection);
 
     }
+
 
     /**
      * @expectedException \Funivan\PhpTokenizer\Exception\Exception
@@ -219,8 +229,44 @@
       $tokensChecker = new Pattern($collection);
       $tokensChecker->apply(function (QuerySequence $q) {
         $q->setSkipWhitespaces(true);
-        return array();
+        return [];
       });
+
+    }
+
+
+    public function testCombinedPatterns() {
+      $code = '<?php
+      
+      class Logger {
+         public function log($message){
+          echo $message;
+         }
+      }
+      
+      class User { 
+        public function getName(){
+          return $this->name;
+        }
+        public function getPassword(){
+          return $this->password;
+        }
+      }
+      
+      
+      ';
+
+      $collection = Collection::createFromString($code);
+      $tokensChecker = new Pattern($collection);
+
+      $tokensChecker->apply(new ClassPattern())
+        ->apply(new MethodPattern());
+
+      $collections = $tokensChecker->getCollections();
+      $this->assertCount(3, $collections);
+      $this->assertContains('echo $message', (string) $collections[0]);
+      $this->assertContains('return $this->name', (string) $collections[1]);
+      $this->assertContains('return $this->password', (string) $collections[2]);
 
     }
 
