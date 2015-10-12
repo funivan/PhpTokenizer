@@ -52,7 +52,7 @@ Reformat our code like PhpStorm. Lets create rule: place single spaces after `wh
 ```
 
 ## Documentation
-(Documentation)[doc/index.md]
+[Documentation](doc/index.md)
 
 ## Testing
 

@@ -121,7 +121,7 @@ For example we want to change all `echo` statements to `$output->write()`
   
 ```
 
-(index)[index.md]
+[index](index.md)
 
 
 
