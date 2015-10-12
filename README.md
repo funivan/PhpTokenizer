@@ -20,9 +20,9 @@ composer require funivan/php-tokenizer
 ## Usage
 Reformat our code like PhpStorm. Lets create rule: place single spaces after `while`
   
-``` php
+```php
 
-   require __DIR__.'/vendor/autoload.php';
+  require __DIR__.'/vendor/autoload.php';
    
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Pattern\Pattern;
@@ -50,6 +50,9 @@ Reformat our code like PhpStorm. Lets create rule: place single spaces after `wh
 
 
 ```
+
+## Documentation
+(Documentation)[doc/index.md]
 
 ## Testing
 
