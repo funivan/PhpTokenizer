@@ -13,7 +13,7 @@
   class MethodPattern implements PatternInterface {
 
     /**
-     * @var QueryStrategy|null
+     * @var QueryStrategy
      */
     private $nameQuery;
 
