@@ -46,6 +46,7 @@
      */
     protected $index = null;
 
+
     /**
      * You need to provide at least 3 elements
      *
@@ -58,6 +59,7 @@
       }
     }
 
+
     /**
      * @return string
      */
@@ -65,12 +67,14 @@
       return $this->value !== null ? (string) $this->value : '';
     }
 
+
     /**
      * @return string
      */
     public function assemble() {
       return $this->__toString();
     }
+
 
     /**
      * @param array $data
@@ -103,6 +107,7 @@
       return $this;
     }
 
+
     /**
      * @return array
      */
@@ -120,6 +125,7 @@
       return $this;
     }
 
+
     /**
      * @return null|integer
      */
@@ -127,12 +133,14 @@
       return $this->type;
     }
 
+
     /**
      * @return string
      */
     public function getTypeName() {
       return token_name($this->getType());
     }
+
 
     /**
      * @return string
@@ -157,12 +165,14 @@
       return $this;
     }
 
+
     /**
      * @return int
      */
     public function getLine() {
       return $this->line;
     }
+
 
     /**
      * @param int $line
@@ -173,12 +183,14 @@
       return $this;
     }
 
+
     /**
      * @return bool
      */
     public function isValid() {
       return $this->getValue() !== null;
     }
+
 
     /**
      * Remove all data from token so this token become invalid
@@ -208,9 +220,10 @@
       }
 
       $this->value = $this->value . $part;
-      
+
       return $this;
     }
+
 
     /**
      * Add part to the begin of value
@@ -220,7 +233,7 @@
      * @throws Exception
      */
     public function prependToValue($part) {
-      
+
       if (!is_string($part) and !is_numeric($part)) {
         throw new InvalidArgumentException('You can prepend only string to value');
       }
@@ -230,12 +243,14 @@
       return $this;
     }
 
+
     /**
      * @return null|int
      */
     public function getIndex() {
       return $this->index;
     }
+
 
     /**
      * @param null|int $index

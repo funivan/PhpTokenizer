@@ -7,7 +7,7 @@
   use Funivan\PhpTokenizer\Strategy\Strict;
 
   /**
-   * Class pattern used to finding classes in tour source code
+   * Pattern used to finding classes in tour source code
    *
    */
   class ClassPattern implements PatternInterface {
@@ -26,9 +26,9 @@
     }
 
 
-    /**     
+    /**
      * @codeCoverageIgnore
-     * @deprecated      
+     * @deprecated
      * @param string $name
      * @return $this
      */
@@ -55,7 +55,7 @@
     }
 
 
-    /**            
+    /**
      * @codeCoverageIgnore
      * @deprecated
      * @param QueryStrategy $strategy

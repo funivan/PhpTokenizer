@@ -20,35 +20,36 @@
      *
      * @var callable[]
      */
-    protected $checkFunctions = array();
+    protected $checkFunctions = [];
 
     /**
      * Storage of type conditions
      *
      * @var array
      */
-    protected $type = array();
+    protected $type = [];
 
     /**
      * Storage of conditions conditions
      *
      * @var array
      */
-    protected $value = array();
+    protected $value = [];
 
     /**
      * Storage of line conditions
      *
      * @var array
      */
-    protected $line = array();
+    protected $line = [];
 
     /**
      * Storage of index conditions
      *
      * @var array
      */
-    protected $index = array();
+    protected $index = [];
+
 
     /**
      * @return static
@@ -73,6 +74,7 @@
       return $this;
     }
 
+
     /**
      * @param int|array $type Array<Int>|Int
      * @return $this
@@ -88,6 +90,7 @@
       return $this;
     }
 
+
     /**
      * @param string $value Array<String>|String
      * @return $this
@@ -101,6 +104,7 @@
 
       return $this;
     }
+
 
     /**
      * @param string $value Array<String>|String
@@ -116,6 +120,7 @@
 
       return $this;
     }
+
 
     /**
      * @param string $regex Array<String>|String
@@ -159,6 +164,7 @@
       return $this;
     }
 
+
     /**
      * @param int|int[] $index
      * @return $this
@@ -172,6 +178,7 @@
 
       return $this;
     }
+
 
     /**
      * @param int|int[] $index
@@ -187,6 +194,7 @@
 
       return $this;
     }
+
 
     /**
      * @param int|int[] $index
@@ -224,6 +232,7 @@
       return true;
     }
 
+
     /**
      * @param string|int|array $value String|Int|Array<String>|Array<Int>
      * @return array Array<String>
@@ -232,7 +241,7 @@
     protected function prepareValues($value) {
 
       if ($value == null) {
-        return array();
+        return [];
       }
 
       if (is_object($value)) {
@@ -251,6 +260,7 @@
       return $value;
     }
 
+
     /**
      * @param array|int $value Array<Int>|Int
      * @return array
@@ -259,7 +269,7 @@
     protected function prepareIntValues($value) {
 
       if ($value === null) {
-        return array();
+        return [];
       }
 
       if (is_object($value)) {
@@ -277,6 +287,7 @@
 
       return $value;
     }
+
 
     /**
      * Under development

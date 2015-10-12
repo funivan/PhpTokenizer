@@ -34,12 +34,14 @@
       return $this->token;
     }
 
+
     /**
      * @return boolean
      */
     public function isValid() {
       return ($this->valid === true);
     }
+
 
     /**
      * @param boolean $valid
@@ -50,6 +52,7 @@
       return $this;
     }
 
+
     /**
      * @param Token $token
      * @return $this
@@ -59,6 +62,7 @@
       return $this;
     }
 
+
     /**
      * @param int $nexTokenIndex
      * @return $this
@@ -67,6 +71,7 @@
       $this->nexTokenIndex = $nexTokenIndex;
       return $this;
     }
+
 
     /**
      * @return int|null

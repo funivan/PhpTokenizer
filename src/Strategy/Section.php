@@ -22,6 +22,7 @@
      */
     private $endQuery;
 
+
     /**
      * @param string $start
      * @param string $end
@@ -38,6 +39,7 @@
 
       return $this;
     }
+
 
     /**
      * @param \Funivan\PhpTokenizer\Collection $collection
@@ -88,6 +90,7 @@
       return $result;
     }
 
+
     /**
      * @param QueryInterface $startQuery
      * @return $this
@@ -97,6 +100,7 @@
       return $this;
     }
 
+
     /**
      * @param QueryInterface $endQuery
      * @return $this
@@ -105,6 +109,7 @@
       $this->endQuery = $endQuery;
       return $this;
     }
+
 
     protected function requireQueries() {
       if (empty($this->startQuery)) {

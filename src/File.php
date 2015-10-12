@@ -20,6 +20,7 @@
      */
     protected $collection = null;
 
+
     /**
      *
      * ```
@@ -38,6 +39,7 @@
       $fileTokens = new File($path);
       return $fileTokens;
     }
+
 
     /**
      * @param string $path
@@ -84,6 +86,7 @@
       return $this;
     }
 
+
     /**
      * @return string
      */
@@ -91,12 +94,14 @@
       return $this->path;
     }
 
+
     /**
      * @return bool
      */
     public function isChanged() {
       return $this->collection->isChanged();
     }
+
 
     /**
      * Alias for Collection::find

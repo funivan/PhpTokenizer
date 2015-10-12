@@ -1,5 +1,5 @@
 <?php
-  
+
   namespace Funivan\PhpTokenizer\Pattern;
 
   use Funivan\PhpTokenizer\Collection;
@@ -17,6 +17,7 @@
      * @throws \Exception
      */
     public function apply(callable $pattern);
+
 
     /**
      *

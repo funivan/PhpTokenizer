@@ -34,7 +34,7 @@
     /**
      * @param array $items
      */
-    public function __construct(array $items = array()) {
+    public function __construct(array $items = []) {
       parent::__construct($items);
       $this->storeContentHash();
     }

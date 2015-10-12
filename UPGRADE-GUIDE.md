@@ -1,5 +1,9 @@
 # Php tokenizer upgrade guide
 
+## from 0.1.1 to 0.1.2
+  - Deprecated `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern::nameIs` use `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern::withName`  
+  - Deprecated `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern::whereName` use `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern::withName`  
+  
 ## from 0.1.0 to 0.1.1
 This package is under development. Please use strict version in composer json
   - rename `\Funivan\PhpTokenizer\Strategy\BaseStrategy` to `\Funivan\PhpTokenizer\Strategy\QueryStrategy` 

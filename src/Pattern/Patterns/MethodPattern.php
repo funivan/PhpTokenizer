@@ -8,8 +8,7 @@
   use Funivan\PhpTokenizer\Strategy\Strict;
 
   /**
-   *
-   * @package Atl\Automation
+   * Find method in code
    */
   class MethodPattern implements PatternInterface {
 
@@ -49,7 +48,7 @@
      * @return Collection|null
      */
     public function __invoke(QuerySequence $querySequence) {
-      
+
       $querySequence->strict('function');
       $querySequence->strict(T_WHITESPACE);
       $querySequence->process($this->nameQuery);
@@ -59,7 +58,7 @@
       if ($querySequence->isValid()) {
         return $body->extractItems(1, -1);
       }
-      
+
       return null;
     }
 

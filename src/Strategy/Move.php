@@ -32,6 +32,7 @@
      */
     protected $direction = null;
 
+
     /**
      * @param int $steps
      * @return static
@@ -39,6 +40,7 @@
     public static function create($steps) {
       return new static($steps);
     }
+
 
     /**
      * You can pass positive and negative numbers

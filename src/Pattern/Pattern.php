@@ -14,7 +14,8 @@
     /**
      * @var Collection[]
      */
-    protected $collections = array();
+    protected $collections = [];
+
 
     /**
      *
@@ -34,7 +35,7 @@
       # We will add new one and iterate over current
 
       $collections = $this->collections;
-      $this->collections = array();
+      $this->collections = [];
 
       foreach ($collections as $collection) {
 
@@ -65,7 +66,7 @@
      * @throws Exception
      */
     protected function iterateOverCollections(callable $pattern, Collection $collection) {
-      $result = array();
+      $result = [];
 
       $collection->rewind();
       foreach ($collection as $index => $token) {

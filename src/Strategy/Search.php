@@ -62,6 +62,7 @@
       return $result;
     }
 
+
     /**
      * @param int $direction
      * @return $this

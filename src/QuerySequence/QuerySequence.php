@@ -4,9 +4,9 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
-  use Funivan\PhpTokenizer\Strategy\QueryStrategy;
   use Funivan\PhpTokenizer\Strategy\Move;
   use Funivan\PhpTokenizer\Strategy\Possible;
+  use Funivan\PhpTokenizer\Strategy\QueryStrategy;
   use Funivan\PhpTokenizer\Strategy\Search;
   use Funivan\PhpTokenizer\Strategy\StrategyInterface;
   use Funivan\PhpTokenizer\Strategy\Strict;
@@ -37,6 +37,7 @@
      */
     private $skipWhitespaces = false;
 
+
     /**
      * @inheritdoc
      */
@@ -44,6 +45,7 @@
       $this->collection = $collection;
       $this->position = $initialPosition;
     }
+
 
     /**
      * @return Collection
@@ -62,12 +64,14 @@
       return $this;
     }
 
+
     /**
      * @return int
      */
     public function getPosition() {
       return $this->position;
     }
+
 
     /**
      * Strict validation of condition
@@ -80,6 +84,7 @@
       return $this->process($query);
     }
 
+
     /**
      * Check if token possible valid for our condition
      *
@@ -90,6 +95,7 @@
       $query = $this->buildStrategyCondition($condition, Possible::create());
       return $this->process($query);
     }
+
 
     /**
      * @param string $start
@@ -116,6 +122,7 @@
       return $this->collection->extractByTokens($token, $lastToken);
     }
 
+
     /**
      * By default we search forward
      *
@@ -132,6 +139,7 @@
       return $this->process($query);
     }
 
+
     /**
      * Relative move
      * +10 move forward 10 tokens
@@ -143,6 +151,7 @@
     public function move($steps) {
       return $this->process(Move::create($steps));
     }
+
 
     /**
      * Move to specific position
@@ -158,7 +167,7 @@
       }
 
       $tokenIndex = $token->getIndex();
-      
+
 
       foreach ($this->collection as $index => $collectionToken) {
         if ($collectionToken->getIndex() == $tokenIndex) {
@@ -187,6 +196,7 @@
       return $range;
     }
 
+
     /**
      * @param string|int|StrategyInterface $value
      * @return Token
@@ -201,6 +211,7 @@
       $token = $this->process($query);
       return $token;
     }
+
 
     /**
      * @inheritdoc
@@ -233,6 +244,7 @@
 
       return $token;
     }
+
 
     /**
      *
@@ -275,6 +287,7 @@
       return $this;
     }
 
+
     /**
      * Indicate state of all conditions
      *
@@ -284,6 +297,7 @@
       return ($this->valid === true);
     }
 
+
     /**
      * @param boolean $skipWhitespaces
      * @return $this
@@ -292,5 +306,5 @@
       $this->skipWhitespaces = $skipWhitespaces;
       return $this;
     }
-    
+
   }
