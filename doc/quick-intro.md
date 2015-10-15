@@ -1,15 +1,15 @@
 # Quick Intro 
-This library helps us to develop better software and refactor our code efficiently.
+This library helps us to develop better software and refactors our code efficiently.
 When I need to modify hundreds lines of code and I can not use my IDE for this task, I use `PhpTokenizer` library. 
-Here is few cases how I use this library:
+There are some cases how I use this library:
 
-1. Change `$this->response()` to `$this->getResponse()` in methods which name starts with `action` word.
-2. Add `public` keyword to all methods that does not have visibility keyword.
+1. Change `$this->response()` to `$this->getResponse()` in methods tat starts with `action` word.
+2. Add `public` keyword to all methods that do not have visibility keyword.
 3. Replace old and unused code.
 4. Etc ... 
 
 
-# How it workds
+# How it works
 For example you have php code. You load your code to `Collection` using `Collection::createFromString($code)`
 This function will create collection of tokens. You can already find and modify your code
 ```php
@@ -36,7 +36,7 @@ This function will create collection of tokens. You can already find and modify 
   echo (string) $collection;
 
 ```
-With this code we change all strings in double quotes to single quotes. As you can see it is pretty simple. 
+With this code we change all double quoted strings into single quoted strings. As you can see it is pretty simple. 
   
 `Collection` is array of `Token` (tokens). What is it, token?
 `Token` is the minimum unit of this library. This data structure consist of 3 values: 
@@ -46,11 +46,11 @@ With this code we change all strings in double quotes to single quotes. As you c
 3. Line
 4. Index
 
-Php build tokens from string using `token_get_all` built-in function.
+Php builds tokens from string using `token_get_all` built-in function.
 
 
 If we have complicated condition it is easy to use `Query`
-`Query` is condition holder class. Lets rewrite our example
+  It is condition holder class. Let`s rewrite our example
 
 
 ```php
@@ -89,7 +89,8 @@ Traverse over collection is simple but it is not so easy to find code by multipl
 For this task there are `Pattern` and `QuerySequence` classes
 
 `QuerySequence` is sequence of several queries.
-`Pattern` used to combine multiple `QuerySequence`
+
+`Pattern` is used to combine multiple `QuerySequence`
 
 For example we want to change all `echo` statements to `$output->write()`
   
