@@ -14,8 +14,6 @@ For example you have php code. You load your code to `Collection` using `Collect
 This function will create collection of tokens. You can already find and modify your code
 ```php
 
-  require __DIR__ . '/vendor/autoload.php';
-
   use Funivan\PhpTokenizer\Collection;
 
   $source = '<?php 
@@ -55,8 +53,6 @@ If we have complicated condition it is easy to use `Query`
 
 ```php
 
-
-  require __DIR__ . '/vendor/autoload.php';
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Query\Query;
@@ -122,7 +118,4 @@ For example we want to change all `echo` statements to `$output->write()`
   
 ```
 
-[index](index.md)
-
-
-
+[Index](index.md)
