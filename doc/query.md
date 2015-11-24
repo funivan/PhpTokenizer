@@ -1,10 +1,9 @@
 # Query
-You can validate token by simple `if` `else` keywords. But it is move preferable to use `Query` class.
-`Query` contain conditions and check if token is valid to all of this conditions.
+You can validate token by simple `if` `else` keywords. But it is more preferable to use `Query` class.
+`Query` contains conditions and checks if token is valid to all of these conditions.
 
 
-Lets see simple example:
-
+Let's see the simple example:
 
 ```
   use Funivan\PhpTokenizer\Collection;
@@ -33,18 +32,18 @@ Lets see simple example:
 
 ```
 
-# Common used conditions
+# Commonly used conditions
 
-Our `Query` check token by type, value, index and etc. Here is several most used conditions:
-- `typeIs` check if type is equal
-- `typeNot` check if type is not equal
-- `valueIs` check if value is equal
-- `valueLike` check value by regexp
-- `valueNot` check if value is not equal
-- `custom` check token by custom callback
+Our `Query` checks token by type, value, index and etc. There are several most used conditions:
+- `typeIs` checks if type is equal
+- `typeNot` checks if type is not equal
+- `valueIs` checks if value is equal
+- `valueLike` checks value by regexp
+- `valueNot` checks if value is not equal
+- `custom` checks token with custom function
 
 
-# Check token by custom callback
+# Check token with the custom function
 
 ```php
   use Funivan\PhpTokenizer\Query\Query;
@@ -56,9 +55,9 @@ Our `Query` check token by type, value, index and etc. Here is several most used
   });
 ```
 
-# Where i will use it?
+# Where will I use it?
  
-- You can extract tokens from collection with `Query`
+- You can extract tokens from the collection with the help of `Query`
 
 ```php
 
@@ -80,9 +79,9 @@ Our `Query` check token by type, value, index and etc. Here is several most used
   print_r($tokens);
   
 ```
-You will find all `$a` variables
+You will find all `$a` variables.
 
-- Find/modify sequence of tokens. This is complicated example and you can read more in next sections.
+- Find/modify the sequence of tokens. This is a complicated example and you can read more about it in the next sections.
  
 ```php
  use Funivan\PhpTokenizer\Collection;
