@@ -1,7 +1,7 @@
 # Token
 
 
-Your php code consist of words and symbols. Php processor can split your code to tokens.
+Your php code consists of words and symbols. Php processor can split your code to tokens.
 
 `Token` class is a wrapper around standard token representation. 
 This class contains:
@@ -19,8 +19,8 @@ From official php manual.
 
 You can read more about token at [List of Parsed Tokens](http://php.net/manual/en/tokens.php)
 
-So token type identify what is the nature of the symbol.
-Lets see some common types of tokens. 
+So token type identifies what is the nature of the symbol.
+Let's see some common types of tokens. 
 ```php
 $tokenTypes = [
   T_CLASS       => 'class',
@@ -29,8 +29,8 @@ $tokenTypes = [
   T_VARIABLE    => '$foo',
 ];
 ```
-For example we want to find all variable in our code. We do not know what is the variable name. 
-But we know type of words that we search: `T_VARIABLE`
+For example we want to find all variables in our code. We do not know the variable name. 
+But we know the type of words that we search: `T_VARIABLE`.
  
 ```php
 
@@ -60,7 +60,7 @@ You can get value from token by `getValue`. As we know our code consists of toke
 If we tokenize our code we get array of `Token`.
 To get our code back we just need to concat all token values.   
 
-Lets make simple hack. Change all variable `$a` to `$b`
+Let's make a simple hack. Change all variables `$a` to `$b`.
 ```php
 
   use Funivan\PhpTokenizer\Collection;
@@ -94,10 +94,10 @@ Now your `$newCode` is
 ```
 
 #Token line
-It is useful when we want to find tokens in specific line. For example at `34` line remove empty string.
+It is useful when we want to find tokens in a specific line. For example, remove empty string in line `34`.
 
 # Token index
-Token index is my custom feature. This index inited when we create tokens from string.
+Token index is my custom feature. This index inited when we create tokens from the string.
 ```
 
   use Funivan\PhpTokenizer\Collection;
@@ -114,7 +114,7 @@ Token index is my custom feature. This index inited when we create tokens from s
   echo $token->getIndex();
 
 ```
-Tou should see `0`
-In most cases you don not need it. This index used in internal part of the library (When we need to extract tokens by start and end tokens).
+Tou should see `0`.
+In most cases you do not need it. This index is used in the internal part of the library (when we need to extract tokens by start and end tokens).
 
 [Index](index.md)
