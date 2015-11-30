@@ -1,17 +1,17 @@
 # Quick Intro 
 This library helps us to develop better software and refactors our code efficiently.
 When I need to modify hundreds lines of code and I can not use my IDE for this task, I use `PhpTokenizer` library. 
-There are some cases how I use this library:
+There are some cases where I use this library:
 
-1. Change `$this->response()` to `$this->getResponse()` in methods tat starts with `action` word.
+1. Change `$this->response()` to `$this->getResponse()` in methods that starts with `action` word.
 2. Add `public` keyword to all methods that do not have visibility keyword.
 3. Replace old and unused code.
 4. Etc ... 
 
 
 # How it works
-For example you have php code. You load your code to `Collection` using `Collection::createFromString($code)`
-This function will create collection of tokens. You can already find and modify your code
+For example you have php code. You load your code to `Collection`, using `Collection::createFromString($code)`
+This function will create collection of tokens. You can already find and modify your code.
 ```php
 
   use Funivan\PhpTokenizer\Collection;
@@ -34,21 +34,21 @@ This function will create collection of tokens. You can already find and modify 
   echo (string) $collection;
 
 ```
-With this code we change all double quoted strings into single quoted strings. As you can see it is pretty simple. 
+We change all double quoted strings into single quoted strings with this code. As you can see it is pretty simple. 
   
 `Collection` is array of `Token` (tokens). What is it, token?
-`Token` is the minimum unit of this library. This data structure consist of 3 values: 
+`Token` is the minimum unit of this library. This data structure consists of 4 values: 
 
 1. Type
 2. Value
 3. Line
 4. Index
 
-Php builds tokens from string using `token_get_all` built-in function.
+Php builds tokens from string, using `token_get_all` built-in function.
 
 
-If we have complicated condition it is easy to use `Query`
-  It is condition holder class. Let`s rewrite our example
+If we have a complicated condition it is easy to use `Query`.
+  It is a condition holder class. Let`s rewrite our example.
 
 
 ```php
@@ -82,13 +82,13 @@ You can validate `Token` by several conditions. Take a look at `Query` class.
 
 
 Traverse over collection is simple but it is not so easy to find code by multiple queries (conditions). 
-For this task there are `Pattern` and `QuerySequence` classes
+There are `Pattern` and `QuerySequence` classes for this task.
 
 `QuerySequence` is sequence of several queries.
 
-`Pattern` is used to combine multiple `QuerySequence`
+`Pattern` is used to combine multiple `QuerySequence`.
 
-For example we want to change all `echo` statements to `$output->write()`
+For example we want to change all `echo` statements to `$output->write()`.
   
 ```php
 
