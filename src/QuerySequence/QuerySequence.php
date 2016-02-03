@@ -104,7 +104,7 @@
      */
     public function section($start, $end) {
 
-      $token = $this->search($start);
+      $token = $this->strict($start);
       if (!$token->isValid()) {
         # cant find start position
         return new Collection();

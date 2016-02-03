@@ -25,7 +25,9 @@
 
       $tokensChecker->apply(function (QuerySequence $processor) {
         $processor->strict('class');
+        $processor->strict(T_WHITESPACE);
         $processor->process(Strict::create()->valueLike("!.*!"));
+        $processor->possible(T_WHITESPACE);
         $body = $processor->section('{', '}');
         if ($processor->isValid()) {
           return $body->extractItems(1, -1);

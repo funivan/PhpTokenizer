@@ -3,6 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\Pattern\Pattern;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Section;
 
@@ -15,26 +16,27 @@
      * @return array
      */
     public function functionCallDataProvider() {
-      return array(
-        array(
+      return [
+        [
           'header(123); ',
           'header',
           'header(123)',
-        ),
-        array(
+        ],
+        [
           'echo header          (123, 432); ',
           'header',
           'header          (123, 432)',
-        ),
+        ],
 
-        array(
+        [
           'echo header          (123, 432); ',
           'header',
           'header          (123, 432)',
-        ),
+        ],
 
-      );
+      ];
     }
+
 
     /**
      * @dataProvider functionCallDataProvider
@@ -47,11 +49,12 @@
 
       $collection = Collection::createFromString($code);
 
-      $lines = array();
+      $lines = [];
 
       foreach ($collection as $index => $token) {
         $q = new QuerySequence($collection, $index);
         $start = $q->strict($functionName);
+        $q->possible(T_WHITESPACE);
         $end = $q->section('(', ')');
 
         if ($q->isValid()) {
@@ -63,7 +66,7 @@
       $this->assertEquals($expectCode, $lines[0]);
     }
 
-    
+
     public function testWithEmptySection() {
       $code = '<?php 
       
@@ -74,7 +77,7 @@
       ';
 
       $collection = Collection::createFromString($code);
-      $linesWithEcho = array();
+      $linesWithEcho = [];
 
       foreach ($collection as $index => $token) {
         $q = new QuerySequence($collection, $index);
@@ -90,6 +93,7 @@
 
     }
 
+
     public function testWithEmptySectionSearch() {
       $code = '<?php 
       
@@ -102,7 +106,7 @@
       $collection = Collection::createFromString($code);
 
 
-      $linesWithEcho = array();
+      $linesWithEcho = [];
 
       foreach ($collection as $index => $token) {
         $q = new QuerySequence($collection, $index);
@@ -118,6 +122,40 @@
 
     }
 
+
+    public function testWithMultipleTokens() {
+
+      $code = '<?php 
+      
+      class User { 
+        abstract function getInfo();
+ss     
+        public function save() {}
+      }
+      ';
+
+      $collection = Collection::createFromString($code);
+
+
+      $num = 0;
+
+      (new Pattern($collection))->apply(function (QuerySequence $q) use (&$num) {
+
+        $q->strict(')');
+        $q->possible(T_WHITESPACE);
+        $q->section('{', '}');
+
+        if ($q->isValid()) {
+          $num++;
+        }
+
+      });
+
+      $this->assertEquals(1, $num);
+
+    }
+
+
     /**
      * @expectedException \Funivan\PhpTokenizer\Exception\InvalidArgumentException
      */
@@ -127,6 +165,7 @@
       $section->process(new Collection(), 0);
 
     }
+
 
     /**
      * @expectedException \Funivan\PhpTokenizer\Exception\InvalidArgumentException

@@ -75,6 +75,8 @@
       $querySequence->strict('class');
       $querySequence->strict(T_WHITESPACE);
       $querySequence->process($this->nameQuery);
+      $startClassBody = $querySequence->search('{');
+      $querySequence->moveToToken($startClassBody);
       $body = $querySequence->section('{', '}');
 
       if ($querySequence->isValid()) {
