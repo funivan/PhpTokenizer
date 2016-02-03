@@ -6,6 +6,7 @@
   use Funivan\PhpTokenizer\Pattern\Pattern;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Section;
+  use Funivan\PhpTokenizer\Strategy\Strict;
 
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 4/18/15
@@ -129,7 +130,7 @@
       
       class User { 
         abstract function getInfo();
-ss     
+
         public function save() {}
       }
       ';
@@ -153,6 +154,93 @@ ss
 
       $this->assertEquals(1, $num);
 
+    }
+
+
+    /**
+     * @return array
+     */
+    public function functionDetectDataProvider() {
+      return [
+        [
+          function (QuerySequence $q) {
+            $q->strict(')');
+            $q->possible(T_WHITESPACE);
+            $q->section('{', '}');
+          },
+          2,
+        ],
+        [
+          function (QuerySequence $q) {
+            $q->strict(')');
+            $q->section('{', '}');
+          },
+          1,
+        ],
+        [
+          function (QuerySequence $q) {
+            $q->setSkipWhitespaces(true);
+            $q->strict(')');
+            $q->section('{', '}');
+          },
+          2,
+        ],
+        [
+          function (QuerySequence $q) {
+            $q->setSkipWhitespaces(true);
+            $q->strict(Strict::create()->valueLike('!^[a-z]+$!i'));
+            $q->section('(', ')');
+            $q->section('{', '}');
+          },
+          2,
+        ],
+        [
+          function (QuerySequence $q) {
+            $q->strict(Strict::create()->valueLike('!^[a-z]+$!i'));
+            $q->section('(', ')');
+            $q->section('{', '}');
+          },
+          0,
+        ],
+        [
+          function (QuerySequence $q) {
+            $q->strict(Strict::create()->valueLike('!^[a-z]+$!i'));
+            $q->strict(T_WHITESPACE);
+            $q->section('(', ')');
+            $q->section('{', '}');
+          },
+          1,
+        ],
+      ];
+    }
+
+
+    /**
+     * @dataProvider functionDetectDataProvider
+     * @param callable $callback
+     * @param $expectFunctionNum
+     */
+    public function testFunctionDetect(callable $callback, $expectFunctionNum) {
+      $code = '<?php 
+      function getInfo ($df){}
+      function save() {}
+      ';
+
+      $collection = Collection::createFromString($code);
+
+
+      $num = 0;
+
+      (new Pattern($collection))->apply(function (QuerySequence $q) use ($callback, &$num) {
+        $callback($q);
+
+        if ($q->isValid()) {
+          $num++;
+        }
+
+      });
+
+      $this->assertEquals($expectFunctionNum, $num);
     }
 
 
