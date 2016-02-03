@@ -289,6 +289,21 @@
 
 
     /**
+     * @return Token
+     */
+    public function getToken() {
+      $position = $this->getPosition();
+      $token = $this->getCollection()->offsetGet($position);
+
+      if ($token !== null) {
+        return $token;
+      }
+
+      return new Token();
+    }
+
+
+    /**
      * Indicate state of all conditions
      *
      * @return bool

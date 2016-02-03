@@ -165,19 +165,86 @@
       $this->assertCount(2, $checker->getCollections());
       $this->assertStringStartsWith('abstract class B{', (string) $checker->getCollections()[0]);
       $this->assertStringStartsWith('final class A ', (string) $checker->getCollections()[1]);
-      
+
     }
-    
+
+
     public function testOutputBody() {
       $checker = new Pattern(Collection::createFromString('<?php abstract class B{public $a=1;} final class A {}'));
 
       $checker->apply((new ClassPattern())->outputBody());
 
       $this->assertCount(2, $checker->getCollections());
-      
+
       $this->assertStringStartsWith('public $a=1;', (string) $checker->getCollections()[0]);
       $this->assertEmpty((string) $checker->getCollections()[1]);
+
+    }
+
+
+    public function testSelectWithOrWithoutDocComment() {
+      $checker = new Pattern(Collection::createFromString('<?php 
+      /**
+       * description
+       */
+      abstract class B{public $a=1;} 
       
+      
+      final class A {}'
+      ));
+
+      $checker->apply((new ClassPattern())->outputFull());
+
+      $this->assertCount(2, $checker->getCollections());
+
+      $this->assertStringStartsWith('/**', (string) $checker->getCollections()[0]);
+      $this->assertStringStartsWith('final class', (string) $checker->getCollections()[1]);
+
+    }
+
+
+    public function testSelectWithDocComment() {
+
+      $checker = new Pattern(Collection::createFromString('<?php 
+      /**
+       * description
+       */
+      abstract class B{public $a=1;} 
+      
+      final class A {}'
+      ));
+
+      $checker->apply((new ClassPattern())->outputFull()->withDocComment());
+
+      $this->assertCount(1, $checker->getCollections());
+
+      $this->assertContains('class B', (string) $checker->getCollections()[0]);
+
+    }
+
+
+    public function testSelectWithoutDocComment() {
+
+      $checker = new Pattern(Collection::createFromString('<?php 
+      /**
+       * description
+       */
+      abstract class A{public $a=1;} 
+      
+      class B{}
+      /**
+       */final class C{}
+       
+      final class D {}'
+      ));
+
+      $checker->apply((new ClassPattern())->outputFull()->withoutDocComment());
+
+
+      $this->assertCount(2, $checker->getCollections());
+      $this->assertContains('class B', (string) $checker->getCollections()[0]);
+      $this->assertContains('final class D', (string) $checker->getCollections()[1]);
+
     }
 
 

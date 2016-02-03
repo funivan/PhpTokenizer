@@ -8,6 +8,7 @@ All Notable changes to `PhpTokenizer` will be documented in this file
  - fixed  `Funivan\PhpTokenizer\Helper::getTokensFromString`. Better detection of token line
  - fixed `Funivan\PhpTokenizer\extractByTokens` We detect token range by token global index. See documentation
  - changed `Funivan\PhpTokenizer\Strategy\Section` Strict detection of section. Next token after current must be section start token 
+ - added `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern` `withDocComment`, `withoutDocComment`, `withPossibleDocComment`
 
 ## 0.1.1 - 2015-07-28
   - fixed `\Funivan\PhpTokenizer\Strategy\Search::process`

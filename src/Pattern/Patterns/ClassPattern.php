@@ -6,6 +6,7 @@
   use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Strategy\QueryStrategy;
   use Funivan\PhpTokenizer\Strategy\Strict;
+  use Funivan\PhpTokenizer\Token;
 
   /**
    * Pattern used to finding classes in tour source code
@@ -30,6 +31,11 @@
     private $nameQuery = null;
 
     /**
+     * @var callable
+     */
+    private $docCommentQuery;
+
+    /**
      * @var int
      */
     private $outputType = self::OUTPUT_BODY;
@@ -40,6 +46,7 @@
      */
     public function __construct() {
       $this->nameQuery = Strict::create()->valueLike('!.+!');
+      $this->withPossibleDocComment();
     }
 
 
@@ -68,6 +75,43 @@
         throw new \InvalidArgumentException('Expect string or QueryInterface');
       }
 
+      return $this;
+    }
+
+
+    /**
+     * @return $this
+     */
+    public function withDocComment() {
+      $this->docCommentQuery = function (Token $comment, QuerySequence $q) {
+        if ($comment->getType() != T_DOC_COMMENT) {
+          $q->setValid(false);
+        }
+      };
+      return $this;
+    }
+
+
+    /**
+     * @return $this
+     */
+    public function withPossibleDocComment() {
+      $this->docCommentQuery = function (Token $comment, QuerySequence $q) {
+        return;
+      };
+      return $this;
+    }
+
+
+    /**
+     * @return $this
+     */
+    public function withoutDocComment() {
+      $this->docCommentQuery = function (Token $comment, QuerySequence $q) {
+        if ($comment->getType() == T_DOC_COMMENT) {
+          $q->setValid(false);
+        }
+      };
       return $this;
     }
 
@@ -108,6 +152,9 @@
     public function __invoke(QuerySequence $querySequence) {
 
 
+      $comment = $querySequence->process(Possible::create()->typeIs(T_DOC_COMMENT));
+
+      $querySequence->possible(T_WHITESPACE);
       $modifier = $querySequence->process(Possible::create()->valueIs([
         'abstract',
         'final',
@@ -124,6 +171,13 @@
       if ($modifier->isValid()) {
         $start = $modifier;
       }
+
+      if ($comment->isValid()) {
+        $start = $comment;
+      }
+
+      $docCommentChecker = $this->docCommentQuery;
+      $docCommentChecker($comment, $querySequence);
 
       if (!$querySequence->isValid()) {
         return null;

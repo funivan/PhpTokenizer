@@ -143,7 +143,7 @@
     public function getNext($step = 1) {
       $item = parent::getNext($step);
       if ($item === null) {
-        $item = new Token();
+          $item = new Token();
       }
       return $item;
     }
