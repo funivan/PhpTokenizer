@@ -107,6 +107,13 @@
      */
     public function __invoke(QuerySequence $querySequence) {
 
+
+      $modifier = $querySequence->process(Possible::create()->valueIs([
+        'abstract',
+        'final',
+      ]));
+
+      $querySequence->possible(T_WHITESPACE);
       $start = $querySequence->strict('class');
       $querySequence->strict(T_WHITESPACE);
       $querySequence->process($this->nameQuery);
@@ -114,31 +121,21 @@
       $querySequence->moveToToken($startClassBody);
       $body = $querySequence->section('{', '}');
 
-      if ($start->isValid()) {
-        # catch class modifiers
-        $querySequence->moveToToken($start);
-        $querySequence->move(-2);
-        $modifier = $querySequence->process(Possible::create()->valueIs([
-          'abstract',
-          'final',
-        ]));
-        if ($modifier->isValid()) {
-          $start = $modifier;
-        }
+      if ($modifier->isValid()) {
+        $start = $modifier;
       }
 
       if (!$querySequence->isValid()) {
         return null;
       }
 
+
       if ($this->outputType == self::OUTPUT_BODY) {
         return $body->extractItems(1, -1);
       }
 
-      if ($this->outputType == self::OUTPUT_FULL) {
-        return $querySequence->getCollection()->extractByTokens($start, $body->getLast());
-      }
-
+      # self::OUTPUT_FULL
+      return $querySequence->getCollection()->extractByTokens($start, $body->getLast());
     }
 
   }

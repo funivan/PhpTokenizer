@@ -166,6 +166,17 @@
       $this->assertStringStartsWith('abstract class B{', (string) $checker->getCollections()[0]);
       $this->assertStringStartsWith('final class A ', (string) $checker->getCollections()[1]);
       
+    }
+    
+    public function testOutputBody() {
+      $checker = new Pattern(Collection::createFromString('<?php abstract class B{public $a=1;} final class A {}'));
+
+      $checker->apply((new ClassPattern())->outputBody());
+
+      $this->assertCount(2, $checker->getCollections());
+      
+      $this->assertStringStartsWith('public $a=1;', (string) $checker->getCollections()[0]);
+      $this->assertEmpty((string) $checker->getCollections()[1]);
       
     }
 
