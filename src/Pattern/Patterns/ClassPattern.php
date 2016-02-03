@@ -36,7 +36,7 @@
     private $docCommentChecker;
 
     /**
-     * @var callable
+     * @var callable[]
      */
     private $modifierChecker;
 
@@ -102,8 +102,8 @@
      * @return $this
      */
     public function withPossibleDocComment() {
-      $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
-        return;
+      $this->docCommentChecker = function () {
+
       };
       return $this;
     }
@@ -210,8 +210,7 @@
      */
     public function withAnyModifier() {
       $this->modifierChecker = [];
-      $this->modifierChecker[] = function (Token $token, QuerySequence $q) {
-        return;
+      $this->modifierChecker[] = function () {
       };
       return $this;
     }
