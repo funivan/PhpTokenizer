@@ -76,7 +76,7 @@
 
 
     /**
-     * @param int|array $type Array<Int>|Int
+     * @param array|int $type Array<Int>|Int
      * @return $this
      */
     public function typeNot($type) {
@@ -92,7 +92,7 @@
 
 
     /**
-     * @param string $value Array<String>|String
+     * @param array|string $value Array<String>|String
      * @return $this
      */
     public function valueIs($value) {
@@ -107,7 +107,7 @@
 
 
     /**
-     * @param string $value Array<String>|String
+     * @param array|string $value Array<String>|String
      * @return $this
      */
     public function valueNot($value) {
@@ -123,7 +123,7 @@
 
 
     /**
-     * @param string $regex Array<String>|String
+     * @param array|string $regex Array<String>|String
      * @return $this
      */
     public function valueLike($regex) {
