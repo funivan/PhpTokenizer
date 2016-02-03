@@ -248,4 +248,78 @@
     }
 
 
+    public function testWithModifier(){
+
+      $baseChecker = new Pattern(Collection::createFromString('<?php 
+      /**
+       * description
+       */
+      abstract class A{public $a=1;} 
+      
+      class B{}
+      /**
+       */final class C{}
+       
+      final class D {}
+      final class E {
+      }
+      '
+      ));
+
+      $checker = clone $baseChecker;
+      $checker->apply((new ClassPattern())->outputFull()->withModifier('abstract'));
+      $this->assertCount(1, $checker->getCollections());
+      $this->assertContains('/**', (string) $checker->getCollections()[0]);
+
+      $checker = clone $baseChecker;
+      $checker->apply((new ClassPattern())->outputFull()->withModifier('final'));
+      $this->assertCount(3, $checker->getCollections());
+      
+      $checker = clone $baseChecker;
+      $checker->apply((new ClassPattern())->outputFull()->withModifier('final')->withModifier('abstract'));
+      $this->assertCount(0, $checker->getCollections());
+
+      $checker = clone $baseChecker;
+      $checker->apply((new ClassPattern())->outputFull()->withAnyModifier());
+      $this->assertCount(5, $checker->getCollections());
+
+      
+    }
+
+
+    public function testWithoutModifier() {
+      $baseChecker = new Pattern(Collection::createFromString('<?php 
+      /**
+       * description
+       */
+      abstract class A{public $a=1;} 
+      
+      class B{}
+      /**
+       */final class C{}
+       
+      final class D {}
+      final class E {
+      }
+      '
+      ));
+
+      $checker = clone $baseChecker;
+      $checker->apply((new ClassPattern())->outputFull()->withoutModifier('abstract'));
+      $this->assertCount(4, $checker->getCollections());
+      
+
+      $checker = clone $baseChecker;
+      $checker->apply((new ClassPattern())->outputFull()->withoutModifier('final'));
+      $this->assertCount(2, $checker->getCollections());
+
+      $checker = clone $baseChecker;
+      $checker->apply((new ClassPattern())->outputFull()->withoutModifier('final')->withModifier('abstract'));
+      $this->assertCount(1, $checker->getCollections());
+
+
+      
+    }
+
+
   }

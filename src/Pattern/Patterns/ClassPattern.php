@@ -33,7 +33,12 @@
     /**
      * @var callable
      */
-    private $docCommentQuery;
+    private $docCommentChecker;
+
+    /**
+     * @var callable
+     */
+    private $modifierChecker;
 
     /**
      * @var int
@@ -47,6 +52,7 @@
     public function __construct() {
       $this->nameQuery = Strict::create()->valueLike('!.+!');
       $this->withPossibleDocComment();
+      $this->withAnyModifier();
     }
 
 
@@ -83,7 +89,7 @@
      * @return $this
      */
     public function withDocComment() {
-      $this->docCommentQuery = function (Token $comment, QuerySequence $q) {
+      $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
         if ($comment->getType() != T_DOC_COMMENT) {
           $q->setValid(false);
         }
@@ -96,7 +102,7 @@
      * @return $this
      */
     public function withPossibleDocComment() {
-      $this->docCommentQuery = function (Token $comment, QuerySequence $q) {
+      $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
         return;
       };
       return $this;
@@ -107,7 +113,7 @@
      * @return $this
      */
     public function withoutDocComment() {
-      $this->docCommentQuery = function (Token $comment, QuerySequence $q) {
+      $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
         if ($comment->getType() == T_DOC_COMMENT) {
           $q->setValid(false);
         }
@@ -176,8 +182,14 @@
         $start = $comment;
       }
 
-      $docCommentChecker = $this->docCommentQuery;
+      $docCommentChecker = $this->docCommentChecker;
       $docCommentChecker($comment, $querySequence);
+
+
+      foreach ($this->modifierChecker as $checker) {
+        $checker($modifier, $querySequence);
+      }
+
 
       if (!$querySequence->isValid()) {
         return null;
@@ -191,5 +203,52 @@
       # self::OUTPUT_FULL
       return $querySequence->getCollection()->extractByTokens($start, $body->getLast());
     }
+
+
+    /**
+     * @return $this
+     */
+    public function withAnyModifier() {
+      $this->modifierChecker = [];
+      $this->modifierChecker[] = function (Token $token, QuerySequence $q) {
+        return;
+      };
+      return $this;
+    }
+
+
+    /**
+     * @param string $modifier
+     * @return $this
+     */
+    public function withModifier($modifier) {
+
+      $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
+        if ($token->getValue() != $modifier) {
+          $q->setValid(false);
+        }
+        return;
+      };
+
+
+      return $this;
+    }
+
+
+    /**
+     * @param string $modifier
+     * @return $this
+     */
+    public function withoutModifier($modifier) {
+
+      $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
+        if ($token->getValue() == $modifier) {
+          $q->setValid(false);
+        }
+        return;
+      };
+      return $this;
+    }
+
 
   }
