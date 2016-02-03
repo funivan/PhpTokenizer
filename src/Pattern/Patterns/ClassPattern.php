@@ -3,6 +3,7 @@
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
+  use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Strategy\QueryStrategy;
   use Funivan\PhpTokenizer\Strategy\Strict;
 
@@ -13,9 +14,25 @@
   class ClassPattern implements PatternInterface {
 
     /**
+     * Result of this pattern will be body of the class
+     */
+    const OUTPUT_BODY = 1;
+
+    /**
+     * Result of this pattern will be full class
+     */
+    const OUTPUT_FULL = 2;
+
+
+    /**
      * @var QueryStrategy
      */
     private $nameQuery = null;
+
+    /**
+     * @var int
+     */
+    private $outputType = self::OUTPUT_BODY;
 
 
     /**
@@ -56,6 +73,24 @@
 
 
     /**
+     * @return $this
+     */
+    public function outputBody() {
+      $this->outputType = self::OUTPUT_BODY;
+      return $this;
+    }
+
+
+    /**
+     * @return $this
+     */
+    public function outputFull() {
+      $this->outputType = self::OUTPUT_FULL;
+      return $this;
+    }
+
+
+    /**
      * @codeCoverageIgnore
      * @deprecated
      * @param QueryStrategy $strategy
@@ -72,18 +107,38 @@
      */
     public function __invoke(QuerySequence $querySequence) {
 
-      $querySequence->strict('class');
+      $start = $querySequence->strict('class');
       $querySequence->strict(T_WHITESPACE);
       $querySequence->process($this->nameQuery);
       $startClassBody = $querySequence->search('{');
       $querySequence->moveToToken($startClassBody);
       $body = $querySequence->section('{', '}');
 
-      if ($querySequence->isValid()) {
+      if ($start->isValid()) {
+        # catch class modifiers
+        $querySequence->moveToToken($start);
+        $querySequence->move(-2);
+        $modifier = $querySequence->process(Possible::create()->valueIs([
+          'abstract',
+          'final',
+        ]));
+        if ($modifier->isValid()) {
+          $start = $modifier;
+        }
+      }
+
+      if (!$querySequence->isValid()) {
+        return null;
+      }
+
+      if ($this->outputType == self::OUTPUT_BODY) {
         return $body->extractItems(1, -1);
       }
 
-      return null;
+      if ($this->outputType == self::OUTPUT_FULL) {
+        return $querySequence->getCollection()->extractByTokens($start, $body->getLast());
+      }
+
     }
 
   }

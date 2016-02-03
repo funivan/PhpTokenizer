@@ -147,4 +147,27 @@
     }
 
 
+    public function testOutputFullClass() {
+      $tokensChecker = new Pattern($this->getDemoCollection());
+      $tokensChecker->apply((new ClassPattern())->outputFull());
+
+      $this->assertCount(2, $tokensChecker->getCollections());
+
+      $this->assertStringStartsWith('class B {', (string) $tokensChecker->getCollections()[0]);
+    }
+
+
+    public function testOutputFullClassWithAllKeywords() {
+      $checker = new Pattern(Collection::createFromString('<?php abstract class B{} final class A {}'));
+
+      $checker->apply((new ClassPattern())->outputFull());
+
+      $this->assertCount(2, $checker->getCollections());
+      $this->assertStringStartsWith('abstract class B{', (string) $checker->getCollections()[0]);
+      $this->assertStringStartsWith('final class A ', (string) $checker->getCollections()[1]);
+      
+      
+    }
+
+
   }
