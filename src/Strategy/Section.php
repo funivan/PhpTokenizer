@@ -42,9 +42,7 @@
 
 
     /**
-     * @param \Funivan\PhpTokenizer\Collection $collection
-     * @param int $currentIndex
-     * @return int|null
+     * @inheritdoc
      */
     public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
 
