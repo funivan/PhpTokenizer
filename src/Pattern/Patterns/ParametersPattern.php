@@ -22,12 +22,36 @@
      */
     private $outputArgument = null;
 
+    /**
+     * @var bool
+     */
+    private $fullSearch = true;
+
 
     /**
      *
      */
     public function __construct() {
       $this->outputFull();
+      $this->startFromFunction();
+    }
+
+
+    /**
+     * @return $this
+     */
+    public function startFromParenthesis() {
+      $this->fullSearch = false;
+      return $this;
+    }
+
+
+    /**
+     * @return $this
+     */
+    public function startFromFunction() {
+      $this->fullSearch = true;
+      return $this;
     }
 
 
@@ -37,10 +61,12 @@
      * @throws \Exception
      */
     public function __invoke(QuerySequence $querySequence) {
-      $querySequence->strict(T_FUNCTION);
-      $querySequence->possible(T_WHITESPACE);
-      $querySequence->possible(T_STRING);
-      $querySequence->possible(T_WHITESPACE);
+      if ($this->fullSearch) {
+        $querySequence->strict(T_FUNCTION);
+        $querySequence->possible(T_WHITESPACE);
+        $querySequence->possible(T_STRING);
+        $querySequence->possible(T_WHITESPACE);
+      }
 
       $section = $querySequence->section('(', ')');
       if ($section->count() === 0) {
@@ -71,7 +97,7 @@
         }
       }
 
-      if ($this->outputArgument) {
+      if ($this->outputArgument !== null) {
         $argumentCollection = !empty($arguments[$this->outputArgument]) ? $arguments[$this->outputArgument] : null;
 
         return $argumentCollection;

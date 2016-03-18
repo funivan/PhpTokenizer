@@ -5,6 +5,7 @@
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Pattern\Pattern;
   use Funivan\PhpTokenizer\Pattern\Patterns\MethodPattern;
+  use Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern;
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\Strategy\Strict;
   use Funivan\PhpTokenizer\Token;
@@ -64,6 +65,26 @@
       $tokensChecker->apply((new MethodPattern()));
       $this->assertCount(1, $tokensChecker->getCollections());
 
+    }
+
+
+    public function testMatchWithParameters() {
+
+      $code = '<?php
+      function showUser($user){ }
+
+      function test($a, $b){ }
+
+      ';
+
+      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker->apply((new MethodPattern())->withParameters(new ParametersPattern()));
+      $this->assertCount(2, $tokensChecker->getCollections());
+
+
+      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker->apply((new MethodPattern())->withParameters((new ParametersPattern())->withArgument(2)));
+      $this->assertCount(1, $tokensChecker->getCollections());
     }
 
 

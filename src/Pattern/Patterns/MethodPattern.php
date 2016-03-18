@@ -3,6 +3,7 @@
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
   use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\Pattern\Pattern;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\QueryStrategy;
   use Funivan\PhpTokenizer\Strategy\Strict;
@@ -44,6 +45,11 @@
      * @var int
      */
     private $outputType = self::OUTPUT_BODY;
+
+    /**
+     * @var ParametersPattern
+     */
+    private $parametersPattern;
 
 
     /**
@@ -166,6 +172,16 @@
 
 
     /**
+     * @param ParametersPattern $pattern
+     * @return $this
+     */
+    public function withParameters(ParametersPattern $pattern) {
+      $this->parametersPattern = $pattern;
+      return $this;
+    }
+
+
+    /**
      * @return $this
      */
     public function withAnyModifier() {
@@ -243,7 +259,7 @@
       $functionKeyword = $querySequence->strict('function');
       $querySequence->strict(T_WHITESPACE);
       $querySequence->process($this->nameQuery);
-      $querySequence->section('(', ')');
+      $parameters = $querySequence->section('(', ')');
       $querySequence->possible(T_WHITESPACE);
       $body = $querySequence->section('{', '}');
 
@@ -301,7 +317,11 @@
         return null;
       }
 
-      if (is_null($startFrom)) {
+      if ($this->isValidParameters($parameters) === false) {
+        return null;
+      }
+
+      if ($startFrom === null) {
         $startFrom = $functionKeyword;
       }
 
@@ -309,12 +329,12 @@
       if ($this->outputType === self::OUTPUT_FULL) {
         # all conditions are ok, so extract full function
         $fullFunction = $collection->extractByTokens($startFrom, $body->getLast());
-        if ($fullFunction->getFirst()->getType() == T_WHITESPACE) {
+        if ($fullFunction->getFirst()->getType() === T_WHITESPACE) {
           $fullFunction->slice(1);
         }
         return $fullFunction;
 
-      } elseif ($this->outputType == self::OUTPUT_DOC_COMMENT) {
+      } elseif ($this->outputType === self::OUTPUT_DOC_COMMENT) {
         return new Collection([$docComment]);
       }
 
@@ -337,6 +357,23 @@
       }
 
       return $result;
+    }
+
+
+    /**
+     * @param Collection $parameters
+     * @return bool
+     */
+    private function isValidParameters(Collection $parameters) {
+      if ($this->parametersPattern === null) {
+        return true;
+      }
+
+      $this->parametersPattern->startFromParenthesis();
+
+      $pattern = (new Pattern($parameters))->apply($this->parametersPattern);
+
+      return (count($pattern->getCollections()) !== 0);
     }
 
 
