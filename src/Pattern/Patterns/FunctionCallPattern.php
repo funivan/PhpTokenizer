@@ -1,13 +1,29 @@
-<?
+<?php
 
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
+  use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
   /**
    *
    */
   class FunctionCallPattern implements PatternInterface {
+
+    /**
+     * @var Query|null
+     */
+    private $nameQuery;
+
+
+    /**
+     * @param Query $query
+     * @return $this
+     */
+    public function withName(Query $query) {
+      $this->nameQuery = $query;
+      return $this;
+    }
 
 
     /**
@@ -16,6 +32,10 @@
     public function __invoke(QuerySequence $querySequence) {
 
       $name = $querySequence->strict(T_STRING);
+      if ($this->nameQuery !== null and $this->nameQuery->isValid($name) === false) {
+        return null;
+      }
+
       $querySequence->possible(T_WHITESPACE);
       $arguments = $querySequence->section('(', ')');
 

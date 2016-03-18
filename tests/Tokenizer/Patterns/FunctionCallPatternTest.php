@@ -5,6 +5,7 @@
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Pattern\Pattern;
   use Funivan\PhpTokenizer\Pattern\Patterns\FunctionCallPattern;
+  use Funivan\PhpTokenizer\Query\Query;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
@@ -40,6 +41,28 @@
 
       $this->assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
       $this->assertEquals('strlen(123)', (string) $collections[1]);
+    }
+
+
+    public function testWithName() {
+
+
+      $code = '<?php
+
+      echo @trigger_error("Deprecated", E_USER_DEPRECATED);
+      echo strlen(123);
+
+      ';
+
+      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker->apply((new FunctionCallPattern())->withName(new Query()));
+      $collections = $tokensChecker->getCollections();
+      $this->assertCount(2, $collections);
+
+      $tokensChecker->apply((new FunctionCallPattern())->withName((new Query())->valueLike('!^str.+$!')));
+      $collections = $tokensChecker->getCollections();
+      $this->assertCount(1, $collections);
+
     }
 
   }
