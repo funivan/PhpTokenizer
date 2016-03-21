@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Pattern\Pattern;
-  use Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern;
+  use Funivan\PhpTokenizer\Pattern\Patterns\ArgumentsPattern;
   use Funivan\PhpTokenizer\Query\Query;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
@@ -29,12 +29,13 @@
       ($aa);
       ';
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $tokensChecker->apply((new ParametersPattern()));
+      $tokensChecker->apply((new ArgumentsPattern()));
       $collections = $tokensChecker->getCollections();
 
-      $this->assertCount(2, $collections);
+      $this->assertCount(5, $collections);
       $this->assertEquals('\Adm\Users\Model $df = []  ', (string) $collections[0]);
       $this->assertEquals('$row, $col', (string) $collections[1]);
+      $this->assertEquals('$df', (string) $collections[2]);
     }
 
 
@@ -53,25 +54,25 @@
 
       ';
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $tokensChecker->apply((new ParametersPattern()));
+      $tokensChecker->apply((new ArgumentsPattern()));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(3, $collections);
 
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $tokensChecker->apply((new ParametersPattern())->withArgument(1));
+      $tokensChecker->apply((new ArgumentsPattern())->withArgument(1));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(3, $collections);
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $tokensChecker->apply((new ParametersPattern())->withArgument(2));
+      $tokensChecker->apply((new ArgumentsPattern())->withArgument(2));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
       $this->assertEquals('$data, $row', (string) $collections[0]);
       $this->assertEquals('$data, $row, $new ', (string) $collections[1]);
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $tokensChecker->apply((new ParametersPattern())->withArgument(3));
+      $tokensChecker->apply((new ArgumentsPattern())->withArgument(3));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(1, $collections);
       $this->assertEquals('$data, $row, $new ', (string) $collections[0]);
@@ -96,13 +97,13 @@
 
       ';
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $tokensChecker->apply((new ParametersPattern()));
+      $tokensChecker->apply((new ArgumentsPattern()));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
 
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $tokensChecker->apply((new ParametersPattern())->withArgument(1, function (Collection $collection) {
+      $tokensChecker->apply((new ArgumentsPattern())->withArgument(1, function (Collection $collection) {
         $assign = $collection->find((new Query())->valueIs('='));
         return ($assign->count() > 0);
       }));
@@ -127,14 +128,14 @@
 
       ';
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $tokensChecker->apply((new ParametersPattern()));
+      $tokensChecker->apply((new ArgumentsPattern()));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(3, $collections);
 
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
       $tokensChecker->apply(
-        (new ParametersPattern())
+        (new ArgumentsPattern())
           ->withArgument(2)
           ->withoutArgument(3)
       );
@@ -143,12 +144,15 @@
       $this->assertCount(1, $collections);
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $tokensChecker->apply((new ParametersPattern())->withArgument(3));
+      $tokensChecker->apply((new ArgumentsPattern())->withArgument(3));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
     }
 
 
+    /**
+     * @return array
+     */
     public function getOutputArgumentsDataProvider() {
       return [
         [
@@ -161,6 +165,11 @@
           'function test($items = [45], $data = [1,4] ) {}',
           2,
           ' $data = [1,4] ',
+        ],
+        [
+          'custom_call(function($data, $error = []){ }, 54) {}',
+          1,
+          'function($data, $error = []){ }',
         ],
 
       ];
@@ -176,7 +185,7 @@
     public function testOutputArguments($code, $index, $expect) {
 
       $tokensChecker = new Pattern(Collection::createFromString('<?php  ' . $code));
-      $tokensChecker->apply((new ParametersPattern())->outputArgument($index));
+      $tokensChecker->apply((new ArgumentsPattern())->outputArgument($index));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(1, $collections);
 
@@ -194,12 +203,12 @@
       ';
 
       $tokensChecker = new Pattern(Collection::createFromString($code));
-      $pattern = (new ParametersPattern())->withArgument(1, function () {
+      $pattern = (new ArgumentsPattern())->withArgument(1, function () {
         return new \stdClass();
       });
 
 
-      $this->assertInstanceOf(ParametersPattern::class, $pattern);
+      $this->assertInstanceOf(ArgumentsPattern::class, $pattern);
 
       $tokensChecker->apply($pattern);
     }

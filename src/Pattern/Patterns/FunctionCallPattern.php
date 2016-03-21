@@ -2,6 +2,7 @@
 
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
+  use Funivan\PhpTokenizer\Pattern\Pattern;
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
@@ -15,6 +16,11 @@
      */
     private $nameQuery;
 
+    /**
+     * @var ArgumentsPattern
+     */
+    private $parametersPattern;
+
 
     /**
      * @param Query $query
@@ -22,6 +28,16 @@
      */
     public function withName(Query $query) {
       $this->nameQuery = $query;
+      return $this;
+    }
+
+
+    /**
+     * @param ArgumentsPattern $pattern
+     * @return $this
+     */
+    public function withParameters(ArgumentsPattern $pattern) {
+      $this->parametersPattern = $pattern;
       return $this;
     }
 
@@ -49,8 +65,15 @@
         $before = $querySequence->move(-1);
       }
 
-      if (in_array($before->getValue(), ['::', 'function'])) {
+      if (in_array($before->getValue(), ['::', 'function', '->'])) {
         return null;
+      }
+
+      if ($this->parametersPattern !== null) {
+        $pattern = (new Pattern($arguments))->apply($this->parametersPattern);
+        if (count($pattern->getCollections()) === 0) {
+          return null;
+        }
       }
 
       return $querySequence->getCollection()->extractByTokens($name, $arguments->getLast());

@@ -8,9 +8,9 @@
   use Funivan\PhpTokenizer\Token;
 
   /**
-   * Find method in code
+   *
    */
-  class ParametersPattern implements PatternInterface {
+  class ArgumentsPattern implements PatternInterface {
 
     /**
      * @var array
@@ -22,36 +22,12 @@
      */
     private $outputArgument = null;
 
-    /**
-     * @var bool
-     */
-    private $fullSearch = true;
-
 
     /**
      *
      */
     public function __construct() {
       $this->outputFull();
-      $this->startFromFunction();
-    }
-
-
-    /**
-     * @return $this
-     */
-    public function startFromParenthesis() {
-      $this->fullSearch = false;
-      return $this;
-    }
-
-
-    /**
-     * @return $this
-     */
-    public function startFromFunction() {
-      $this->fullSearch = true;
-      return $this;
     }
 
 
@@ -61,13 +37,6 @@
      * @throws \Exception
      */
     public function __invoke(QuerySequence $querySequence) {
-      if ($this->fullSearch) {
-        $querySequence->strict(T_FUNCTION);
-        $querySequence->possible(T_WHITESPACE);
-        $querySequence->possible(T_STRING);
-        $querySequence->possible(T_WHITESPACE);
-      }
-
       $section = $querySequence->section('(', ')');
       if ($section->count() === 0) {
         return null;
@@ -189,16 +158,8 @@
         return $result->getToken();
       }
 
-      if ($token->getValue() === 'array') {
-
-        # skip whitespace
-        $nextIndex = ($index + 1);
-        $nextToken = $section->offsetGet($nextIndex);
-        if ($nextToken->getType() === T_WHITESPACE) {
-          $nextIndex = ($index + 2);
-        }
-
-        $result = (new Section())->setDelimiters('(', ')')->process($section, $nextIndex);
+      if ($token->getValue() === '(') {
+        $result = (new Section())->setDelimiters('(', ')')->process($section, $index);
         return $result->getToken();
       }
 

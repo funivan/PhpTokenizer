@@ -47,9 +47,9 @@
     private $outputType = self::OUTPUT_BODY;
 
     /**
-     * @var ParametersPattern
+     * @var ArgumentsPattern
      */
-    private $parametersPattern;
+    private $argumentsPattern;
 
 
     /**
@@ -172,11 +172,11 @@
 
 
     /**
-     * @param ParametersPattern $pattern
+     * @param ArgumentsPattern $pattern
      * @return $this
      */
-    public function withParameters(ParametersPattern $pattern) {
-      $this->parametersPattern = $pattern;
+    public function withParameters(ArgumentsPattern $pattern) {
+      $this->argumentsPattern = $pattern;
       return $this;
     }
 
@@ -259,7 +259,7 @@
       $functionKeyword = $querySequence->strict('function');
       $querySequence->strict(T_WHITESPACE);
       $querySequence->process($this->nameQuery);
-      $parameters = $querySequence->section('(', ')');
+      $arguments = $querySequence->section('(', ')');
       $querySequence->possible(T_WHITESPACE);
       $body = $querySequence->section('{', '}');
 
@@ -317,7 +317,7 @@
         return null;
       }
 
-      if ($this->isValidParameters($parameters) === false) {
+      if ($this->isValidArguments($arguments) === false) {
         return null;
       }
 
@@ -364,14 +364,12 @@
      * @param Collection $parameters
      * @return bool
      */
-    private function isValidParameters(Collection $parameters) {
-      if ($this->parametersPattern === null) {
+    private function isValidArguments(Collection $parameters) {
+      if ($this->argumentsPattern === null) {
         return true;
       }
 
-      $this->parametersPattern->startFromParenthesis();
-
-      $pattern = (new Pattern($parameters))->apply($this->parametersPattern);
+      $pattern = (new Pattern($parameters))->apply($this->argumentsPattern);
 
       return (count($pattern->getCollections()) !== 0);
     }

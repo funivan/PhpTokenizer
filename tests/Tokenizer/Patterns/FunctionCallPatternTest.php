@@ -4,6 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\Patterns\ArgumentsPattern;
   use Funivan\PhpTokenizer\Pattern\Patterns\FunctionCallPattern;
   use Funivan\PhpTokenizer\Query\Query;
   use Test\Funivan\PhpTokenizer\MainTestCase;
@@ -63,6 +64,40 @@
       $collections = $tokensChecker->getCollections();
       $this->assertCount(1, $collections);
 
+    }
+
+
+    /**
+     * @faq How to find function with specific arguments num
+     */
+    public function testWithParameters() {
+
+
+      $code = '<?php
+
+      echo @trigger_error("Deprecated", E_USER_DEPRECATED);
+      echo strlen(123);
+
+      ';
+
+      # configure out pattern
+      $functionPattern = (new FunctionCallPattern())
+        ->withParameters(
+          (new ArgumentsPattern())
+            ->withArgument(2)
+        );
+
+      #
+      $tokens = Collection::createFromString($code);
+      $tokensChecker = new Pattern($tokens);
+      $tokensChecker->apply($functionPattern);
+
+      # get result
+      $collections = $tokensChecker->getCollections();
+
+      $this->assertCount(1, $collections);
+
+      $this->assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', $collections[0]);
     }
 
   }
