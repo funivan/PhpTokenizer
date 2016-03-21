@@ -25,7 +25,7 @@ Reformat our code like PhpStorm. Lets create rule: place single spaces after `wh
   require __DIR__.'/vendor/autoload.php';
    
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
 
@@ -33,7 +33,7 @@ Reformat our code like PhpStorm. Lets create rule: place single spaces after `wh
   
   $collection = Collection::initFromString($source);
   
-  (new Pattern($collection))->apply(function (QuerySequence $checker) {
+  (new PatternMatcher($collection))->apply(function (QuerySequence $checker) {
 
     $while = $checker->strict('while');
     $space = $checker->possible(T_WHITESPACE);

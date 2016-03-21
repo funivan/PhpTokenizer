@@ -9,7 +9,7 @@
   use Funivan\PhpTokenizer\Token;
 
   /**
-   * Pattern used to finding classes in tour source code
+   * PatternMatcher used to finding classes in tour source code
    *
    */
   class ClassPattern implements PatternInterface {

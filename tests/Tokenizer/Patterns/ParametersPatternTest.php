@@ -3,7 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Patterns;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\Pattern\Patterns\ArgumentsPattern;
   use Funivan\PhpTokenizer\Query\Query;
   use Test\Funivan\PhpTokenizer\MainTestCase;
@@ -28,7 +28,7 @@
 
       ($aa);
       ';
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new ArgumentsPattern()));
       $collections = $tokensChecker->getCollections();
 
@@ -53,25 +53,25 @@
       }
 
       ';
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new ArgumentsPattern()));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(3, $collections);
 
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new ArgumentsPattern())->withArgument(1));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(3, $collections);
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new ArgumentsPattern())->withArgument(2));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
       $this->assertEquals('$data, $row', (string) $collections[0]);
       $this->assertEquals('$data, $row, $new ', (string) $collections[1]);
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new ArgumentsPattern())->withArgument(3));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(1, $collections);
@@ -96,13 +96,13 @@
       }
 
       ';
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new ArgumentsPattern()));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
 
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new ArgumentsPattern())->withArgument(1, function (Collection $collection) {
         $assign = $collection->find((new Query())->valueIs('='));
         return ($assign->count() > 0);
@@ -127,13 +127,13 @@
       }
 
       ';
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new ArgumentsPattern()));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(3, $collections);
 
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply(
         (new ArgumentsPattern())
           ->withArgument(2)
@@ -143,7 +143,7 @@
       $collections = $tokensChecker->getCollections();
       $this->assertCount(1, $collections);
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new ArgumentsPattern())->withArgument(3));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
@@ -184,7 +184,7 @@
      */
     public function testOutputArguments($code, $index, $expect) {
 
-      $tokensChecker = new Pattern(Collection::createFromString('<?php  ' . $code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString('<?php  ' . $code));
       $tokensChecker->apply((new ArgumentsPattern())->outputArgument($index));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(1, $collections);
@@ -202,7 +202,7 @@
       }
       ';
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $pattern = (new ArgumentsPattern())->withArgument(1, function () {
         return new \stdClass();
       });

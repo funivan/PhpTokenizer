@@ -85,7 +85,7 @@ You will find all `$a` variables.
  
 ```php
  use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Strict;
 
@@ -96,7 +96,7 @@ You will find all `$a` variables.
 
   $collection = Collection::createFromString($source);
 
-  (new Pattern($collection))->apply(function (QuerySequence $qs) {
+  (new PatternMatcher($collection))->apply(function (QuerySequence $qs) {
     $regexp = '!^(.)\s*Location\s*:\s*(.+)$!';
     
     // Use strict query with valueIs condition

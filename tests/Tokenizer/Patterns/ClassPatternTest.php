@@ -3,7 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Patterns;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern;
   use Funivan\PhpTokenizer\Strategy\Strict;
   use Test\Funivan\PhpTokenizer\MainTestCase;
@@ -17,7 +17,7 @@
 
     public function testClassDetect() {
 
-      $tokensChecker = new Pattern($this->getDemoCollection());
+      $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $tokensChecker->apply((new ClassPattern()));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
@@ -26,19 +26,19 @@
 
     public function testNameIs() {
 
-      $tokensChecker = new Pattern($this->getDemoCollection());
+      $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $checker = new ClassPattern();
       $checker->withName('B');
       $tokensChecker->apply($checker);
       $this->assertCount(1, $tokensChecker->getCollections());
 
-      $tokensChecker = new Pattern($this->getDemoCollection());
+      $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $checker = new ClassPattern();
       $checker->withName(Strict::create()->valueIs('b'));
       $tokensChecker->apply($checker);
       $this->assertCount(0, $tokensChecker->getCollections());
 
-      $tokensChecker = new Pattern($this->getDemoCollection());
+      $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $checker = new ClassPattern();
       $checker->withName(Strict::create()->valueIs('B'));
       $tokensChecker->apply($checker);
@@ -48,7 +48,7 @@
 
 
     public function testNameCustomCheck() {
-      $tokensChecker = new Pattern($this->getDemoCollection());
+      $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $checker = new ClassPattern();
       $checker->withName(Strict::create()->valueLike('![a-z]+!i'));
       $tokensChecker->apply($checker);
@@ -138,7 +138,7 @@
 
 
       $collection = Collection::createFromString($code);
-      $checker = new Pattern($collection);
+      $checker = new PatternMatcher($collection);
       $pattern = new ClassPattern();
 
       $checker->apply($pattern);
@@ -148,7 +148,7 @@
 
 
     public function testOutputFullClass() {
-      $tokensChecker = new Pattern($this->getDemoCollection());
+      $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $tokensChecker->apply((new ClassPattern())->outputFull());
 
       $this->assertCount(2, $tokensChecker->getCollections());
@@ -158,7 +158,7 @@
 
 
     public function testOutputFullClassWithAllKeywords() {
-      $checker = new Pattern(Collection::createFromString('<?php abstract class B{} final class A {}'));
+      $checker = new PatternMatcher(Collection::createFromString('<?php abstract class B{} final class A {}'));
 
       $checker->apply((new ClassPattern())->outputFull());
 
@@ -170,7 +170,7 @@
 
 
     public function testOutputBody() {
-      $checker = new Pattern(Collection::createFromString('<?php abstract class B{public $a=1;} final class A {}'));
+      $checker = new PatternMatcher(Collection::createFromString('<?php abstract class B{public $a=1;} final class A {}'));
 
       $checker->apply((new ClassPattern())->outputBody());
 
@@ -183,7 +183,7 @@
 
 
     public function testSelectWithOrWithoutDocComment() {
-      $checker = new Pattern(Collection::createFromString('<?php 
+      $checker = new PatternMatcher(Collection::createFromString('<?php
       /**
        * description
        */
@@ -205,7 +205,7 @@
 
     public function testSelectWithDocComment() {
 
-      $checker = new Pattern(Collection::createFromString('<?php 
+      $checker = new PatternMatcher(Collection::createFromString('<?php
       /**
        * description
        */
@@ -225,7 +225,7 @@
 
     public function testSelectWithoutDocComment() {
 
-      $checker = new Pattern(Collection::createFromString('<?php 
+      $checker = new PatternMatcher(Collection::createFromString('<?php
       /**
        * description
        */
@@ -250,7 +250,7 @@
 
     public function testWithModifier(){
 
-      $baseChecker = new Pattern(Collection::createFromString('<?php 
+      $baseChecker = new PatternMatcher(Collection::createFromString('<?php
       /**
        * description
        */
@@ -288,7 +288,7 @@
 
 
     public function testWithoutModifier() {
-      $baseChecker = new Pattern(Collection::createFromString('<?php 
+      $baseChecker = new PatternMatcher(Collection::createFromString('<?php
       /**
        * description
        */

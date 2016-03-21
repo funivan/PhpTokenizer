@@ -3,7 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Section;
   use Funivan\PhpTokenizer\Strategy\Strict;
@@ -140,7 +140,7 @@
 
       $num = 0;
 
-      (new Pattern($collection))->apply(function (QuerySequence $q) use (&$num) {
+      (new PatternMatcher($collection))->apply(function (QuerySequence $q) use (&$num) {
 
         $q->strict(')');
         $q->possible(T_WHITESPACE);
@@ -231,7 +231,7 @@
 
       $num = 0;
 
-      (new Pattern($collection))->apply(function (QuerySequence $q) use ($callback, &$num) {
+      (new PatternMatcher($collection))->apply(function (QuerySequence $q) use ($callback, &$num) {
         $callback($q);
 
         if ($q->isValid()) {

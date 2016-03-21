@@ -2,7 +2,7 @@
 
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
@@ -70,7 +70,7 @@
       }
 
       if ($this->parametersPattern !== null) {
-        $pattern = (new Pattern($arguments))->apply($this->parametersPattern);
+        $pattern = (new PatternMatcher($arguments))->apply($this->parametersPattern);
         if (count($pattern->getCollections()) === 0) {
           return null;
         }

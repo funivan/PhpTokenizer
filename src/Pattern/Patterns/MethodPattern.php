@@ -3,7 +3,7 @@
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\QueryStrategy;
   use Funivan\PhpTokenizer\Strategy\Strict;
@@ -369,7 +369,7 @@
         return true;
       }
 
-      $pattern = (new Pattern($parameters))->apply($this->argumentsPattern);
+      $pattern = (new PatternMatcher($parameters))->apply($this->argumentsPattern);
 
       return (count($pattern->getCollections()) !== 0);
     }

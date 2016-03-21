@@ -4,7 +4,7 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Exception\Exception;
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern;
   use Funivan\PhpTokenizer\Pattern\Patterns\MethodPattern;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
@@ -21,7 +21,7 @@
      */
     public function testWithCallbackPattern() {
       $code = '<?php class A { public $user = null; }';
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
 
       $tokensChecker->apply(function (QuerySequence $processor) {
         $processor->strict('class');
@@ -70,7 +70,7 @@
 
       $code = '<?php 
       ' . $data;
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $result = [];
       $tokensChecker->apply(function (QuerySequence $q) use (&$result) {
         $q->setSkipWhitespaces(true);
@@ -99,26 +99,26 @@
 
     public function testWithClassPattern() {
       $code = '<?php class A { public $user = null; } class customUser { }';
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply(new ClassPattern());
 
       $this->assertCount(2, $tokensChecker->getCollections());
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->withName('B');
       $tokensChecker->apply($classPattern);
 
       $this->assertCount(0, $tokensChecker->getCollections());
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->withName('A');
       $tokensChecker->apply($classPattern);
 
       $this->assertCount(1, $tokensChecker->getCollections());
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->withName('customUser');
       $tokensChecker->apply($classPattern);
@@ -130,7 +130,7 @@
     public function testWithNestedPatterns() {
       # find class with property 
       $code = '<?php class A { public $user = null; static $name;} class customUser { $value; }';
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker
         ->apply(new ClassPattern())
         ->apply(function (QuerySequence $p) {
@@ -163,7 +163,7 @@
      * @expectedException Exception
      */
     public function testInvalidPatternResult() {
-      $tokensChecker = new Pattern(Collection::createFromString('<?php echo 1;'));
+      $tokensChecker = new PatternMatcher(Collection::createFromString('<?php echo 1;'));
       /** @noinspection PhpUnusedParameterInspection */
       $tokensChecker->apply(function (QuerySequence $process) {
         return new \stdClass();
@@ -176,7 +176,7 @@
      * @expectedException Exception
      */
     public function testInvalidPatternResultArray() {
-      $tokensChecker = new Pattern(Collection::createFromString('<?php echo 1;'));
+      $tokensChecker = new PatternMatcher(Collection::createFromString('<?php echo 1;'));
       /** @noinspection PhpUnusedParameterInspection */
       $tokensChecker->apply(function (QuerySequence $process) {
         return [new \stdClass()];
@@ -199,7 +199,7 @@
       
       ';
       $collection = Collection::createFromString($code);
-      $tokensChecker = new Pattern($collection);
+      $tokensChecker = new PatternMatcher($collection);
       $tokensChecker->apply(
         (new ClassPattern())->withName('UsersController')
       )->apply(function (QuerySequence $q) {
@@ -228,7 +228,7 @@
       
       ';
       $collection = Collection::createFromString($code);
-      $tokensChecker = new Pattern($collection);
+      $tokensChecker = new PatternMatcher($collection);
       $tokensChecker->apply(function (QuerySequence $q) {
         $q->setSkipWhitespaces(true);
         return [];
@@ -259,7 +259,7 @@
       ';
 
       $collection = Collection::createFromString($code);
-      $tokensChecker = new Pattern($collection);
+      $tokensChecker = new PatternMatcher($collection);
 
       $tokensChecker->apply(new ClassPattern())
         ->apply(new MethodPattern());

@@ -3,7 +3,7 @@
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Patterns;
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\Pattern\Patterns\ArgumentsPattern;
   use Funivan\PhpTokenizer\Pattern\Patterns\FunctionCallPattern;
   use Funivan\PhpTokenizer\Query\Query;
@@ -35,7 +35,7 @@
 
       ';
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new FunctionCallPattern()));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
@@ -55,7 +55,7 @@
 
       ';
 
-      $tokensChecker = new Pattern(Collection::createFromString($code));
+      $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new FunctionCallPattern())->withName(new Query()));
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
@@ -89,7 +89,7 @@
 
       #
       $tokens = Collection::createFromString($code);
-      $tokensChecker = new Pattern($tokens);
+      $tokensChecker = new PatternMatcher($tokens);
       $tokensChecker->apply($functionPattern);
 
       # get result

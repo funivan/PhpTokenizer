@@ -2,7 +2,7 @@
 
   namespace Test\Funivan\PhpTokenizer\Demo;
 
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
   /**
@@ -66,7 +66,7 @@
     public function testExtract($code, $expectCode) {
       $collection = \Funivan\PhpTokenizer\Collection::createFromString("<?php " . $code);
 
-      $checker = new Pattern($collection);
+      $checker = new PatternMatcher($collection);
       $checker->apply(function (QuerySequence $q) {
 
         $q->strict('"');

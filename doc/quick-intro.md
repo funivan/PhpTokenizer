@@ -93,7 +93,7 @@ For example we want to change all `echo` statements to `$output->write()`.
 ```php
 
   use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Pattern\Pattern;
+  use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
   $source = '<?php 
@@ -102,7 +102,7 @@ For example we want to change all `echo` statements to `$output->write()`.
 
   $collection = Collection::createFromString($source);
 
-  (new Pattern($collection))->apply(function (QuerySequence $q) {
+  (new PatternMatcher($collection))->apply(function (QuerySequence $q) {
     $start = $q->strict('echo');
     $space = $q->possible(T_WHITESPACE);
     $end = $q->search(';');

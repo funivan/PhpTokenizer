@@ -9,7 +9,7 @@
    * Check collection according to callback patterns
    *
    */
-  interface PatternCheckerInterface {
+  interface PatternMatcherInterface {
 
     /**
      * @param callable $pattern
