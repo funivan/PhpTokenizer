@@ -26,7 +26,7 @@
     private $parametersPattern;
 
     /**
-     * @var ArgumentsPattern
+     * @var int
      */
     private $outputType = self::OUTPUT_FULL;
 
