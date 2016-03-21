@@ -36,7 +36,7 @@
       ';
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-      $tokensChecker->apply((new FunctionCallPattern()));
+      $tokensChecker->apply((new FunctionCallPattern())->outputFull());
       $collections = $tokensChecker->getCollections();
       $this->assertCount(2, $collections);
 
@@ -68,6 +68,30 @@
 
 
     /**
+     * @faq function :: How to find function and fetch only its arguments
+     */
+    public function testOutputArguments() {
+      $code = '<?php
+
+      echo @trigger_error("Deprecated", E_USER_DEPRECATED);
+      echo strlen(123);
+      ';
+
+
+      $matcher = (new PatternMatcher(Collection::createFromString($code)))
+        ->apply(
+          (new FunctionCallPattern())->outputArguments() # configure our pattern
+        );
+
+      # get result
+      $collections = $matcher->getCollections();
+
+      $this->assertCount(2, $collections);
+      $this->assertEquals('("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
+    }
+
+
+    /**
      * @faq How to find function with specific arguments num
      */
     public function testWithParameters() {
@@ -80,7 +104,7 @@
 
       ';
 
-      # configure out pattern
+      # configure our pattern
       $functionPattern = (new FunctionCallPattern())
         ->withParameters(
           (new ArgumentsPattern())
@@ -97,7 +121,7 @@
 
       $this->assertCount(1, $collections);
 
-      $this->assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', $collections[0]);
+      $this->assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
     }
 
   }

@@ -11,6 +11,10 @@
    */
   class FunctionCallPattern implements PatternInterface {
 
+    const OUTPUT_FULL = 1;
+
+    const OUTPUT_ARGUMENTS = 2;
+
     /**
      * @var Query|null
      */
@@ -20,6 +24,29 @@
      * @var ArgumentsPattern
      */
     private $parametersPattern;
+
+    /**
+     * @var ArgumentsPattern
+     */
+    private $outputType = self::OUTPUT_FULL;
+
+
+    /**
+     * @return $this
+     */
+    public function outputFull() {
+      $this->outputType = self::OUTPUT_FULL;
+      return $this;
+    }
+
+
+    /**
+     * @return $this
+     */
+    public function outputArguments() {
+      $this->outputType = self::OUTPUT_ARGUMENTS;
+      return $this;
+    }
 
 
     /**
@@ -74,6 +101,10 @@
         if (count($pattern->getCollections()) === 0) {
           return null;
         }
+      }
+
+      if ($this->outputType === self::OUTPUT_ARGUMENTS) {
+        return $arguments;
       }
 
       return $querySequence->getCollection()->extractByTokens($name, $arguments->getLast());
