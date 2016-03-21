@@ -56,7 +56,7 @@
 
       $blockEndFlag = null;
       $startIndex = null;
-
+      $endIndex = null;
       foreach ($collection as $tokenIndex => $token) {
         if ($tokenIndex < $currentIndex) {
           continue;
@@ -64,7 +64,7 @@
 
         if ($this->startQuery->isValid($token)) {
           $blockEndFlag++;
-          if ($blockEndFlag == 1) {
+          if ($blockEndFlag === 1) {
             $startIndex = $tokenIndex;
           }
 
@@ -78,7 +78,7 @@
         }
       }
 
-      if (isset($startIndex) and isset($endIndex)) {
+      if ($startIndex !== null and $endIndex !== null) {
         $result = new StrategyResult();
         $result->setValid(true);
         $result->setNexTokenIndex(++$endIndex);
@@ -111,11 +111,11 @@
 
     protected function requireQueries() {
       if (empty($this->startQuery)) {
-        throw new InvalidArgumentException("Empty start Query. ");
+        throw new InvalidArgumentException('Empty start Query. ');
       }
 
       if (empty($this->endQuery)) {
-        throw new InvalidArgumentException("Empty end Query. ");
+        throw new InvalidArgumentException('Empty end Query. ');
       }
     }
 

@@ -170,7 +170,7 @@
 
 
       foreach ($this->collection as $index => $collectionToken) {
-        if ($collectionToken->getIndex() == $tokenIndex) {
+        if ($collectionToken->getIndex() === $tokenIndex) {
           $this->setPosition($index);
           return $collectionToken;
         }
@@ -208,8 +208,7 @@
         $query = $this->buildStrategyCondition($value, Strict::create());
       }
 
-      $token = $this->process($query);
-      return $token;
+      return $this->process($query);
     }
 
 
@@ -239,7 +238,7 @@
 
       if ($this->skipWhitespaces and isset($this->collection[$position]) and $this->collection[$position]->getType() === T_WHITESPACE) {
         # skip whitespaces in next check
-        $this->setPosition(($position + 1));
+        $this->setPosition($position + 1);
       }
 
       return $token;
@@ -254,7 +253,7 @@
      */
     private function buildStrategyCondition($value, QueryStrategy $defaultStrategy) {
 
-      if (is_object($value) and get_class($value) == get_class($defaultStrategy)) {
+      if (is_object($value) and get_class($value) === get_class($defaultStrategy)) {
         return $value;
       }
 
@@ -271,7 +270,7 @@
       }
 
 
-      throw new InvalidArgumentException("Invalid token condition. Expect string or int or StrategyInterface");
+      throw new InvalidArgumentException('Invalid token condition. Expect string or int or StrategyInterface');
     }
 
 
@@ -281,7 +280,7 @@
      */
     public function setValid($valid) {
       if (!is_bool($valid)) {
-        throw new InvalidArgumentException("Invalid flag. Expect boolean. Given:" . gettype($valid));
+        throw new InvalidArgumentException('Invalid flag. Expect boolean. Given:' . gettype($valid));
       }
       $this->valid = $valid;
       return $this;

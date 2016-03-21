@@ -153,6 +153,8 @@
      * @codeCoverageIgnore
      * @deprecated
      * @see createFromString
+     * @param string $string
+     * @return Collection
      */
     public static function initFromString($string) {
       trigger_error(__CLASS__ . '::' . __METHOD__ . ' deprecated and will be removed in 0.1.3 Use ' . __CLASS__ . '::createFromString', E_USER_DEPRECATED);

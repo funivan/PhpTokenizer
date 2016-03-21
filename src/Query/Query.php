@@ -220,7 +220,7 @@
 
         $result = $check($token);
         if (!is_bool($result)) {
-          throw new Exception("Check function should return boolean value. Given:" . gettype($result));
+          throw new Exception('Check function should return boolean value. Given:' . gettype($result));
         }
 
         if ($result === false) {
@@ -240,7 +240,7 @@
      */
     protected function prepareValues($value) {
 
-      if ($value == null) {
+      if ($value === null) {
         return [];
       }
 

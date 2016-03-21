@@ -63,7 +63,7 @@
      * @return $this
      */
     public function nameIs($name) {
-      trigger_error("Deprecated. Use withName", E_USER_DEPRECATED);
+      trigger_error('Deprecated. Use withName', E_USER_DEPRECATED);
       return $this->withName($name);
     }
 
@@ -90,7 +90,7 @@
      */
     public function withDocComment() {
       $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
-        if ($comment->getType() != T_DOC_COMMENT) {
+        if ($comment->getType() !== T_DOC_COMMENT) {
           $q->setValid(false);
         }
       };
@@ -114,7 +114,7 @@
      */
     public function withoutDocComment() {
       $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
-        if ($comment->getType() == T_DOC_COMMENT) {
+        if ($comment->getType() === T_DOC_COMMENT) {
           $q->setValid(false);
         }
       };
@@ -147,7 +147,7 @@
      * @return $this
      */
     public function whereName(QueryStrategy $strategy) {
-      trigger_error("Deprecated. Use withName", E_USER_DEPRECATED);
+      trigger_error('Deprecated. Use withName', E_USER_DEPRECATED);
       return $this->withName($strategy);
     }
 
@@ -196,7 +196,7 @@
       }
 
 
-      if ($this->outputType == self::OUTPUT_BODY) {
+      if ($this->outputType === self::OUTPUT_BODY) {
         return $body->extractItems(1, -1);
       }
 
@@ -223,10 +223,9 @@
     public function withModifier($modifier) {
 
       $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
-        if ($token->getValue() != $modifier) {
+        if ($token->getValue() !== $modifier) {
           $q->setValid(false);
         }
-        return;
       };
 
 
@@ -241,10 +240,9 @@
     public function withoutModifier($modifier) {
 
       $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
-        if ($token->getValue() == $modifier) {
+        if ($token->getValue() === $modifier) {
           $q->setValid(false);
         }
-        return;
       };
       return $this;
     }

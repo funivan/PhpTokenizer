@@ -36,8 +36,7 @@
      * @return File
      */
     public static function open($path) {
-      $fileTokens = new File($path);
-      return $fileTokens;
+      return new File($path);
     }
 
 

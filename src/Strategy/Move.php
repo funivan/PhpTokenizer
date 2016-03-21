@@ -51,8 +51,8 @@
      */
     public function __construct($steps) {
 
-      if (!is_integer($steps)) {
-        throw new InvalidArgumentException("Invalid steps. Expect integer. Given: " . gettype($steps));
+      if (!is_int($steps)) {
+        throw new InvalidArgumentException('Invalid steps. Expect integer. Given: ' . gettype($steps));
       }
 
       $this->steps = $steps;

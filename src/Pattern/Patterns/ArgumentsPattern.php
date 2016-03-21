@@ -54,7 +54,7 @@
 
       foreach ($this->argumentCheck as $index => $check) {
 
-        $argumentTokens = isset($arguments[$index]) ? $arguments[$index] : new Collection();;
+        $argumentTokens = isset($arguments[$index]) ? $arguments[$index] : new Collection();
         $result = $check($argumentTokens);
 
         if (!is_bool($result)) {
