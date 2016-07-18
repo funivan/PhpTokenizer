@@ -1,8 +1,7 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
 
-
-## [UNRELEASED] 
+## 0.1.2-alpha5 - 2016-07-18
  - deprecated `Funivan\PhpTokenizer\Pattern\Pattern` use `Funivan\PhpTokenizer\Pattern\PatternMatcher`
  - deprecated `ClassPattern::nameIs`
  - deprecated `ClassPattern::whereName`
