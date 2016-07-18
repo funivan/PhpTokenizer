@@ -21,7 +21,7 @@
     private $nameQuery;
 
     /**
-     * @var ArgumentsPattern
+     * @var ParametersPattern
      */
     private $parametersPattern;
 
@@ -60,10 +60,10 @@
 
 
     /**
-     * @param ArgumentsPattern $pattern
+     * @param ParametersPattern $pattern
      * @return $this
      */
-    public function withParameters(ArgumentsPattern $pattern) {
+    public function withParameters(ParametersPattern $pattern) {
       $this->parametersPattern = $pattern;
       return $this;
     }

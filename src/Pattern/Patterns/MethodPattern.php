@@ -47,7 +47,7 @@
     private $outputType = self::OUTPUT_BODY;
 
     /**
-     * @var ArgumentsPattern
+     * @var ParametersPattern
      */
     private $argumentsPattern;
 
@@ -172,10 +172,10 @@
 
 
     /**
-     * @param ArgumentsPattern $pattern
+     * @param ParametersPattern $pattern
      * @return $this
      */
-    public function withParameters(ArgumentsPattern $pattern) {
+    public function withParameters(ParametersPattern $pattern) {
       $this->argumentsPattern = $pattern;
       return $this;
     }

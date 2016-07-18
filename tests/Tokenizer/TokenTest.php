@@ -15,7 +15,7 @@
       $file = $this->initFileWithCode('<?php echo 1');
       $lastToken = $file->getCollection()->getLast();
 
-      $this->assertEquals(token_name(T_LNUMBER), $lastToken->getTypeName());
+      static::assertEquals(token_name(T_LNUMBER), $lastToken->getTypeName());
 
       unlink($file->getPath());
     }
@@ -26,7 +26,7 @@
       $lastToken = $file->getCollection()->getLast();
 
       $lastToken->setType(T_WHITESPACE);
-      $this->assertEquals(T_WHITESPACE, $lastToken->getType());
+      static::assertEquals(T_WHITESPACE, $lastToken->getType());
 
       unlink($file->getPath());
     }
@@ -36,7 +36,7 @@
       $file = $this->initFileWithCode('<?php echo 1');
       $firstToken = $file->getCollection()->getFirst();
 
-      $this->assertCount(4, $firstToken->getData());
+      static::assertCount(4, $firstToken->getData());
 
       unlink($file->getPath());
     }
@@ -46,7 +46,7 @@
       $file = $this->initFileWithCode('<?php echo 1');
       $firstToken = $file->getCollection()->getFirst();
 
-      $this->assertEquals('<?php ', (string) $firstToken);
+      static::assertEquals('<?php ', (string) $firstToken);
 
       unlink($file->getPath());
     }
@@ -55,7 +55,7 @@
       $token = new Token();
       $token->setValue('123');
 
-      $this->assertEquals('123', $token->assemble());
+      static::assertEquals('123', $token->assemble());
     }
 
     /**
@@ -97,7 +97,7 @@
     public function testPrependToValue() {
       $token = new Token();
       $token->setValue("123")->prependToValue("test");
-      $this->assertEquals("test123", $token->getValue());
+      static::assertEquals("test123", $token->getValue());
     }
 
     /**
@@ -111,16 +111,16 @@
     public function testAppendToValue() {
       $token = new Token();
       $token->setValue("123")->appendToValue("test");
-      $this->assertEquals("123test", $token->getValue());
+      static::assertEquals("123test", $token->getValue());
     }
 
     public function testTokenData() {
       $token = new Token(array(1, "test", 1, 1));
 
-      $this->assertEquals(array(1, "test", 1, 1), $token->getData());
-      $this->assertEquals(1, $token->getIndex());
-      $this->assertEquals(1, $token->getLine());
-      $this->assertEquals(1, $token->getType());
+      static::assertEquals(array(1, "test", 1, 1), $token->getData());
+      static::assertEquals(1, $token->getIndex());
+      static::assertEquals(1, $token->getLine());
+      static::assertEquals(1, $token->getType());
     }
 
   }

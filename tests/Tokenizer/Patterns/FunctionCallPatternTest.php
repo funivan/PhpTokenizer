@@ -4,8 +4,8 @@
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Pattern\PatternMatcher;
-  use Funivan\PhpTokenizer\Pattern\Patterns\ArgumentsPattern;
   use Funivan\PhpTokenizer\Pattern\Patterns\FunctionCallPattern;
+  use Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern;
   use Funivan\PhpTokenizer\Query\Query;
   use Test\Funivan\PhpTokenizer\MainTestCase;
 
@@ -38,10 +38,10 @@
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new FunctionCallPattern())->outputFull());
       $collections = $tokensChecker->getCollections();
-      $this->assertCount(2, $collections);
+      static::assertCount(2, $collections);
 
-      $this->assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
-      $this->assertEquals('strlen(123)', (string) $collections[1]);
+      static::assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
+      static::assertEquals('strlen(123)', (string) $collections[1]);
     }
 
 
@@ -58,11 +58,11 @@
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new FunctionCallPattern())->withName(new Query()));
       $collections = $tokensChecker->getCollections();
-      $this->assertCount(2, $collections);
+      static::assertCount(2, $collections);
 
       $tokensChecker->apply((new FunctionCallPattern())->withName((new Query())->valueLike('!^str.+$!')));
       $collections = $tokensChecker->getCollections();
-      $this->assertCount(1, $collections);
+      static::assertCount(1, $collections);
 
     }
 
@@ -86,8 +86,8 @@
       # get result
       $collections = $matcher->getCollections();
 
-      $this->assertCount(2, $collections);
-      $this->assertEquals('("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
+      static::assertCount(2, $collections);
+      static::assertEquals('("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
     }
 
 
@@ -107,7 +107,7 @@
       # configure our pattern
       $functionPattern = (new FunctionCallPattern())
         ->withParameters(
-          (new ArgumentsPattern())
+          (new ParametersPattern())
             ->withArgument(2)
         );
 
@@ -119,9 +119,9 @@
       # get result
       $collections = $tokensChecker->getCollections();
 
-      $this->assertCount(1, $collections);
+      static::assertCount(1, $collections);
 
-      $this->assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
+      static::assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
     }
 
   }

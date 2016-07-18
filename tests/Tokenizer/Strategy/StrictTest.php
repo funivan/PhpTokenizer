@@ -5,6 +5,9 @@
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Strategy\Strict;
 
+  /**
+   *
+   */
   class StrictTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
 
@@ -28,7 +31,7 @@
 
       }
 
-      $this->assertCount(3, $variables);
+      static::assertCount(3, $variables);
 
     }
   }

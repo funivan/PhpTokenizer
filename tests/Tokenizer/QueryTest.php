@@ -22,15 +22,15 @@
 
       $query = new Query();
       $query->typeIs(T_ECHO);
-      $this->assertCount(1, $finder->find($query));
+      static::assertCount(1, $finder->find($query));
 
       $query = new Query();
       $query->typeIs([T_ECHO, T_VARIABLE]);
-      $this->assertCount(2, $finder->find($query));
+      static::assertCount(2, $finder->find($query));
 
       $query = new Query();
       $query->typeNot(T_ECHO);
-      $this->assertCount(count($collection) - 1, $finder->find($query));
+      static::assertCount(count($collection) - 1, $finder->find($query));
 
     }
 
@@ -46,19 +46,19 @@
 
       $query = new Query();
       $query->valueNot('echo');
-      $this->assertCount($collection->count() - 1, $collection->find($query));
+      static::assertCount($collection->count() - 1, $collection->find($query));
 
 
       $collection = Collection::createFromString('<?php echo "123"; echo "132";');
-      $this->assertCount(4, $collection->find(Query::create()->valueIs(['echo', ';'])));
+      static::assertCount(4, $collection->find(Query::create()->valueIs(['echo', ';'])));
 
 
       $q = Query::create();
-      $this->assertCount(2, $collection->find($q->valueLike('/\d+/')));
+      static::assertCount(2, $collection->find($q->valueLike('/\d+/')));
 
-      $this->assertCount(0, $collection->find($q->valueLike(null)));
+      static::assertCount(0, $collection->find($q->valueLike(null)));
 
-      $this->assertCount(0, $collection->find($q->valueIs(null)));
+      static::assertCount(0, $collection->find($q->valueIs(null)));
 
     }
 
@@ -85,7 +85,7 @@
     public function testQueryWithoutConditions() {
       $query = new Query();
       $token = new Token();
-      $this->assertTrue($query->isValid($token));
+      static::assertTrue($query->isValid($token));
     }
 
     public function testIndexIs() {
@@ -94,9 +94,9 @@
       $token = new Token();
       $token->setIndex(1);
 
-      $this->assertTrue($query->isValid($token));
+      static::assertTrue($query->isValid($token));
       $token->setIndex(3);
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
     }
 
     public function testIndexIsMultipleDefinition() {
@@ -105,9 +105,9 @@
       $token = new Token();
       $token->setIndex(1);
 
-      $this->assertTrue($query->isValid($token));
+      static::assertTrue($query->isValid($token));
       $token->setIndex(10);
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
     }
 
     public function testIndexNot() {
@@ -116,9 +116,9 @@
       $token = new Token();
       $token->setIndex(10);
 
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
       $token->setIndex(1);
-      $this->assertTrue($query->isValid($token));
+      static::assertTrue($query->isValid($token));
     }
 
 
@@ -128,10 +128,10 @@
       $token = new Token();
       $token->setIndex(2);
 
-      $this->assertTrue($query->isValid($token));
+      static::assertTrue($query->isValid($token));
 
       $token->setIndex(4);
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
     }
 
     public function testLt() {
@@ -140,16 +140,16 @@
       $token = new Token();
       $token->setIndex(10);
 
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
       $token->setIndex(8);
-      $this->assertTrue($query->isValid($token));
+      static::assertTrue($query->isValid($token));
 
       $query = new Query();
       $query->indexLt([40, 30, 20]);
-      $this->assertTrue($query->isValid($token));
+      static::assertTrue($query->isValid($token));
 
       $token->setIndex(35);
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
 
     }
 
@@ -160,24 +160,24 @@
       $token = new Token();
       $token->setIndex(10);
 
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
 
 
       $token->setIndex(11);
-      $this->assertTrue($query->isValid($token));
+      static::assertTrue($query->isValid($token));
 
       $query = new Query();
       $query->indexGt([40, 30, 20]);
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
 
       $token->setIndex(21);
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
 
       $token->setIndex(40);
-      $this->assertFalse($query->isValid($token));
+      static::assertFalse($query->isValid($token));
 
       $token->setIndex(41);
-      $this->assertTrue($query->isValid($token));
+      static::assertTrue($query->isValid($token));
 
     }
 
@@ -189,7 +189,7 @@
 
       $token = new Token();
 
-      $this->assertFalse($q->isValid($token));
+      static::assertFalse($q->isValid($token));
     }
 
     /**
@@ -202,7 +202,7 @@
 
       $token = new Token();
 
-      $this->assertFalse($q->isValid($token));
+      static::assertFalse($q->isValid($token));
     }
 
     /**
@@ -211,6 +211,7 @@
     public function testPrepareObjectIntValues() {
 
       $q = new Query();
+      /** @noinspection PhpParamsInspection */
       $q->typeIs(new \stdClass());
 
     }
@@ -233,12 +234,12 @@
       });
 
       $token = new Token();
-      $this->assertFalse($q->isValid($token));
+      static::assertFalse($q->isValid($token));
 
       $token = new Token();
       $token->setValue("test");
       $token->setLine(5);
-      $this->assertTrue($q->isValid($token));
+      static::assertTrue($q->isValid($token));
 
     }
 
@@ -251,8 +252,8 @@
         return $token;
       });
 
-      $this->assertFalse($q->isValid(new Token()));
+      static::assertFalse($q->isValid(new Token()));
 
     }
-    
+
   }

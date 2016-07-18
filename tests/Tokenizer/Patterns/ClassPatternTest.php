@@ -20,7 +20,7 @@
       $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $tokensChecker->apply((new ClassPattern()));
       $collections = $tokensChecker->getCollections();
-      $this->assertCount(2, $collections);
+      static::assertCount(2, $collections);
     }
 
 
@@ -30,19 +30,19 @@
       $checker = new ClassPattern();
       $checker->withName('B');
       $tokensChecker->apply($checker);
-      $this->assertCount(1, $tokensChecker->getCollections());
+      static::assertCount(1, $tokensChecker->getCollections());
 
       $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $checker = new ClassPattern();
       $checker->withName(Strict::create()->valueIs('b'));
       $tokensChecker->apply($checker);
-      $this->assertCount(0, $tokensChecker->getCollections());
+      static::assertCount(0, $tokensChecker->getCollections());
 
       $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $checker = new ClassPattern();
       $checker->withName(Strict::create()->valueIs('B'));
       $tokensChecker->apply($checker);
-      $this->assertCount(1, $tokensChecker->getCollections());
+      static::assertCount(1, $tokensChecker->getCollections());
 
     }
 
@@ -54,7 +54,7 @@
       $tokensChecker->apply($checker);
 
 
-      $this->assertCount(2, $tokensChecker->getCollections());
+      static::assertCount(2, $tokensChecker->getCollections());
 
     }
 
@@ -143,7 +143,7 @@
 
       $checker->apply($pattern);
 
-      $this->assertCount($expectItems, $checker->getCollections());
+      static::assertCount($expectItems, $checker->getCollections());
     }
 
 
@@ -151,9 +151,9 @@
       $tokensChecker = new PatternMatcher($this->getDemoCollection());
       $tokensChecker->apply((new ClassPattern())->outputFull());
 
-      $this->assertCount(2, $tokensChecker->getCollections());
+      static::assertCount(2, $tokensChecker->getCollections());
 
-      $this->assertStringStartsWith('class B {', (string) $tokensChecker->getCollections()[0]);
+      static::assertStringStartsWith('class B {', (string) $tokensChecker->getCollections()[0]);
     }
 
 
@@ -162,9 +162,9 @@
 
       $checker->apply((new ClassPattern())->outputFull());
 
-      $this->assertCount(2, $checker->getCollections());
-      $this->assertStringStartsWith('abstract class B{', (string) $checker->getCollections()[0]);
-      $this->assertStringStartsWith('final class A ', (string) $checker->getCollections()[1]);
+      static::assertCount(2, $checker->getCollections());
+      static::assertStringStartsWith('abstract class B{', (string) $checker->getCollections()[0]);
+      static::assertStringStartsWith('final class A ', (string) $checker->getCollections()[1]);
 
     }
 
@@ -174,10 +174,10 @@
 
       $checker->apply((new ClassPattern())->outputBody());
 
-      $this->assertCount(2, $checker->getCollections());
+      static::assertCount(2, $checker->getCollections());
 
-      $this->assertStringStartsWith('public $a=1;', (string) $checker->getCollections()[0]);
-      $this->assertEmpty((string) $checker->getCollections()[1]);
+      static::assertStringStartsWith('public $a=1;', (string) $checker->getCollections()[0]);
+      static::assertEmpty((string) $checker->getCollections()[1]);
 
     }
 
@@ -195,10 +195,10 @@
 
       $checker->apply((new ClassPattern())->outputFull());
 
-      $this->assertCount(2, $checker->getCollections());
+      static::assertCount(2, $checker->getCollections());
 
-      $this->assertStringStartsWith('/**', (string) $checker->getCollections()[0]);
-      $this->assertStringStartsWith('final class', (string) $checker->getCollections()[1]);
+      static::assertStringStartsWith('/**', (string) $checker->getCollections()[0]);
+      static::assertStringStartsWith('final class', (string) $checker->getCollections()[1]);
 
     }
 
@@ -216,9 +216,9 @@
 
       $checker->apply((new ClassPattern())->outputFull()->withDocComment());
 
-      $this->assertCount(1, $checker->getCollections());
+      static::assertCount(1, $checker->getCollections());
 
-      $this->assertContains('class B', (string) $checker->getCollections()[0]);
+      static::assertContains('class B', (string) $checker->getCollections()[0]);
 
     }
 
@@ -241,9 +241,9 @@
       $checker->apply((new ClassPattern())->outputFull()->withoutDocComment());
 
 
-      $this->assertCount(2, $checker->getCollections());
-      $this->assertContains('class B', (string) $checker->getCollections()[0]);
-      $this->assertContains('final class D', (string) $checker->getCollections()[1]);
+      static::assertCount(2, $checker->getCollections());
+      static::assertContains('class B', (string) $checker->getCollections()[0]);
+      static::assertContains('final class D', (string) $checker->getCollections()[1]);
 
     }
 
@@ -268,22 +268,22 @@
 
       $checker = clone $baseChecker;
       $checker->apply((new ClassPattern())->outputFull()->withModifier('abstract'));
-      $this->assertCount(1, $checker->getCollections());
-      $this->assertContains('/**', (string) $checker->getCollections()[0]);
+      static::assertCount(1, $checker->getCollections());
+      static::assertContains('/**', (string) $checker->getCollections()[0]);
 
       $checker = clone $baseChecker;
       $checker->apply((new ClassPattern())->outputFull()->withModifier('final'));
-      $this->assertCount(3, $checker->getCollections());
-      
+      static::assertCount(3, $checker->getCollections());
+
       $checker = clone $baseChecker;
       $checker->apply((new ClassPattern())->outputFull()->withModifier('final')->withModifier('abstract'));
-      $this->assertCount(0, $checker->getCollections());
+      static::assertCount(0, $checker->getCollections());
 
       $checker = clone $baseChecker;
       $checker->apply((new ClassPattern())->outputFull()->withAnyModifier());
-      $this->assertCount(5, $checker->getCollections());
+      static::assertCount(5, $checker->getCollections());
 
-      
+
     }
 
 
@@ -306,19 +306,19 @@
 
       $checker = clone $baseChecker;
       $checker->apply((new ClassPattern())->outputFull()->withoutModifier('abstract'));
-      $this->assertCount(4, $checker->getCollections());
-      
+      static::assertCount(4, $checker->getCollections());
+
 
       $checker = clone $baseChecker;
       $checker->apply((new ClassPattern())->outputFull()->withoutModifier('final'));
-      $this->assertCount(2, $checker->getCollections());
+      static::assertCount(2, $checker->getCollections());
 
       $checker = clone $baseChecker;
       $checker->apply((new ClassPattern())->outputFull()->withoutModifier('final')->withModifier('abstract'));
-      $this->assertCount(1, $checker->getCollections());
+      static::assertCount(1, $checker->getCollections());
 
 
-      
+
     }
 
 

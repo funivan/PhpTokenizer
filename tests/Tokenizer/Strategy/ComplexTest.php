@@ -7,6 +7,9 @@
   use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Token;
 
+  /**
+   *
+   */
   class ComplexTest extends \PHPUnit_Framework_TestCase {
 
     public function testSkipWhitespaces() {
@@ -33,9 +36,13 @@
       }
 
 
-      $this->assertCount(3, $findItems);
+      static::assertCount(3, $findItems);
     }
 
+
+    /**
+     * @return array
+     */
     public function getTestWithoutWhitespaceSkipDataProvider() {
       return array(
         array(
@@ -60,8 +67,11 @@
       );
     }
 
+
     /**
      * @dataProvider getTestWithoutWhitespaceSkipDataProvider
+     * @param $sequence
+     * @param $expectItems
      */
     public function testWithoutWhitespaceSkip($sequence, $expectItems) {
       $code = '<?php 
@@ -83,10 +93,14 @@
         }
       }
 
-      $this->assertCount($expectItems, $findItems);
+      static::assertCount($expectItems, $findItems);
 
     }
 
+
+    /**
+     * @return array
+     */
     public function getComplexTestData() {
       return [
         [
@@ -146,9 +160,13 @@
       ];
     }
 
+
     /**
      * @dataProvider   getComplexTestData
-     * @throws \Funivan\PhpTokenizer\Exception\Exception
+     * @param $code
+     * @param $contain
+     * @param $notContain
+     * @throws \Exception
      */
     public function testComplex($code, $contain, $notContain) {
       $code = '<?php ' . $code;
@@ -182,8 +200,8 @@
           $newToken = new Token();
           $newToken->setValue($token->getValue() . ' = (array) ' . $token->getValue() . ';');
 
-          foreach ($collection as $index => $collectionToken) {
-            if ($index >= $start and $index <= $end) {
+          foreach ($collection as $collectionIndex => $collectionToken) {
+            if ($collectionIndex >= $start and $collectionIndex <= $end) {
               $collectionToken->remove();
             }
           }
@@ -199,11 +217,11 @@
       }
 
       if ($contain !== null) {
-        $this->assertContains($contain, $result);
+        static::assertContains($contain, $result);
       }
 
       if ($notContain !== null) {
-        $this->assertNotContains($notContain, $result);
+        static::assertNotContains($notContain, $result);
       }
 
     }

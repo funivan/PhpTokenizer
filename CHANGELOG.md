@@ -11,7 +11,7 @@ All Notable changes to `PhpTokenizer` will be documented in this file
  - changed `Funivan\PhpTokenizer\Strategy\Section` Strict detection of section. Next token after current must be section start token 
  - added `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern` `withDocComment`, `withoutDocComment`, `withPossibleDocComment`
  - added `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern` `withModifier`, `withoutModifier`, `withAnyModifier`
- - added `Funivan\PhpTokenizer\Pattern\Patterns\ArgumentsPattern`
+ - added `Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern`
 
 ## 0.1.1 - 2015-07-28
   - fixed `\Funivan\PhpTokenizer\Strategy\Search::process`

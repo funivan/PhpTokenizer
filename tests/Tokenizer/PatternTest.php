@@ -35,7 +35,7 @@
         return null;
       });
 
-      $this->assertCount(1, $tokensChecker->getCollections());
+      static::assertCount(1, $tokensChecker->getCollections());
     }
 
 
@@ -93,7 +93,7 @@
 
       });
 
-      $this->assertEquals($expectResult, !empty($result));
+      static::assertEquals($expectResult, !empty($result));
     }
 
 
@@ -102,33 +102,33 @@
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply(new ClassPattern());
 
-      $this->assertCount(2, $tokensChecker->getCollections());
+      static::assertCount(2, $tokensChecker->getCollections());
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->withName('B');
       $tokensChecker->apply($classPattern);
 
-      $this->assertCount(0, $tokensChecker->getCollections());
+      static::assertCount(0, $tokensChecker->getCollections());
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->withName('A');
       $tokensChecker->apply($classPattern);
 
-      $this->assertCount(1, $tokensChecker->getCollections());
+      static::assertCount(1, $tokensChecker->getCollections());
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $classPattern = new ClassPattern();
       $classPattern->withName('customUser');
       $tokensChecker->apply($classPattern);
 
-      $this->assertCount(1, $tokensChecker->getCollections());
+      static::assertCount(1, $tokensChecker->getCollections());
     }
 
 
     public function testWithNestedPatterns() {
-      # find class with property 
+      # find class with property
       $code = '<?php class A { public $user = null; static $name;} class customUser { $value; }';
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker
@@ -151,10 +151,10 @@
         });
 
       $collections = $tokensChecker->getCollections();
-      $this->assertCount(2, $collections);
+      static::assertCount(2, $collections);
 
-      $this->assertEquals('$user', (string) $collections[0]);
-      $this->assertEquals('$name', (string) $collections[1]);
+      static::assertEquals('$user', (string) $collections[0]);
+      static::assertEquals('$name', (string) $collections[1]);
 
     }
 
@@ -210,7 +210,7 @@
         }
       });
 
-      $this->assertContains('$this->response()->redirect("123")', (string) $collection);
+      static::assertContains('$this->response()->redirect("123")', (string) $collection);
 
     }
 
@@ -265,10 +265,10 @@
         ->apply(new MethodPattern());
 
       $collections = $tokensChecker->getCollections();
-      $this->assertCount(3, $collections);
-      $this->assertContains('echo $message', (string) $collections[0]);
-      $this->assertContains('return $this->name', (string) $collections[1]);
-      $this->assertContains('return $this->password', (string) $collections[2]);
+      static::assertCount(3, $collections);
+      static::assertContains('echo $message', (string) $collections[0]);
+      static::assertContains('return $this->name', (string) $collections[1]);
+      static::assertContains('return $this->password', (string) $collections[2]);
 
     }
 

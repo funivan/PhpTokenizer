@@ -10,7 +10,7 @@
   /**
    *
    */
-  class ArgumentsPattern implements PatternInterface {
+  class ParametersPattern implements PatternInterface {
 
     /**
      * @var array
@@ -21,6 +21,11 @@
      * @var int|null
      */
     private $outputArgument = null;
+
+    /**
+     * @var bool|null
+     */
+    private $outputPreparedArgument = null;
 
 
     /**
@@ -69,7 +74,25 @@
       if ($this->outputArgument !== null) {
         $argumentCollection = !empty($arguments[$this->outputArgument]) ? $arguments[$this->outputArgument] : null;
 
-        return $argumentCollection;
+        # Do not remove T_WHITESPACE tokens from the argument output
+        if ($this->outputPreparedArgument === false) {
+          return $argumentCollection;
+        }
+
+        // trim first and last whitespace token
+        $first = $argumentCollection->getFirst();
+        $last = $argumentCollection->getLast();
+
+        $from = 0;
+        $to = null;
+        if ($first !== null and $first->getType() == T_WHITESPACE) {
+          $from = 1;
+        }
+        if ($last and $last->getType() == T_WHITESPACE) {
+          $to = -1;
+        }
+
+        return $argumentCollection->extractItems($from, $to);
       }
 
       # output full
@@ -108,8 +131,8 @@
 
 
     /**
-     * @param $section
-     * @return array
+     * @param Collection $section
+     * @return Collection[]
      */
     protected function getArguments(Collection $section) {
       /** @var Token $skipToToken */
@@ -151,7 +174,7 @@
      * @return Token
      */
     private function getEndArray(Token $token, Collection $section, $index) {
-      // # check if we have array start
+      # check if we have array start
 
       if ($token->getValue() === '[') {
         $result = (new Section())->setDelimiters('[', ']')->process($section, $index);
@@ -172,16 +195,19 @@
      */
     public function outputFull() {
       $this->outputArgument = null;
+      $this->outputPreparedArgument = null;
       return $this;
     }
 
 
     /**
-     * @param $int
+     * @param int $int
+     * @param bool $prepared
      * @return $this
      */
-    public function outputArgument($int) {
+    public function outputArgument($int, $prepared = true) {
       $this->outputArgument = $int;
+      $this->outputPreparedArgument = $prepared;
       return $this;
     }
 

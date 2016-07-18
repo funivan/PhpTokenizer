@@ -23,7 +23,7 @@
       ';
 
       $collection = Collection::createFromString($code);
-      $linesWithEcho = array();
+      $linesWithEcho = [];
 
       foreach ($collection as $index => $token) {
         $q = new QuerySequence($collection, $index);
@@ -35,9 +35,9 @@
         }
       }
 
-      $this->assertCount(2, $linesWithEcho);
-      $this->assertEquals('echo $a;', $linesWithEcho[0]);
-      $this->assertEquals('echo 1 . $a;', $linesWithEcho[1]);
+      static::assertCount(2, $linesWithEcho);
+      static::assertEquals('echo $a;', $linesWithEcho[0]);
+      static::assertEquals('echo 1 . $a;', $linesWithEcho[1]);
 
     }
 
@@ -58,7 +58,7 @@
 
       $collection = Collection::createFromString($code);
 
-      $linesWithEcho = array();
+      $linesWithEcho = [];
 
       foreach ($collection as $index => $token) {
         $q = new QuerySequence($collection, $index);
@@ -71,11 +71,12 @@
         }
       }
 
-      $this->assertCount(2, $linesWithEcho);
-      $this->assertEquals('$name', (string) $linesWithEcho[0]);
-      $this->assertEquals('$userName', (string) $linesWithEcho[1]);
+      static::assertCount(2, $linesWithEcho);
+      static::assertEquals('$name', (string) $linesWithEcho[0]);
+      static::assertEquals('$userName', (string) $linesWithEcho[1]);
 
     }
+
 
     /**
      * @expectedException \Funivan\PhpTokenizer\Exception\InvalidArgumentException
@@ -85,23 +86,23 @@
     }
 
 
-    public function testSearchBackwardWithInvalidFailureCondition() {
+    public function testSearchBackward() {
 
       $code = '<?php 
       
       echo $name;
       echo $userName;
+      echo (string) $userName;
       
       
       ';
 
       $collection = Collection::createFromString($code);
-      $finder = new QuerySequence($collection);
 
-      $linesWithEcho = array();
+      $linesWithEcho = [];
 
-      foreach ($finder as $q) {
-
+      foreach ($collection as $index => $item) {
+        $q = new QuerySequence($collection, $index);
         $q->strict('echo');
         $q->search(';');
         $variable = $q->search('(string)', Search::BACKWARD);
@@ -110,8 +111,7 @@
         }
       }
 
-      $this->assertCount(0, $linesWithEcho);
-
+      static::assertCount(1, $linesWithEcho);
     }
 
   }

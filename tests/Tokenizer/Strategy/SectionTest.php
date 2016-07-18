@@ -63,8 +63,8 @@
         }
       }
 
-      $this->assertCount(1, $lines);
-      $this->assertEquals($expectCode, $lines[0]);
+      static::assertCount(1, $lines);
+      static::assertEquals($expectCode, $lines[0]);
     }
 
 
@@ -90,7 +90,7 @@
         }
       }
 
-      $this->assertCount(0, $linesWithEcho);
+      static::assertCount(0, $linesWithEcho);
 
     }
 
@@ -119,7 +119,7 @@
         }
       }
 
-      $this->assertCount(0, $linesWithEcho);
+      static::assertCount(0, $linesWithEcho);
 
     }
 
@@ -152,7 +152,7 @@
 
       });
 
-      $this->assertEquals(1, $num);
+      static::assertEquals(1, $num);
 
     }
 
@@ -240,7 +240,7 @@
 
       });
 
-      $this->assertEquals($expectFunctionNum, $num);
+      static::assertEquals($expectFunctionNum, $num);
     }
 
 

@@ -5,8 +5,15 @@
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\Token;
 
+  /**
+   *
+   */
   class FileTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
+    /**
+     * @param $code
+     * @return \Funivan\PhpTokenizer\File
+     */
     protected function getFileObjectWithCode($code) {
       $tempFile = $this->createFileWithCode($code);
       return new \Funivan\PhpTokenizer\File($tempFile);
@@ -16,11 +23,11 @@
       $file = $this->getFileObjectWithCode('<?php 
       echo 1; ');
 
-      $this->assertCount(7, $file->getCollection());
+      static::assertCount(7, $file->getCollection());
 
-      $this->assertInternalType('string', $file->getPath());
+      static::assertInternalType('string', $file->getPath());
       $otherFile = \Funivan\PhpTokenizer\File::open($file->getPath());
-      $this->assertCount(7, $otherFile->getCollection());
+      static::assertCount(7, $otherFile->getCollection());
 
 
       unlink($file->getPath());
@@ -31,13 +38,13 @@
       $file = $this->getFileObjectWithCode('<?php
       echo 1; ');
 
-      $this->assertCount(7, $file->getCollection());
+      static::assertCount(7, $file->getCollection());
       unlink($file->getPath());
     }
 
     public function testFilePath() {
       $file = $this->getFileObjectWithCode('<?php echo 1; ');
-      $this->assertNotEmpty($file->getPath());
+      static::assertNotEmpty($file->getPath());
       unlink($file->getPath());
     }
 
@@ -48,7 +55,7 @@
 
       $tokens = $file->find(Query::create()->valueIs('1'));
 
-      $this->assertCount(1, $tokens);
+      static::assertCount(1, $tokens);
       $tokens->map(function (Token $token) {
         $token->setValue(2);
       });
@@ -65,7 +72,7 @@
         }
       }
 
-      $this->assertEquals(0, $itemsNum);
+      static::assertEquals(0, $itemsNum);
 
       $itemsNum = 0;
       $query = new Query();
@@ -76,7 +83,7 @@
         }
       }
 
-      $this->assertEquals(1, $itemsNum);
+      static::assertEquals(1, $itemsNum);
 
       unlink($file->getPath());
     }
@@ -85,7 +92,7 @@
     public function testRefresh() {
       $file = $this->getFileObjectWithCode('<?php echo 1;');
 
-      $this->assertCount(5, $file->getCollection());
+      static::assertCount(5, $file->getCollection());
 
       $query = new Query();
       $query->valueIs('echo');
@@ -96,13 +103,13 @@
       }
 
 
-      $this->assertCount(5, $file->getCollection());
+      static::assertCount(5, $file->getCollection());
       $file->refresh();
 
-      $this->assertCount(4, $file->getCollection());
+      static::assertCount(4, $file->getCollection());
 
       $code = $file->getCollection()->assemble();
-      $this->assertEquals('<?php  1;', $code);
+      static::assertEquals('<?php  1;', $code);
 
       unlink($file->getPath());
     }
@@ -113,7 +120,7 @@
 
       $file = $this->getFileObjectWithCode($code);
 
-      $this->assertCount(8, $file->getCollection());
+      static::assertCount(8, $file->getCollection());
       unlink($file->getPath());
     }
 
@@ -125,7 +132,7 @@
       $file->save();
 
       $endModificationTime = \filemtime($file->getPath());
-      $this->assertEquals($endModificationTime, $startModificationTime);
+      static::assertEquals($endModificationTime, $startModificationTime);
       unlink($file->getPath());
     }
 
@@ -133,10 +140,10 @@
     public function testIsChanged() {
       $file = $this->getFileObjectWithCode('<?php echo 1;');
 
-      $this->assertFalse($file->isChanged());
+      static::assertFalse($file->isChanged());
 
       $file->getCollection()->getFirst()->setValue('<?php');
-      $this->assertTrue($file->isChanged());
+      static::assertTrue($file->isChanged());
       unlink($file->getPath());
     }
 

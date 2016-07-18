@@ -14,22 +14,22 @@
 
     public function testBuildFromString() {
       $collection = Collection::createFromString('<?php echo 123;');
-      $this->assertInstanceOf(Collection::N, $collection);
+      static::assertInstanceOf(Collection::N, $collection);
     }
 
 
     public function testGetNext() {
       $collection = Collection::createFromString('<?php echo 123;');
       $nextToken = $collection->getNext();
-      $this->assertInstanceOf(Token::N, $nextToken);
+      static::assertInstanceOf(Token::N, $nextToken);
 
       $nextToken = $collection->getNext(2);
-      $this->assertInstanceOf(Token::N, $nextToken);
+      static::assertInstanceOf(Token::N, $nextToken);
 
       $nextToken = $collection->getNext(100);
-      $this->assertInstanceOf(Token::N, $nextToken);
+      static::assertInstanceOf(Token::N, $nextToken);
 
-      $this->assertEquals(null, $nextToken->getValue());
+      static::assertEquals(null, $nextToken->getValue());
     }
 
 
@@ -37,18 +37,18 @@
       $collection = Collection::createFromString('<?php echo 123;');
 
       $previousToken = $collection->getPrevious();
-      $this->assertInstanceOf(Token::N, $previousToken);
+      static::assertInstanceOf(Token::N, $previousToken);
 
       $previousToken = $collection->getPrevious(2);
-      $this->assertInstanceOf(Token::N, $previousToken);
+      static::assertInstanceOf(Token::N, $previousToken);
 
       $next = $collection->getNext(100);
-      $this->assertInstanceOf(Token::N, $next);
-      $this->assertEquals(null, $next->getValue());
+      static::assertInstanceOf(Token::N, $next);
+      static::assertEquals(null, $next->getValue());
 
       $previous = $collection->getPrevious(100);
-      $this->assertInstanceOf(Token::N, $previous);
-      $this->assertEquals(null, $previous->getValue());
+      static::assertInstanceOf(Token::N, $previous);
+      static::assertEquals(null, $previous->getValue());
     }
 
 
@@ -56,7 +56,7 @@
       $code = '<?php echo 123;';
       $collection = Collection::createFromString($code);
 
-      $this->assertEquals($code, (string) $collection);
+      static::assertEquals($code, (string) $collection);
     }
 
 
@@ -67,14 +67,14 @@
 
       try {
         $collection[10] = null;
-        $this->fail('Invalid token set. Expect exception.');
+        static::fail('Invalid token set. Expect exception.');
       } catch (\Exception $e) {
-        $this->assertInstanceOf('\Exception', $e);
+        static::assertInstanceOf('\Exception', $e);
       }
 
       $itemsNum = $collection->count();
       $collection[] = new Token();
-      $this->assertCount($itemsNum + 1, $collection);
+      static::assertCount($itemsNum + 1, $collection);
 
     }
 
@@ -87,14 +87,14 @@
 
       $collection->addAfter(4, [$newToken]);
 
-      $this->assertEquals($newToken, $collection->getLast());
+      static::assertEquals($newToken, $collection->getLast());
 
       $exception = null;
       try {
         $collection->addAfter(4, 'test');
       } catch (\Exception $exception) {
       }
-      $this->assertInstanceOf('Exception', $exception);
+      static::assertInstanceOf('Exception', $exception);
     }
 
 
@@ -109,7 +109,7 @@
 
       $collection->slice(5);
 
-      $this->assertEquals($otherCollection->assemble(), $collection->assemble());
+      static::assertEquals($otherCollection->assemble(), $collection->assemble());
 
     }
 
@@ -117,8 +117,8 @@
     public function testDump() {
       $collection = Collection::createFromString("<?php echo 123;");
       $dumpString = Helper::dump($collection);
-      $this->assertContains("<pre>", $dumpString);
-      $this->assertContains("T_ECHO", $dumpString);
+      static::assertContains("<pre>", $dumpString);
+      static::assertContains("T_ECHO", $dumpString);
 
     }
 
@@ -129,11 +129,11 @@
       $itemsNum = $collection->count();
 
       $collection->getLast()->prependToValue(" ");
-      $this->assertCount($itemsNum, $collection);
+      static::assertCount($itemsNum, $collection);
 
       $collection->refresh();
       $itemsNum++;
-      $this->assertCount($itemsNum, $collection);
+      static::assertCount($itemsNum, $collection);
 
     }
 
@@ -149,7 +149,7 @@
       } catch (\Exception $error) {
 
       }
-      $this->assertInstanceOf('Exception', $error);
+      static::assertInstanceOf('Exception', $error);
     }
 
 
@@ -184,10 +184,10 @@
 
       $newCollection = $collection->extractByTokens($first, $last);
 
-      $this->assertCount(3, $newCollection);
-      $this->assertEquals($first, $newCollection->getFirst());
-      $this->assertEquals($next, $newCollection->offsetGet(1));
-      $this->assertEquals($last, $newCollection->getLast());
+      static::assertCount(3, $newCollection);
+      static::assertEquals($first, $newCollection->getFirst());
+      static::assertEquals($next, $newCollection->offsetGet(1));
+      static::assertEquals($last, $newCollection->getLast());
 
     }
   }

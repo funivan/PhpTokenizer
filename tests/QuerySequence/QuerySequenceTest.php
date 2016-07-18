@@ -37,7 +37,7 @@
         }
       }
 
-      $this->assertCount(3, $findItems);
+      static::assertCount(3, $findItems);
     }
 
     /**
@@ -50,13 +50,13 @@
 
       $finder = new QuerySequence($collection);
       $token = $finder->moveToToken($lastToken);
-      $this->assertEquals($lastToken, $token);
-      
-      
+      static::assertEquals($lastToken, $token);
+
+
       $finder = new QuerySequence($collection);
       $token = $finder->moveToToken(new Token());
-      $this->assertNull($token->getValue());
-      $this->assertFalse($finder->isValid());
+      static::assertNull($token->getValue());
+      static::assertFalse($finder->isValid());
     }
 
 
@@ -150,7 +150,7 @@
 
       $q = new QuerySequence($collection, 3);
       $q->strict($condition);
-      $this->assertEquals($isValid, $q->isValid());
+      static::assertEquals($isValid, $q->isValid());
     }
 
 
@@ -209,8 +209,8 @@
       $q = new QuerySequence($collection, 3);
       $token = $q->possible($condition);
 
-      $this->assertEquals($isValidToken, $token->isValid());
-      $this->assertTrue($q->isValid());
+      static::assertEquals($isValidToken, $token->isValid());
+      static::assertTrue($q->isValid());
 
     }
 
@@ -262,7 +262,7 @@
       $q = new QuerySequence($collection, 0);
       $section = $q->section('{', '}');
 
-      $this->assertCount(0, $section);
+      static::assertCount(0, $section);
     }
 
 
@@ -276,20 +276,20 @@
       $q = new QuerySequence($collection, 0);
 
       $token = $q->move(1);
-      $this->assertEquals('echo', $token->getValue());
-      $this->assertTrue($q->isValid());
+      static::assertEquals('echo', $token->getValue());
+      static::assertTrue($q->isValid());
 
       $token = $q->move(2);
-      $this->assertEquals('1', $token->getValue());
-      $this->assertTrue($q->isValid());
+      static::assertEquals('1', $token->getValue());
+      static::assertTrue($q->isValid());
 
       $token = $q->move(-2);
-      $this->assertEquals('echo', $token->getValue());
-      $this->assertTrue($q->isValid());
+      static::assertEquals('echo', $token->getValue());
+      static::assertTrue($q->isValid());
 
       $token = $q->move(-100);
-      $this->assertNull($token->getValue());
-      $this->assertFalse($q->isValid());
+      static::assertNull($token->getValue());
+      static::assertFalse($q->isValid());
     }
 
     /**
@@ -297,8 +297,9 @@
      */
     public function testSetValidWithInvalidFlag() {
       $q = new QuerySequence(new Collection(), 0);
+      /** @noinspection PhpParamsInspection */
       $q->setValid(new \stdClass());
     }
-    
-    
+
+
   }
