@@ -14,20 +14,20 @@
 
     public function testBuildFromString() {
       $collection = Collection::createFromString('<?php echo 123;');
-      static::assertInstanceOf(Collection::N, $collection);
+      static::assertInstanceOf(Collection::class, $collection);
     }
 
 
     public function testGetNext() {
       $collection = Collection::createFromString('<?php echo 123;');
       $nextToken = $collection->getNext();
-      static::assertInstanceOf(Token::N, $nextToken);
+      static::assertInstanceOf(Token::class, $nextToken);
 
       $nextToken = $collection->getNext(2);
-      static::assertInstanceOf(Token::N, $nextToken);
+      static::assertInstanceOf(Token::class, $nextToken);
 
       $nextToken = $collection->getNext(100);
-      static::assertInstanceOf(Token::N, $nextToken);
+      static::assertInstanceOf(Token::class, $nextToken);
 
       static::assertEquals(null, $nextToken->getValue());
     }
@@ -37,17 +37,17 @@
       $collection = Collection::createFromString('<?php echo 123;');
 
       $previousToken = $collection->getPrevious();
-      static::assertInstanceOf(Token::N, $previousToken);
+      static::assertInstanceOf(Token::class, $previousToken);
 
       $previousToken = $collection->getPrevious(2);
-      static::assertInstanceOf(Token::N, $previousToken);
+      static::assertInstanceOf(Token::class, $previousToken);
 
       $next = $collection->getNext(100);
-      static::assertInstanceOf(Token::N, $next);
+      static::assertInstanceOf(Token::class, $next);
       static::assertEquals(null, $next->getValue());
 
       $previous = $collection->getPrevious(100);
-      static::assertInstanceOf(Token::N, $previous);
+      static::assertInstanceOf(Token::class, $previous);
       static::assertEquals(null, $previous->getValue());
     }
 
@@ -105,7 +105,7 @@
       $otherCollection->getFirst()->remove();
       $otherCollection->refresh();
 
-      $collection->addAfter(4, $otherCollection->getItems());
+      $collection->addAfter(4, $otherCollection->getTokens());
 
       $collection->slice(5);
 

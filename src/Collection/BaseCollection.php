@@ -100,7 +100,9 @@
         }
       }
 
-      $this->validateIndex($index);
+      if (!is_int($index)) {
+        throw new \InvalidArgumentException('Invalid type of index. Must be integer');
+      }
 
       $offset = $index + 1;
       $firstPart = array_slice($this->items, 0, $offset);
@@ -273,10 +275,13 @@
 
       if (is_null($offset)) {
         $this->append($item);
-      } else {
-        $this->validateIndex($offset);
-        $this->items[$offset] = $item;
+        return $this;
       }
+      
+      if (!is_int($offset)) {
+        throw new \InvalidArgumentException('Invalid type of index. Must be integer');
+      }
+      $this->items[$offset] = $item;
 
       return $this;
     }
@@ -320,13 +325,19 @@
      * Rewrite this method in you class
      *
      * <code>
-     * foreach($collection->getItems() as $item){
+     * foreach($collection->getTokens() as $item){
      *  echo get_class($item)."\n;
      * }
      * </code>
-     * @return object[]
+     * @return Token[]
      */
+    public function getTokens() : array {
+      return $this->items;
+    }
+
+
     public function getItems() {
+      trigger_error('Deprecated. See getTokens', E_USER_DEPRECATED);
       return $this->items;
     }
 
@@ -335,24 +346,24 @@
      * Iterate over objects in collection
      *
      * <code>
-     * $collection->map(function($item, $index, $collection){
+     * $collection->each(function($item, $index, $collection){
      *    if ( $index > 0 ) {
      *      $item->remove();
      *    }
      * })
      * </code>
      *
-     * @param callback $callback
+     * @param callable $callback
      * @return $this
      * @throws \InvalidArgumentException
      */
-    public function map($callback) {
+    public function each(callable $callback) : self {
 
       if (!is_callable($callback)) {
         throw new \InvalidArgumentException('Invalid callback function');
       }
 
-      foreach ($this->getItems() as $index => $item) {
+      foreach ($this->getTokens() as $index => $item) {
         call_user_func_array($callback, [$item, $index, $this]);
       }
 
@@ -362,20 +373,18 @@
     }
 
 
+    public function map(callable $callback) {
+      trigger_error('Deprecated. See each', E_USER_DEPRECATED);
+      return $this->each($callback);
+    }
+
+
     /**
      * @param int $index
      */
     protected function validateIndex($index) {
-      if (!is_int($index)) {
-        throw new \InvalidArgumentException('Invalid type of index. Must be integer');
-      }
+
     }
 
-
-    public function validateType($item) {
-      if (!($item instanceof Token)) {
-        throw new \Exception('Invalid object type. Expect Token');
-      }
-    }
 
   }

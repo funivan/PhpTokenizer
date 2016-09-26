@@ -272,7 +272,7 @@
       $start->slice(0, -1);  // remove last function keyword
 
       # start reverse search
-      $items = array_reverse($start->getItems());
+      $items = array_reverse($start->getTokens());
       $startFrom = null;
 
       $docComment = new Token();

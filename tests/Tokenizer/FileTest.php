@@ -56,7 +56,7 @@
       $tokens = $file->find(Query::create()->valueIs('1'));
 
       static::assertCount(1, $tokens);
-      $tokens->map(function (Token $token) {
+      $tokens->each(function (Token $token) {
         $token->setValue(2);
       });
 

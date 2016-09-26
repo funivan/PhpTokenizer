@@ -3,6 +3,9 @@ All Notable changes to `PhpTokenizer` will be documented in this file
 
 ## 1.0.0-alpha.1 - [unreleased] 
  - remove `fiv/collection` package
+  - deprecated `Collection::map` use `Collection::each` 
+  - deprecated `Collection::getItems` use `Collection::getToken` 
+
  
 ## 0.1.2-alpha5 - 2016-07-18
  - deprecated `Funivan\PhpTokenizer\Pattern\Pattern` use `Funivan\PhpTokenizer\Pattern\PatternMatcher`

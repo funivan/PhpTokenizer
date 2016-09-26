@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types = 1);
+
   namespace Funivan\PhpTokenizer;
 
   use Funivan\PhpTokenizer\Exception\Exception;
@@ -13,8 +15,6 @@
    * @package Funivan\PhpTokenizer
    */
   class Token {
-
-    const N = __CLASS__;
 
     const INVALID_TYPE = -1;
 
@@ -64,15 +64,15 @@
      * @return string
      */
     public function __toString() {
-      return $this->value !== null ? (string) $this->value : '';
+      return $this->assemble();
     }
 
 
     /**
      * @return string
      */
-    public function assemble() {
-      return $this->__toString();
+    public function assemble() : string {
+      return $this->value !== null ? (string) $this->value : '';
     }
 
 

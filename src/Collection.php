@@ -13,7 +13,6 @@
    * @method \Funivan\PhpTokenizer\Token current();
    * @method \Funivan\PhpTokenizer\Token|null offsetGet($index);
    * @method \Funivan\PhpTokenizer\Token|null getFirst();
-   * @method \Funivan\PhpTokenizer\Token[] getItems();
    * @method \Funivan\PhpTokenizer\Collection extractItems($offset, $length = null);
    * @method $this setItems($tokens)
    *
@@ -195,7 +194,7 @@
       $startIndex = $tokenStart->getIndex();
       $endIndex = $tokenEnd->getIndex();
 
-      foreach ($this->getItems() as $token) {
+      foreach ($this->getTokens() as $token) {
         if ($token->getIndex() >= $startIndex and $token->getIndex() <= $endIndex) {
           $collection->append($token);
         }
