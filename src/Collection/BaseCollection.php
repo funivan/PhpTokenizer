@@ -64,8 +64,7 @@
      * @param $item
      * @return $this
      */
-    public function prepend($item) {
-      $this->validateType($item);
+    public function prepend(Token $item) {
       array_unshift($this->items, $item);
       return $this;
     }
@@ -78,9 +77,7 @@
      * @param $item
      * @return $this
      */
-    public function append($item) {
-      $this->validateType($item);
-
+    public function append(Token $item) {
       $this->items[] = $item;
       return $this;
     }
@@ -98,7 +95,9 @@
       }
 
       foreach ($items as $item) {
-        $this->validateType($item);
+        if (!($item instanceof Token)) {
+          throw new \InvalidArgumentException('Expect array of tokens. Token[]');
+        }
       }
 
       $this->validateIndex($index);
@@ -122,8 +121,10 @@
         throw new \InvalidArgumentException("You can set only array of items");
       }
 
-      foreach ($items as $key => $item) {
-        $this->validateType($item);
+      foreach ($items as $item) {
+        if (!($item instanceof Token)) {
+          throw new \InvalidArgumentException('Expect array of tokens. Token[]');
+        }
       }
 
       $this->items = $items;
@@ -266,7 +267,9 @@
      * @return $this
      */
     public function offsetSet($offset, $item) {
-      $this->validateType($item);
+      if (!($item instanceof Token)) {
+        throw new \InvalidArgumentException('Expect Token object');
+      }
 
       if (is_null($offset)) {
         $this->append($item);
