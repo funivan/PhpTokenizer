@@ -4,55 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e26a1c408a9e9f0fc90e3df8a215f89f",
-    "content-hash": "6539266db75ad30fd61eab93968056e3",
-    "packages": [
-        {
-            "name": "fiv/collection",
-            "version": "0.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/funivan/collection.git",
-                "reference": "6748a731b3fd3ce551f0fda32973c449b32edb03"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/funivan/collection/zipball/6748a731b3fd3ce551f0fda32973c449b32edb03",
-                "reference": "6748a731b3fd3ce551f0fda32973c449b32edb03",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Fiv\\Collection\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ivan Scherbak",
-                    "email": "dev@funivan.com",
-                    "homepage": "http://funivan.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Abstract class for typed object collection",
-            "homepage": "https://github.com/funivan/object-collection",
-            "keywords": [
-                "collection"
-            ],
-            "time": "2014-11-07 10:26:07"
-        }
-    ],
+    "hash": "6d7b546dd718001566fccbf2320d5234",
+    "content-hash": "727d66e1a94eab728245f49be46c5eaf",
+    "packages": [],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
@@ -1363,7 +1317,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.0"
+        "php": ">=7.0"
     },
     "platform-dev": []
 }

@@ -2,6 +2,7 @@
 
   namespace Funivan\PhpTokenizer;
 
+  use Funivan\PhpTokenizer\Collection\BaseCollection;
   use Funivan\PhpTokenizer\Exception\Exception;
   use Funivan\PhpTokenizer\Query\Query;
 
@@ -18,7 +19,7 @@
    *
    * @package Funivan\PhpTokenizer
    */
-  class Collection extends \Fiv\Collection\ObjectCollection {
+  class Collection extends BaseCollection {
 
     /**
      * You can use this constant for access class name
@@ -79,16 +80,6 @@
 
 
     /**
-     * Used for validation
-     *
-     * @return string
-     */
-    public function objectsClassName() {
-      return Token::N;
-    }
-
-
-    /**
      * @return string
      */
     public function assemble() {
@@ -143,7 +134,7 @@
     public function getNext($step = 1) {
       $item = parent::getNext($step);
       if ($item === null) {
-          $item = new Token();
+        $item = new Token();
       }
       return $item;
     }
