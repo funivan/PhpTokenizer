@@ -25,20 +25,6 @@
      */
     const N = __CLASS__;
 
-    /**
-     * @var string
-     */
-    protected $initialContentHash;
-
-
-    /**
-     * @param array $items
-     */
-    public function __construct(array $items = []) {
-      parent::__construct($items);
-      $this->storeContentHash();
-    }
-
 
     /**
      * Extract each value from token
@@ -62,37 +48,8 @@
     }
 
 
-    /**
-     * @return bool
-     */
-    public function isChanged() {
-      return ($this->getContentHash() !== $this->initialContentHash);
-    }
 
 
-    /**
-     * @return string
-     */
-    private function getContentHash() {
-      return md5($this->assemble());
-    }
-
-
-    /**
-     * @return string
-     */
-    public function assemble() {
-      $string = '';
-      /** @var Token $token */
-      foreach ($this as $token) {
-        if (!$token->isValid()) {
-          continue;
-        }
-        $string .= $token->getValue();
-      }
-
-      return $string;
-    }
 
 
     /**
@@ -170,20 +127,6 @@
 
 
     /**
-     * Remove all tokens in collection
-     *
-     * @return $this
-     */
-
-    public function remove() {
-      foreach ($this as $token) {
-        $token->remove();
-      }
-      return $this;
-    }
-
-
-    /**
      * @param Token $tokenStart
      * @param Token $tokenEnd
      * @return Collection
@@ -215,12 +158,6 @@
     }
 
 
-    /**
-     * @return $this
-     */
-    public function storeContentHash() {
-      $this->initialContentHash = $this->getContentHash();
-      return $this;
-    }
+
 
   }
