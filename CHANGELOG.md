@@ -1,6 +1,9 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
 
+## 1.0.0-alpha.1 - [unreleased] 
+ - remove `fiv/collection` package
+ 
 ## 0.1.2-alpha5 - 2016-07-18
  - deprecated `Funivan\PhpTokenizer\Pattern\Pattern` use `Funivan\PhpTokenizer\Pattern\PatternMatcher`
  - deprecated `ClassPattern::nameIs`
