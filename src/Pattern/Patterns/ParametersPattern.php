@@ -90,7 +90,7 @@
         if ($first !== null and $first->getType() == T_WHITESPACE) {
           $from = 1;
         }
-        if ($last and $last->getType() == T_WHITESPACE) {
+        if ($last !== null and $last->getType() == T_WHITESPACE) {
           $to = -1;
         }
 

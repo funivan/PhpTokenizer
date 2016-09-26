@@ -77,7 +77,7 @@
     /**
      * @return $this
      */
-    public function outputFull() {
+    public function outputFull() : self {
       $this->outputType = self::OUTPUT_FULL;
       return $this;
     }
@@ -86,7 +86,7 @@
     /**
      * @return $this
      */
-    public function outputBody() {
+    public function outputBody() : self {
       $this->outputType = self::OUTPUT_BODY;
       return $this;
     }
@@ -95,7 +95,7 @@
     /**
      * @return $this
      */
-    public function outputDocComment() {
+    public function outputDocComment() : self {
       $this->outputType = self::OUTPUT_DOC_COMMENT;
       return $this;
     }
@@ -105,7 +105,7 @@
      * @param string|QueryStrategy $name
      * @return $this
      */
-    public function withName($name) {
+    public function withName($name) : self {
       if (is_string($name)) {
         $this->nameQuery = Strict::create()->valueIs($name);
       } elseif ($name instanceof QueryStrategy) {
@@ -122,7 +122,7 @@
      * @param callable $check
      * @return $this
      */
-    public function withBody(callable $check) {
+    public function withBody(callable $check) : self {
       $this->bodyChecker = $check;
       return $this;
     }
@@ -133,14 +133,9 @@
      * @return bool
      * @throws \Exception
      */
-    private function isValidBody(Collection $body) {
+    private function isValidBody(Collection $body) : bool {
       $checker = $this->bodyChecker;
-      $result = $checker($body);
-      if (!is_bool($result)) {
-        throw new \Exception('Body checker should return boolean result');
-      }
-
-      return $result;
+      return $checker($body);
     }
 
 
@@ -148,7 +143,7 @@
      * @param callable $check
      * @return $this
      */
-    public function withDocComment(callable $check = null) {
+    public function withDocComment(callable $check = null) : self {
 
       if ($check === null) {
         $check = function (Token $token) {
@@ -164,7 +159,7 @@
     /**
      * Find functions without doc comments
      */
-    public function withoutDocComment() {
+    public function withoutDocComment() : self {
       $this->docCommentChecker = function (Token $token) {
         return $token->isValid() === false;
       };
@@ -177,7 +172,7 @@
      * @param ParametersPattern $pattern
      * @return $this
      */
-    public function withParameters(ParametersPattern $pattern) {
+    public function withParameters(ParametersPattern $pattern) : self {
       $this->argumentsPattern = $pattern;
       return $this;
     }
@@ -186,7 +181,7 @@
     /**
      * @return $this
      */
-    public function withAnyModifier() {
+    public function withAnyModifier() : self {
       $this->modifierChecker = [];
       $this->modifierChecker[] = function () {
         return true;
@@ -199,7 +194,7 @@
      * @param string $modifier
      * @return $this
      */
-    public function withModifier($modifier) {
+    public function withModifier($modifier) : self {
       $this->modifierChecker[] = function ($allModifiers) use ($modifier) {
         return in_array($modifier, $allModifiers);
       };
@@ -212,7 +207,7 @@
      * @param string $modifier
      * @return $this
      */
-    public function withoutModifier($modifier) {
+    public function withoutModifier($modifier) : self {
 
       $this->modifierChecker[] = function ($allModifiers) use ($modifier) {
         return !in_array($modifier, $allModifiers);
@@ -227,7 +222,7 @@
      * @return bool
      * @throws \Exception
      */
-    private function isValidModifiers(array $modifiers) {
+    private function isValidModifiers(array $modifiers) : bool {
       foreach ($this->modifierChecker as $checkModifier) {
         $result = $checkModifier($modifiers);
 
@@ -270,7 +265,12 @@
       }
 
       $collection = $querySequence->getCollection();
-      $start = $collection->extractByTokens($collection->getFirst(), $functionKeyword);
+      $first = $collection->getFirst();
+      if ($first === null) {
+        return null;
+      }
+
+      $start = $collection->extractByTokens($first, $functionKeyword);
       $start->slice(0, -1);  // remove last function keyword
 
       # start reverse search
@@ -323,6 +323,11 @@
         return null;
       }
 
+      $lastToken = $body->getLast();
+      if ($lastToken === null) {
+        return null;
+      }
+
       if ($startFrom === null) {
         $startFrom = $functionKeyword;
       }
@@ -330,8 +335,9 @@
 
       if ($this->outputType === self::OUTPUT_FULL) {
         # all conditions are ok, so extract full function
-        $fullFunction = $collection->extractByTokens($startFrom, $body->getLast());
-        if ($fullFunction->getFirst()->getType() === T_WHITESPACE) {
+        $fullFunction = $collection->extractByTokens($startFrom, $lastToken);
+        $firstToken = $fullFunction->getFirst();
+        if ($firstToken !== null and $firstToken->getType() === T_WHITESPACE) {
           $fullFunction->slice(1);
         }
         return $fullFunction;
@@ -348,17 +354,12 @@
 
     /**
      * @param Token $token
-     * @return mixed
+     * @return boolean
      * @throws \Exception
      */
-    private function isValidDocComment(Token $token) {
+    private function isValidDocComment(Token $token) : bool {
       $checker = $this->docCommentChecker;
-      $result = $checker($token);
-      if (!is_bool($result)) {
-        throw new \Exception('DocComment checker should return boolean result');
-      }
-
-      return $result;
+      return $checker($token);
     }
 
 
@@ -366,7 +367,7 @@
      * @param Collection $parameters
      * @return bool
      */
-    private function isValidArguments(Collection $parameters) {
+    private function isValidArguments(Collection $parameters) : bool {
       if ($this->argumentsPattern === null) {
         return true;
       }

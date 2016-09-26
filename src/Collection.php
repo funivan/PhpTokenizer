@@ -215,19 +215,21 @@
     /**
      * Return last item from collection
      *
-     * @return Token|false
+     * @return Token|null
      */
     public function getLast() {
-      return end($this->items);
+      $lastToken = end($this->items);
+      return ($lastToken !== false) ? $lastToken : null;
     }
 
 
     /**
      * Return first item from collection
-     * @return Token|false
+     * @return Token|null
      */
     public function getFirst() {
-      return reset($this->items);
+      $first = reset($this->items);
+      return $first !== false ? $first : null;
     }
 
 
@@ -260,7 +262,7 @@
     /**
      * Return current item in collection
      *
-     * @return Token|null
+     * @return Token
      */
     public function current() {
       return $this->items[$this->position];

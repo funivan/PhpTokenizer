@@ -105,11 +105,16 @@
         }
       }
 
+      $lastToken = $arguments->getLast();
+      if ($lastToken === null) {
+        return null;
+      }
+
       if ($this->outputType === self::OUTPUT_ARGUMENTS) {
         return $arguments;
       }
 
-      return $querySequence->getCollection()->extractByTokens($name, $arguments->getLast());
+      return $querySequence->getCollection()->extractByTokens($name, $lastToken);
     }
 
   }

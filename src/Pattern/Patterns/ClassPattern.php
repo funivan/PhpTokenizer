@@ -197,13 +197,18 @@
         return null;
       }
 
+      # self::OUTPUT_FULL
+      $lastBodyToken = $body->getLast();
+      if ($lastBodyToken === null) {
+        return null;
+      }
 
       if ($this->outputType === self::OUTPUT_BODY) {
         return $body->extractItems(1, -1);
       }
 
-      # self::OUTPUT_FULL
-      return $querySequence->getCollection()->extractByTokens($start, $body->getLast());
+
+      return $querySequence->getCollection()->extractByTokens($start, $lastBodyToken);
     }
 
 
