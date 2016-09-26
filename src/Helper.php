@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types = 1);
+
   namespace Funivan\PhpTokenizer;
 
   use Funivan\PhpTokenizer\Exception\Exception;
@@ -49,7 +51,7 @@
      * @return string
      */
     public static function dump(Collection $collection) {
-      $string = '<pre>'. "\n";
+      $string = '<pre>' . "\n";
       foreach ($collection as $token) {
         $string .= '[' . $token->getTypeName() . ']' . "\n" . print_r($token->getData(), true) . "\n";
       }

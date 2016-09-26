@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types = 1);
+
   namespace Funivan\PhpTokenizer\QuerySequence;
 
   use Funivan\PhpTokenizer\Collection;
@@ -253,7 +255,7 @@
      */
     private function buildStrategyCondition($value, QueryStrategy $defaultStrategy) {
 
-      if (is_object($value) and get_class($value) === get_class($defaultStrategy)) {
+      if ($value instanceof $defaultStrategy) {
         return $value;
       }
 

@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types = 1);
+
   namespace Funivan\PhpTokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;

@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types = 1);
+
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;

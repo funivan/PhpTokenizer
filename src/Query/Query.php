@@ -1,5 +1,6 @@
 <?php
 
+  declare(strict_types = 1);
 
   namespace Funivan\PhpTokenizer\Query;
 
@@ -123,7 +124,7 @@
 
 
     /**
-     * @param array|string $regex Array<String>|String
+     * @param string[]|string $regex string[]
      * @return $this
      */
     public function valueLike($regex) {
@@ -136,6 +137,9 @@
 
         $value = $token->getValue();
 
+        if ($value === null) {
+          return false;
+        }
         foreach ($regexConditions as $regex) {
           if (!preg_match($regex, $value)) {
             return false;
