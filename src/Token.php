@@ -213,7 +213,7 @@
      * @return $this
      * @throws Exception
      */
-    public function appendToValue(string $part) : self {
+    public function appendToValue($part) : self {
 
       if (!is_string($part) and !is_numeric($part)) {
         throw new InvalidArgumentException('You can append only string to value');
@@ -232,7 +232,7 @@
      * @return $this
      * @throws Exception
      */
-    public function prependToValue(string $part) : self {
+    public function prependToValue($part) : self {
 
       if (!is_string($part) and !is_numeric($part)) {
         throw new InvalidArgumentException('You can prepend only string to value');
