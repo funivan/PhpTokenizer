@@ -1,5 +1,5 @@
 <?php
-  
+
   declare(strict_types = 1);
 
   namespace Funivan\PhpTokenizer;
@@ -14,12 +14,12 @@
     /**
      * @var string
      */
-    protected $path = null;
+    protected $path;
 
     /**
      * @var Collection
      */
-    protected $collection = null;
+    protected $collection;
 
 
     /**
@@ -36,7 +36,7 @@
      * @param string $path
      * @return File
      */
-    public static function open($path) {
+    public static function open(string $path) : File {
       return new File($path);
     }
 
@@ -44,7 +44,7 @@
     /**
      * @param string $path
      */
-    public function __construct($path) {
+    public function __construct(string $path) {
       $this->path = $path;
       $code = file_get_contents($path);
       $this->collection = Collection::createFromString($code);
@@ -54,7 +54,7 @@
     /**
      * @return Collection
      */
-    public function getCollection() {
+    public function getCollection() : Collection {
       return $this->collection;
     }
 
@@ -62,7 +62,7 @@
     /**
      * Save tokens to
      *
-     * @return bool
+     * @return bool|int
      */
     public function save() {
       if (!$this->isChanged()) {
@@ -78,7 +78,7 @@
      *
      * @return $this
      */
-    public function refresh() {
+    public function refresh() : self {
       $newCode = $this->collection->assemble();
       $tokens = Helper::getTokensFromString($newCode);
 
@@ -90,7 +90,7 @@
     /**
      * @return string
      */
-    public function getPath() {
+    public function getPath() : string {
       return $this->path;
     }
 
@@ -98,7 +98,7 @@
     /**
      * @return bool
      */
-    public function isChanged() {
+    public function isChanged() : bool {
       return $this->collection->isChanged();
     }
 
@@ -109,7 +109,7 @@
      * @param Query $query
      * @return Collection
      */
-    public function find(Query $query) {
+    public function find(Query $query) : Collection {
       return $this->getCollection()->find($query);
     }
 

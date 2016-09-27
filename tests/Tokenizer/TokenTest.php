@@ -79,34 +79,7 @@
       new Token(array(1, "test"));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testInvalidIndex() {
-      new Token(array(1, "test", 1, new \stdClass()));
-    }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testPrependToValueInvalid() {
-      $token = new Token();
-      $token->prependToValue(null);
-    }
-
-    public function testPrependToValue() {
-      $token = new Token();
-      $token->setValue("123")->prependToValue("test");
-      static::assertEquals("test123", $token->getValue());
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testAppendToValueInvalidValue() {
-      $token = new Token();
-      $token->appendToValue(new \stdClass());
-    }
 
     public function testAppendToValue() {
       $token = new Token();

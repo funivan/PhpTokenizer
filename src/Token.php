@@ -25,26 +25,26 @@
     const INVALID_INDEX = -1;
 
     /**
-     * @var null|int
+     * @var int
      */
-    protected $type = null;
+    protected $type = self::INVALID_TYPE;
 
     /**
      * @var string|null
      */
-    protected $value = null;
+    protected $value;
 
     /**
-     * @var int|null
+     * @var int
      */
-    protected $line = null;
+    protected $line = self::INVALID_LINE;
 
     /**
      * Indicate position in current collection
      *
-     * @var null|int
+     * @var int
      */
-    protected $index = null;
+    protected $index = self::INVALID_INDEX;
 
 
     /**
@@ -81,12 +81,12 @@
      * @return $this
      * @throws Exception
      */
-    protected function setData(array $data) {
+    protected function setData(array $data) : self {
       if (!array_key_exists(0, $data)) {
         throw new InvalidArgumentException('Please provide type of token');
       }
 
-      $this->setType($data[0]);
+      $this->setType((int) $data[0]);
 
       if (!isset($data[1])) {
         throw new InvalidArgumentException('Please provide value of token');
@@ -111,25 +111,25 @@
     /**
      * @return array
      */
-    public function getData() {
+    public function getData() : array {
       return [$this->getType(), $this->getValue(), $this->getLine(), $this->getIndex()];
     }
 
 
     /**
-     * @param $type
+     * @param int $type
      * @return $this
      */
-    public function setType($type) {
+    public function setType(int $type) : self {
       $this->type = $type;
       return $this;
     }
 
 
     /**
-     * @return null|integer
+     * @return int
      */
-    public function getType() {
+    public function getType() : int {
       return $this->type;
     }
 
@@ -137,13 +137,13 @@
     /**
      * @return string
      */
-    public function getTypeName() {
+    public function getTypeName() : string {
       return token_name($this->getType());
     }
 
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getValue() {
       return $this->value;
@@ -152,13 +152,13 @@
 
     /**
      * @param string|int $value
-     * @throws \Funivan\PhpTokenizer\Exception\Exception
+     * @throws InvalidArgumentException
      * @return $this
      */
-    public function setValue($value) {
+    public function setValue($value) : self {
 
       if (!is_string($value) and !is_numeric($value)) {
-        throw new Exception('You can set only string. Given: ' . gettype($value));
+        throw new InvalidArgumentException('You can set only string. Given: ' . gettype($value));
       }
 
       $this->value = (string) $value;
@@ -169,7 +169,7 @@
     /**
      * @return int
      */
-    public function getLine() {
+    public function getLine() : int {
       return $this->line;
     }
 
@@ -178,7 +178,7 @@
      * @param int $line
      * @return $this
      */
-    public function setLine($line) {
+    public function setLine(int $line) : self {
       $this->line = $line;
       return $this;
     }
@@ -187,7 +187,7 @@
     /**
      * @return bool
      */
-    public function isValid() {
+    public function isValid() : bool {
       return $this->getValue() !== null;
     }
 
@@ -197,7 +197,7 @@
      *
      * @return $this
      */
-    public function remove() {
+    public function remove() : self {
       $this->type = static::INVALID_TYPE;
       $this->value = static::INVALID_VALUE;
       $this->line = static::INVALID_LINE;
@@ -213,7 +213,7 @@
      * @return $this
      * @throws Exception
      */
-    public function appendToValue($part) {
+    public function appendToValue(string $part) : self {
 
       if (!is_string($part) and !is_numeric($part)) {
         throw new InvalidArgumentException('You can append only string to value');
@@ -232,7 +232,7 @@
      * @return $this
      * @throws Exception
      */
-    public function prependToValue($part) {
+    public function prependToValue(string $part) : self {
 
       if (!is_string($part) and !is_numeric($part)) {
         throw new InvalidArgumentException('You can prepend only string to value');
@@ -253,14 +253,10 @@
 
 
     /**
-     * @param null|int $index
+     * @param int $index
      * @return $this
      */
-    public function setIndex($index) {
-      if ($index !== null and !is_int($index)) {
-        throw new \InvalidArgumentException('Invalid position argument. Expect null or integer. Given #' . gettype($index));
-      }
-
+    public function setIndex(int $index) : self {
       $this->index = $index;
       return $this;
     }

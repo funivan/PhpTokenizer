@@ -40,7 +40,7 @@
      * @param Query $query
      * @return Collection
      */
-    public function find(Query $query) {
+    public function find(Query $query) : Collection {
       $result = new Collection();
 
       foreach ($this->collection as $token) {
