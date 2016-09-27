@@ -107,7 +107,7 @@
      * @param callable $check
      * @return $this
      */
-    public function withArgument($int, callable $check = null) {
+    public function withArgument(int $int, callable $check = null) {
       if ($check === null) {
         $check = function (Collection $argumentTokens) {
           return $argumentTokens->count() !== 0;
@@ -172,10 +172,10 @@
     /**
      * @param Token $token
      * @param Collection $section
-     * @param $index
+     * @param int $index
      * @return Token
      */
-    private function getEndArray(Token $token, Collection $section, $index) {
+    private function getEndArray(Token $token, Collection $section, int $index) {
       # check if we have array start
 
       if ($token->getValue() === '[') {
