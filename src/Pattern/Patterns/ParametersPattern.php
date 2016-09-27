@@ -103,31 +103,31 @@
 
 
     /**
-     * @param int $int
+     * @param int $index
      * @param callable $check
      * @return $this
      */
-    public function withArgument(int $int, callable $check = null) {
+    public function withArgument(int $index, callable $check = null): self  {
       if ($check === null) {
         $check = function (Collection $argumentTokens) {
           return $argumentTokens->count() !== 0;
         };
       }
-      $this->argumentCheck[$int] = $check;
+      $this->argumentCheck[$index] = $check;
       return $this;
     }
 
 
     /**
-     * @param int $int
+     * @param int $index
      * @return $this
      */
-    public function withoutArgument($int) {
+    public function withoutArgument(int $index) : self {
       $check = function (Collection $argumentTokens) {
         return $argumentTokens->count() === 0;
       };
 
-      $this->argumentCheck[$int] = $check;
+      $this->argumentCheck[$index] = $check;
       return $this;
     }
 
@@ -136,7 +136,7 @@
      * @param Collection $section
      * @return Collection[]
      */
-    protected function getArguments(Collection $section) {
+    protected function getArguments(Collection $section) : array {
       /** @var Token $skipToToken */
       $skipToToken = null;
       $argumentIndex = 1;
@@ -195,7 +195,7 @@
     /**
      * @return $this
      */
-    public function outputFull() {
+    public function outputFull() : self {
       $this->outputArgument = null;
       $this->outputPreparedArgument = null;
       return $this;
@@ -207,7 +207,7 @@
      * @param bool $prepared
      * @return $this
      */
-    public function outputArgument($int, $prepared = true) {
+    public function outputArgument(int $int, $prepared = true) : self {
       $this->outputArgument = $int;
       $this->outputPreparedArgument = $prepared;
       return $this;

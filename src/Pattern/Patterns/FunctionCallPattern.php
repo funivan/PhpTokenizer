@@ -36,7 +36,7 @@
     /**
      * @return $this
      */
-    public function outputFull() {
+    public function outputFull() : self {
       $this->outputType = self::OUTPUT_FULL;
       return $this;
     }
@@ -45,7 +45,7 @@
     /**
      * @return $this
      */
-    public function outputArguments() {
+    public function outputArguments() : self {
       $this->outputType = self::OUTPUT_ARGUMENTS;
       return $this;
     }
@@ -55,7 +55,7 @@
      * @param Query $query
      * @return $this
      */
-    public function withName(Query $query) {
+    public function withName(Query $query) : self {
       $this->nameQuery = $query;
       return $this;
     }
@@ -65,7 +65,7 @@
      * @param ParametersPattern $pattern
      * @return $this
      */
-    public function withParameters(ParametersPattern $pattern) {
+    public function withParameters(ParametersPattern $pattern) : self {
       $this->parametersPattern = $pattern;
       return $this;
     }

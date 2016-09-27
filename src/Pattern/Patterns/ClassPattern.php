@@ -74,7 +74,7 @@
      * @param QueryStrategy|string $name
      * @return $this
      */
-    public function withName($name) {
+    public function withName($name) : self {
       if (is_string($name)) {
         $this->nameQuery = Strict::create()->valueIs($name);
       } elseif ($name instanceof QueryStrategy) {
@@ -90,7 +90,7 @@
     /**
      * @return $this
      */
-    public function withDocComment() {
+    public function withDocComment() : self {
       $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
         if ($comment->getType() !== T_DOC_COMMENT) {
           $q->setValid(false);
@@ -103,7 +103,7 @@
     /**
      * @return $this
      */
-    public function withPossibleDocComment() {
+    public function withPossibleDocComment() : self {
       $this->docCommentChecker = function () {
 
       };
@@ -114,7 +114,7 @@
     /**
      * @return $this
      */
-    public function withoutDocComment() {
+    public function withoutDocComment() : self {
       $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
         if ($comment->getType() === T_DOC_COMMENT) {
           $q->setValid(false);
@@ -127,7 +127,7 @@
     /**
      * @return $this
      */
-    public function outputBody() {
+    public function outputBody() : self {
       $this->outputType = self::OUTPUT_BODY;
       return $this;
     }
@@ -136,7 +136,7 @@
     /**
      * @return $this
      */
-    public function outputFull() {
+    public function outputFull() : self {
       $this->outputType = self::OUTPUT_FULL;
       return $this;
     }
@@ -158,7 +158,6 @@
      * @inheritdoc
      */
     public function __invoke(QuerySequence $querySequence) {
-
 
       $comment = $querySequence->process(Possible::create()->typeIs(T_DOC_COMMENT));
 
@@ -215,7 +214,7 @@
     /**
      * @return $this
      */
-    public function withAnyModifier() {
+    public function withAnyModifier() : self {
       $this->modifierChecker = [];
       $this->modifierChecker[] = function () {
       };
@@ -227,7 +226,7 @@
      * @param string $modifier
      * @return $this
      */
-    public function withModifier($modifier) {
+    public function withModifier(string $modifier) : self {
 
       $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
         if ($token->getValue() !== $modifier) {
@@ -244,7 +243,7 @@
      * @param string $modifier
      * @return $this
      */
-    public function withoutModifier($modifier) {
+    public function withoutModifier(string $modifier) : self {
 
       $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
         if ($token->getValue() === $modifier) {

@@ -194,7 +194,7 @@
      * @param string $modifier
      * @return $this
      */
-    public function withModifier($modifier) : self {
+    public function withModifier(string $modifier) : self {
       $this->modifierChecker[] = function ($allModifiers) use ($modifier) {
         return in_array($modifier, $allModifiers);
       };
@@ -207,7 +207,7 @@
      * @param string $modifier
      * @return $this
      */
-    public function withoutModifier($modifier) : self {
+    public function withoutModifier(string $modifier) : self {
 
       $this->modifierChecker[] = function ($allModifiers) use ($modifier) {
         return !in_array($modifier, $allModifiers);
@@ -218,7 +218,7 @@
 
 
     /**
-     * @param array $modifiers Array<String>
+     * @param string[] $modifiers
      * @return bool
      * @throws \Exception
      */
