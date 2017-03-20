@@ -1,16 +1,17 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Search;
-  use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 4/17/15
    */
-  class SearchTest extends MainTestCase {
+  class SearchTest extends \PHPUnit_Framework_TestCase {
 
     public function testSearchDefault() {
 

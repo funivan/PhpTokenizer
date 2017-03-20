@@ -1,62 +1,61 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Demo;
 
   use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
+  use Funivan\PhpTokenizer\Token;
 
-  /**
-   *
-   * @package Test\Funivan\PhpTokenizer\Demo
-   */
-  class ExtractVariableFromStringTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
-    /**
-     * @return array
-     */
-    public function getDemoCode() {
-      return array(
-        //array(
-        //  'echo "$user->getName 123 ";',
-        //  'echo "".$user->getName." 123 ";'
-        //),
-        //array(
-        //  'echo "$user 123 ";',
-        //  'echo "".$user." 123 ";'
-        //),
-        //array(
-        //  'echo "$user";',
-        //  'echo "".$user."";'
-        //),
-        array(
+  class ExtractVariableFromStringTest extends \PHPUnit_Framework_TestCase {
+
+
+    public function getDemoCode() : array {
+      return [
+        [
+          'echo "$user->getName 123 ";',
+          'echo "".$user->getName." 123 ";',
+        ],
+        [
+          'echo "$user 123 ";',
+          'echo "".$user." 123 ";',
+        ],
+        [
+          'echo "$user";',
+          'echo "".$user."";',
+        ],
+        [
           'echo "$user or $user 123 ";',
           'echo "".$user." or ".$user." 123 ";',
-        ),
-        //array(
-        //  'echo "custom $user 123 ";',
-        //  'echo "custom ".$user." 123 ";'
-        //),
+        ],
+        [
+          'echo "custom $user 123 ";',
+          'echo "custom ".$user." 123 ";',
+        ],
 
-        //array(
-        //  'echo "$data";',
-        //  'echo "".$data."";'
-        //),
-        //
-        //array(
-        //  'echo "$start  ";',
-        //  'echo "".$start."  ";'
-        //),
-        //array(
-        //  'echo "custom $end";',
-        //  'echo "custom ".$end."";',
-        //),
-        //array(
-        //  'echo "$data custom $end";',
-        //  'echo "".$data." custom ".$end."";',
-        //),
+        [
+          'echo "$data";',
+          'echo "".$data."";',
+        ],
 
-      );
+        [
+          'echo "$start  ";',
+          'echo "".$start."  ";',
+        ],
+        [
+          'echo "custom $end";',
+          'echo "custom ".$end."";',
+        ],
+        [
+          'echo "$data custom $end";',
+          'echo "".$data." custom ".$end."";',
+        ],
+
+      ];
     }
+
 
     /**
      * @dataProvider getDemoCode
@@ -64,7 +63,7 @@
      * @param string $expectCode
      */
     public function testExtract($code, $expectCode) {
-      $collection = \Funivan\PhpTokenizer\Collection::createFromString("<?php " . $code);
+      $collection = \Funivan\PhpTokenizer\Collection::createFromString('<?php ' . $code);
 
       $checker = new PatternMatcher($collection);
       $checker->apply(function (QuerySequence $q) {
@@ -73,6 +72,7 @@
         $q->possible(T_ENCAPSED_AND_WHITESPACE);
         $variable = $q->strict(T_VARIABLE);
         $arrow = $q->possible('->');
+        $property = new Token();
         if ($arrow->isValid()) {
           $property = $q->strict(T_STRING);
         }
@@ -80,7 +80,7 @@
 
         if ($q->isValid()) {
           $variable->prependToValue('".');
-          if (!empty($property) and $property->isValid()) {
+          if ($property->isValid()) {
             $property->appendToValue('."');
           } else {
             $variable->appendToValue('."');
@@ -88,7 +88,7 @@
 
           $q->getCollection()->refresh();
         }
-        
+
       });
 
       $collection[0]->remove();

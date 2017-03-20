@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\QuerySequence;
 
   use Funivan\PhpTokenizer\Collection;
@@ -8,13 +10,12 @@
   use Funivan\PhpTokenizer\Strategy\Search;
   use Funivan\PhpTokenizer\Strategy\Strict;
   use Funivan\PhpTokenizer\Token;
-  use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
    *
-   * @package Test\Funivan\PhpTokenizer\Tokenizer
+   *
    */
-  class QuerySequenceTest extends MainTestCase {
+  class QuerySequenceTest extends \PHPUnit_Framework_TestCase {
 
 
     /**
@@ -28,7 +29,7 @@
       ';
       $collection = Collection::createFromString($code);
 
-      $findItems = array();
+      $findItems = [];
       foreach ($collection as $index => $token) {
         $querySequence = new QuerySequence($collection, $index);
         $token = $querySequence->strict('echo');
@@ -39,6 +40,7 @@
 
       static::assertCount(3, $findItems);
     }
+
 
     /**
      *
@@ -64,20 +66,21 @@
      * @return array
      */
     public function getTestStrictInvalidConditionDataProvider() {
-      return array(
-        array(
-          new \stdClass()
-        ),
+      return [
+        [
+          new \stdClass(),
+        ],
 
-        array(
-          new Possible()
-        ),
-        array(
-          array()
-        ),
+        [
+          new Possible(),
+        ],
+        [
+          [],
+        ],
 
-      );
+      ];
     }
+
 
     /**
      * @expectedException \InvalidArgumentException
@@ -93,47 +96,48 @@
       $q->strict($condition);
     }
 
+
     /**
      * @return array
      */
     public function getTestStrictConditionDataProvider() {
-      return array(
-        array(
+      return [
+        [
           T_VARIABLE,
           true,
-        ),
+        ],
 
-        array(
+        [
           T_WHITESPACE,
           false,
-        ),
+        ],
 
-        array(
+        [
           null,
           false,
-        ),
+        ],
 
-        array(
+        [
           '$a',
           true,
-        ),
+        ],
 
-        array(
+        [
           '$b',
           false,
-        ),
+        ],
 
-        array(
+        [
           Strict::create()->valueLike('!^\$.*!'),
           true,
-        ),
+        ],
 
-        array(
+        [
           Strict::create()->valueLike('!^\$.*!')->typeIs(T_WHITESPACE),
           false,
-        ),
+        ],
 
-      );
+      ];
     }
 
 
@@ -158,42 +162,43 @@
      * @return array
      */
     public function getTestPossibleConditionDataProvider() {
-      return array(
-        array(
+      return [
+        [
           T_VARIABLE,
           true,
-        ),
-        array(
+        ],
+        [
           T_WHITESPACE,
           false,
-        ),
-        array(
+        ],
+        [
           null,
           false,
-        ),
+        ],
 
-        array(
+        [
           '$a',
           true,
-        ),
+        ],
 
-        array(
+        [
           '$b',
           false,
-        ),
+        ],
 
-        array(
+        [
           Possible::create()->valueLike('!^\$.*!'),
           true,
-        ),
+        ],
 
-        array(
+        [
           Possible::create()->valueLike('!^\$.*!')->typeIs(T_WHITESPACE),
           false,
-        ),
+        ],
 
-      );
+      ];
     }
+
 
     /**
      * @dataProvider getTestPossibleConditionDataProvider
@@ -219,23 +224,24 @@
      * @return array
      */
     public function getTestPossibleInvalidConditionDataProvider() {
-      return array(
-        array(
-          new \stdClass()
-        ),
+      return [
+        [
+          new \stdClass(),
+        ],
 
-        array(
-          new Strict()
-        ),
-        array(
-          array()
-        ),
-        array(
-          Search::create()
-        ),
+        [
+          new Strict(),
+        ],
+        [
+          [],
+        ],
+        [
+          Search::create(),
+        ],
 
-      );
+      ];
     }
+
 
     /**
      * @expectedException \InvalidArgumentException
@@ -291,6 +297,7 @@
       static::assertNull($token->getValue());
       static::assertFalse($q->isValid());
     }
+
 
     /**
      * @expectedException \InvalidArgumentException

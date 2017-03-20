@@ -1,17 +1,18 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Patterns;
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern;
   use Funivan\PhpTokenizer\Query\Query;
-  use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
    *
    */
-  class ParametersPatternTest extends MainTestCase {
+  class ParametersPatternTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testSimpleParameters() {

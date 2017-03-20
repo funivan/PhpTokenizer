@@ -1,15 +1,16 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Collection;
-  use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
    *
-   * @package Test\Funivan\PhpTokenizer\Tokenizer
+   *
    */
-  class HelperTest extends MainTestCase {
+  class HelperTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @void

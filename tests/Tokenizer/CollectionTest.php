@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Collection;
@@ -9,7 +11,7 @@
   /**
    * @author Ivan Shcherbak <dev@funivan.com> 11/25/13
    */
-  class CollectionTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
+  class CollectionTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testBuildFromString() {
@@ -91,7 +93,7 @@
 
       $exception = null;
       try {
-        $collection->addAfter(4, 'test');
+        $collection->addAfter(4, ['test']);
       } catch (\Exception $exception) {
       }
       static::assertInstanceOf('Exception', $exception);

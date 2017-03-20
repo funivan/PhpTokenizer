@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Patterns;
 
   use Funivan\PhpTokenizer\Collection;
@@ -12,9 +14,9 @@
 
   /**
    *
-   * @package Test\Funivan\PhpTokenizer\Tokenizer\Patterns
+   *
    */
-  class MethodPatternTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
+  class MethodPatternTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testMatchMethodWithoutName() {
@@ -28,7 +30,7 @@
       ';
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-      $tokensChecker->apply((new MethodPattern()));
+      $tokensChecker->apply(new MethodPattern());
       static::assertCount(1, $tokensChecker->getCollections());
 
 
@@ -61,7 +63,7 @@
       ';
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-      $tokensChecker->apply((new MethodPattern()));
+      $tokensChecker->apply(new MethodPattern());
       static::assertCount(1, $tokensChecker->getCollections());
 
     }
@@ -106,7 +108,7 @@
       ';
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-      $tokensChecker->apply((new MethodPattern()));
+      $tokensChecker->apply(new MethodPattern());
       static::assertCount(3, $tokensChecker->getCollections());
 
 
@@ -151,7 +153,7 @@
       ';
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-      $tokensChecker->apply((new MethodPattern()));
+      $tokensChecker->apply(new MethodPattern());
       static::assertCount(3, $tokensChecker->getCollections());
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
@@ -166,14 +168,14 @@
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new MethodPattern())->withDocComment(function (Token $token) {
-        return strpos($token->getValue(), 'hello') !== false;
+        return strpos($token->getValue() ?? '', 'hello') !== false;
       }));
 
       static::assertCount(2, $tokensChecker->getCollections());
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new MethodPattern())->withDocComment(function (Token $token) {
-        return strpos($token->getValue(), 'test') !== false;
+        return strpos($token->getValue() ?? '', 'test') !== false;
       }));
 
       static::assertCount(1, $tokensChecker->getCollections());
@@ -200,7 +202,7 @@
       ';
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-      $tokensChecker->apply((new MethodPattern()));
+      $tokensChecker->apply(new MethodPattern());
       static::assertCount(3, $tokensChecker->getCollections());
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
@@ -210,7 +212,7 @@
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
       $tokensChecker->apply((new MethodPattern())->withBody(function (Collection $collection) {
-        return $collection->find((new Query())->valueLike('!test22!'))->count() == 1;
+        return $collection->find((new Query())->valueLike('!test22!'))->count() === 1;
       }));
 
       static::assertCount(1, $tokensChecker->getCollections());
@@ -230,7 +232,7 @@
       ';
 
       $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-      $tokensChecker->apply((new MethodPattern()));
+      $tokensChecker->apply(new MethodPattern());
       $collections = $tokensChecker->getCollections();
       static::assertCount(1, $collections);
       static::assertContains('echo "test0";', (string) $collections[0]);

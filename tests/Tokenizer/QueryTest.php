@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Collection;
@@ -9,10 +11,7 @@
   use Funivan\PhpTokenizer\Token;
   use Funivan\PhpTokenizer\TokenFinder;
 
-  /**
-   * @author Ivan Shcherbak <dev@funivan.com> 11/25/13
-   */
-  class QueryTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
+  class QueryTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testType() {
@@ -34,9 +33,7 @@
 
     }
 
-    /**
-     * @return array
-     */
+
     public function testValue() {
 
       $collection = Collection::createFromString('<?php 
@@ -77,7 +74,7 @@
      */
     public function testWithInvalidArrayValue() {
       $query = new Query();
-      $query->valueNot(array(new \stdClass()));
+      $query->valueNot([new \stdClass()]);
 
     }
 
@@ -87,6 +84,7 @@
       $token = new Token();
       static::assertTrue($query->isValid($token));
     }
+
 
     public function testIndexIs() {
       $query = new Query();
@@ -99,6 +97,7 @@
       static::assertFalse($query->isValid($token));
     }
 
+
     public function testIndexIsMultipleDefinition() {
       $query = new Query();
       $query->indexIs([4, 5, 6, 1]);
@@ -109,6 +108,7 @@
       $token->setIndex(10);
       static::assertFalse($query->isValid($token));
     }
+
 
     public function testIndexNot() {
       $query = new Query();
@@ -134,6 +134,7 @@
       static::assertFalse($query->isValid($token));
     }
 
+
     public function testLt() {
       $query = new Query();
       $query->indexLt(10);
@@ -152,6 +153,7 @@
       static::assertFalse($query->isValid($token));
 
     }
+
 
     public function testGt() {
       $query = new Query();
@@ -192,6 +194,7 @@
       static::assertFalse($q->isValid($token));
     }
 
+
     /**
      * @throws \Funivan\PhpTokenizer\Exception\Exception
      */
@@ -205,6 +208,7 @@
       static::assertFalse($q->isValid($token));
     }
 
+
     /**
      * @expectedException InvalidArgumentException
      */
@@ -216,6 +220,7 @@
 
     }
 
+
     /**
      * @expectedException InvalidArgumentException
      */
@@ -225,6 +230,7 @@
       $q->typeIs([null]);
 
     }
+
 
     public function testCustomCallback() {
       $q = new Query();
@@ -242,6 +248,7 @@
       static::assertTrue($q->isValid($token));
 
     }
+
 
     /**
      * @expectedException Exception

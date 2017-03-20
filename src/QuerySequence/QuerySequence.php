@@ -1,6 +1,6 @@
 <?php
 
-  declare(strict_types = 1);
+  declare(strict_types=1);
 
   namespace Funivan\PhpTokenizer\QuerySequence;
 
@@ -27,7 +27,7 @@
     /**
      * @var int
      */
-    private $position = 0;
+    private $position;
 
     /**
      * @var Collection
@@ -261,8 +261,13 @@
 
       $query = $defaultStrategy;
 
-      if (is_string($value) or $value === null) {
+      if (is_string($value)) {
         $query->valueIs($value);
+        return $query;
+      }
+
+      if ($value === null) {
+        $query->valueIs([]);
         return $query;
       }
 

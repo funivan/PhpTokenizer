@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Patterns;
 
   use Funivan\PhpTokenizer\Collection;
@@ -7,12 +9,11 @@
   use Funivan\PhpTokenizer\Pattern\Patterns\FunctionCallPattern;
   use Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern;
   use Funivan\PhpTokenizer\Query\Query;
-  use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
    *
    */
-  class FunctionCallPatternTest extends MainTestCase {
+  class FunctionCallPatternTest extends \PHPUnit_Framework_TestCase {
 
     public function testDetectFunctionCall() {
 

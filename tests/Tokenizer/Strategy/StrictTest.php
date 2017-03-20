@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
@@ -8,7 +10,7 @@
   /**
    *
    */
-  class StrictTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
+  class StrictTest extends \PHPUnit_Framework_TestCase {
 
 
     /**
@@ -18,7 +20,7 @@
 
       $code = '<?php echo $a; foreach($users as $user){}';
 
-      $variables = array();
+      $variables = [];
       $collection = Collection::createFromString($code);
 
       $query = Strict::create()->typeIs(T_VARIABLE);

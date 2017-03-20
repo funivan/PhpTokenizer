@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Demo;
 
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
@@ -11,26 +13,27 @@
      */
     public function getDemoCode() {
 
-      return array(
-        array(
+      return [
+        [
           'echo "{$user->getName} 123 ";',
-          'echo "".$user->getName." 123 ";'
-        ),
-        array(
+          'echo "".$user->getName." 123 ";',
+        ],
+        [
           'echo "{$user->getName}";',
-          'echo "".$user->getName."";'
-        ),
-        array(
+          'echo "".$user->getName."";',
+        ],
+        [
           'echo "name: {$user->getName->upFirst()} <- ";',
           'echo "name: ".$user->getName->upFirst()." <- ";',
-        ),
-        array(
+        ],
+        [
           'echo "$user name: {$user->getName->upFirst()} <- ";',
           'echo "$user name: ".$user->getName->upFirst()." <- ";',
-        ),
+        ],
 
-      );
+      ];
     }
+
 
     /**
      * @dataProvider getDemoCode
@@ -38,21 +41,21 @@
      * @param string $expectCode
      */
     public function testExtract($code, $expectCode) {
-      $collection = \Funivan\PhpTokenizer\Collection::createFromString("<?php " . $code);
+      $collection = \Funivan\PhpTokenizer\Collection::createFromString('<?php ' . $code);
 
 
-      # remove empty string and dot    
+      # remove empty string and dot
       foreach ($collection as $index => $token) {
         $p = new QuerySequence($collection, $index);
         $quote = $p->possible('"');
-        if ($quote->isValid() == false) {
+        if ($quote->isValid() === false) {
           $p->strict(T_ENCAPSED_AND_WHITESPACE);
         }
 
 
-        $start = $p->strict("{");
+        $start = $p->strict('{');
         $p->strict(T_VARIABLE);
-        $end = $p->search("}");
+        $end = $p->search('}');
         $string = $p->possible(T_ENCAPSED_AND_WHITESPACE);
 
         if (!$string->isValid()) {

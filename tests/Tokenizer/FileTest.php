@@ -1,26 +1,20 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\Token;
+  use Test\Funivan\PhpTokenizer\FileCreationHelper;
 
   /**
    *
    */
-  class FileTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
-
-    /**
-     * @param $code
-     * @return \Funivan\PhpTokenizer\File
-     */
-    protected function getFileObjectWithCode($code) {
-      $tempFile = $this->createFileWithCode($code);
-      return new \Funivan\PhpTokenizer\File($tempFile);
-    }
+  class FileTest extends \PHPUnit_Framework_TestCase {
 
     public function testStaticOpen() {
-      $file = $this->getFileObjectWithCode('<?php 
+      $file = FileCreationHelper::createFileFromCode('<?php 
       echo 1; ');
 
       static::assertCount(7, $file->getCollection());
@@ -34,16 +28,18 @@
 
     }
 
+
     public function testOpen() {
-      $file = $this->getFileObjectWithCode('<?php
+      $file = FileCreationHelper::createFileFromCode('<?php
       echo 1; ');
 
       static::assertCount(7, $file->getCollection());
       unlink($file->getPath());
     }
 
+
     public function testFilePath() {
-      $file = $this->getFileObjectWithCode('<?php echo 1; ');
+      $file = FileCreationHelper::createFileFromCode('<?php echo 1; ');
       static::assertNotEmpty($file->getPath());
       unlink($file->getPath());
     }
@@ -51,7 +47,7 @@
 
     public function testSave() {
 
-      $file = $this->getFileObjectWithCode('<?php echo 1;');
+      $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
       $tokens = $file->find(Query::create()->valueIs('1'));
 
@@ -90,7 +86,7 @@
 
 
     public function testRefresh() {
-      $file = $this->getFileObjectWithCode('<?php echo 1;');
+      $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
       static::assertCount(5, $file->getCollection());
 
@@ -114,18 +110,20 @@
       unlink($file->getPath());
     }
 
+
     public function testHtml() {
       # create temp file
       $code = '<html><?php echo 1 ?></html>';
 
-      $file = $this->getFileObjectWithCode($code);
+      $file = FileCreationHelper::createFileFromCode($code);
 
       static::assertCount(8, $file->getCollection());
       unlink($file->getPath());
     }
 
+
     public function testSaveFileWithoutChange() {
-      $file = $this->getFileObjectWithCode('<?php echo 1;');
+      $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
       $startModificationTime = \filemtime($file->getPath());
 
@@ -138,7 +136,7 @@
 
 
     public function testIsChanged() {
-      $file = $this->getFileObjectWithCode('<?php echo 1;');
+      $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
       static::assertFalse($file->isChanged());
 

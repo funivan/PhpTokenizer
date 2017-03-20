@@ -1,6 +1,6 @@
 <?php
 
-  declare(strict_types = 1);
+  declare(strict_types=1);
 
   namespace Funivan\PhpTokenizer\Pattern\Patterns;
 
@@ -107,7 +107,7 @@
      * @param callable $check
      * @return $this
      */
-    public function withArgument(int $index, callable $check = null): self  {
+    public function withArgument(int $index, callable $check = null) : self {
       if ($check === null) {
         $check = function (Collection $argumentTokens) {
           return $argumentTokens->count() !== 0;

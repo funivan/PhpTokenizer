@@ -1,18 +1,17 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
   use Funivan\PhpTokenizer\Token;
 
-  /**
-   * @author Ivan Shcherbak <dev@funivan.com> 11/25/13
-   */
-  class TokenTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
+  class TokenTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetTypeName() {
 
-      $file = $this->initFileWithCode('<?php echo 1');
+      $file = \Test\Funivan\PhpTokenizer\FileCreationHelper::createFileFromCode('<?php echo 1');
       $lastToken = $file->getCollection()->getLast();
 
       static::assertEquals(token_name(T_LNUMBER), $lastToken->getTypeName());
@@ -23,7 +22,7 @@
 
     public function testSetType() {
 
-      $file = $this->initFileWithCode('<?php echo 1');
+      $file = \Test\Funivan\PhpTokenizer\FileCreationHelper::createFileFromCode('<?php echo 1');
       $lastToken = $file->getCollection()->getLast();
 
       $lastToken->setType(T_WHITESPACE);
@@ -35,7 +34,7 @@
 
     public function testGetData() {
 
-      $file = $this->initFileWithCode('<?php echo 1');
+      $file = \Test\Funivan\PhpTokenizer\FileCreationHelper::createFileFromCode('<?php echo 1');
       $firstToken = $file->getCollection()->getFirst();
 
       static::assertCount(4, $firstToken->getData());
@@ -45,7 +44,7 @@
 
 
     public function testToString() {
-      $file = $this->initFileWithCode('<?php echo 1');
+      $file = \Test\Funivan\PhpTokenizer\FileCreationHelper::createFileFromCode('<?php echo 1');
       $firstToken = $file->getCollection()->getFirst();
 
       static::assertEquals('<?php ', (string) $firstToken);

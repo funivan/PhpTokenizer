@@ -1,62 +1,68 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Demo;
 
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Strategy\Strict;
 
-  class RemoveEmptyConcatenatedStringsTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
+  class RemoveEmptyConcatenatedStringsTest extends \PHPUnit_Framework_TestCase {
 
 
-    public function getDemoCode() {
-      return array(
-        array(
+    /**
+     * @return array
+     */
+    public function getDemoCode() : array {
+      return [
+        [
           'echo $user."";',
-          'echo $user;'
-        ),
-        array(
+          'echo $user;',
+        ],
+        [
           'echo $user ."";',
-          'echo $user;'
-        ),
+          'echo $user;',
+        ],
 
-        array(
+        [
           'echo $user . "" ;',
-          'echo $user;'
-        ),
+          'echo $user;',
+        ],
 
-        array(
+        [
           'echo $user.""          ;',
-          'echo $user;'
-        ),
-        array(
+          'echo $user;',
+        ],
+        [
           'echo $user.""          ."user";',
-          'echo $user."user";'
-        ),
-        array(
+          'echo $user."user";',
+        ],
+        [
           'echo $user.\'\'.$user;',
-          'echo $user.$user;'
-        ),
-        array(
+          'echo $user.$user;',
+        ],
+        [
           'echo "".$user;',
-          'echo $user;'
-        ),
-        array(
+          'echo $user;',
+        ],
+        [
           'echo "".$user.""."".$name;',
-          'echo $user.$name;'
-        ),
+          'echo $user.$name;',
+        ],
 
-        array(
+        [
           'echo "111".$user.""."".$name;',
-          'echo "111".$user.$name;'
-        ),
+          'echo "111".$user.$name;',
+        ],
 
-        array(
+        [
           'echo ""."".$name;',
-          'echo $name;'
-        ),
-      );
+          'echo $name;',
+        ],
+      ];
     }
+
 
     /**
      * @dataProvider getDemoCode
@@ -64,19 +70,19 @@
      * @param string $expectCode
      */
     public function testRemoveEmptyString($code, $expectCode) {
-      $collection = \Funivan\PhpTokenizer\Collection::createFromString("<?php " . $code);
+      $collection = \Funivan\PhpTokenizer\Collection::createFromString('<?php ' . $code);
 
 
       foreach ($collection as $index => $token) {
         $p = new QuerySequence($collection, $index);
 
-        # remove empty string and dot    
-        $sequence = $p->sequence(array(
+        # remove empty string and dot
+        $sequence = $p->sequence([
           Strict::create()->valueIs(["''", '""']),
           Possible::create()->typeIs(T_WHITESPACE),
           Strict::create()->valueIs('.'),
           Possible::create()->typeIs(T_WHITESPACE),
-        ));
+        ]);
 
         if ($p->isValid()) {
           $sequence->remove();
@@ -85,14 +91,14 @@
         # remove empty dot and empty string
 
         $p->setValid(true)->setPosition($index);
-        
-        $sequence = $p->sequence(array(
+
+        $sequence = $p->sequence([
           Possible::create()->typeIs(T_WHITESPACE),
           Strict::create()->valueIs('.'),
           Possible::create()->typeIs(T_WHITESPACE),
           Strict::create()->valueIs(["''", '""']),
           Possible::create()->typeIs(T_WHITESPACE),
-        ));
+        ]);
 
         if ($p->isValid()) {
           $sequence->remove();

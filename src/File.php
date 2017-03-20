@@ -1,6 +1,6 @@
 <?php
 
-  declare(strict_types = 1);
+  declare(strict_types=1);
 
   namespace Funivan\PhpTokenizer;
 
@@ -76,7 +76,7 @@
     /**
      * Parse current tokens
      *
-     * @return $this
+     * @return self
      */
     public function refresh() : self {
       $newCode = $this->collection->assemble();

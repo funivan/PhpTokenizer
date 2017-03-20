@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
@@ -10,9 +12,9 @@
 
   /**
    *
-   * @package Test\Funivan\PhpTokenizer\Tokenizer\Query\Strategy
+   *
    */
-  class MoveTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
+  class MoveTest extends \PHPUnit_Framework_TestCase {
 
     /**
      *
@@ -37,12 +39,14 @@
 
     }
 
+
     /**
      * @expectedException InvalidArgumentException
      */
     public function testInvalidStepsValue() {
       Move::create(null);
     }
+
 
     public function testMoveToToken() {
       $code = '<?php echo $a;';

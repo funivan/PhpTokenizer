@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
   use Funivan\PhpTokenizer\Collection;
@@ -9,12 +11,8 @@
   use Funivan\PhpTokenizer\Pattern\Patterns\MethodPattern;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Strict;
-  use Test\Funivan\PhpTokenizer\MainTestCase;
 
-  /**
-   * @author Ivan Shcherbak <dev@funivan.com> 6/26/15
-   */
-  class PatternTest extends MainTestCase {
+  class PatternTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * Prototype for new version

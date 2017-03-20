@@ -1,5 +1,7 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
   use Funivan\PhpTokenizer\Collection;
@@ -7,9 +9,6 @@
   use Funivan\PhpTokenizer\Strategy\Possible;
   use Funivan\PhpTokenizer\Token;
 
-  /**
-   *
-   */
   class ComplexTest extends \PHPUnit_Framework_TestCase {
 
     public function testSkipWhitespaces() {
@@ -23,7 +22,7 @@
       $collection = Collection::createFromString($code);
 
 
-      $findItems = array();
+      $findItems = [];
       foreach ($collection as $index => $token) {
         $q = new QuerySequence($collection, $index);
         $q->setSkipWhitespaces(true);
@@ -44,27 +43,27 @@
      * @return array
      */
     public function getTestWithoutWhitespaceSkipDataProvider() {
-      return array(
-        array(
-          'sequence' => array('echo', '$a', ';'),
-          'items' => 0
-        ),
+      return [
+        [
+          'sequence' => ['echo', '$a', ';'],
+          'items' => 0,
+        ],
 
-        array(
-          'sequence' => array('$a', ';'),
-          'items' => 1
-        ),
+        [
+          'sequence' => ['$a', ';'],
+          'items' => 1,
+        ],
 
-        array(
-          'sequence' => array('echo', ' ', '$a', '  ', ';'),
-          'items' => 1
-        ),
+        [
+          'sequence' => ['echo', ' ', '$a', '  ', ';'],
+          'items' => 1,
+        ],
 
-        array(
-          'sequence' => array('echo', T_WHITESPACE, '$a', T_WHITESPACE, ';'),
-          'items' => 2
-        ),
-      );
+        [
+          'sequence' => ['echo', T_WHITESPACE, '$a', T_WHITESPACE, ';'],
+          'items' => 2,
+        ],
+      ];
     }
 
 
@@ -84,7 +83,7 @@
 
       $collection = Collection::createFromString($code);
 
-      $findItems = array();
+      $findItems = [];
       foreach ($collection as $index => $token) {
         $q = new QuerySequence($collection, $index);
         $list = $q->sequence($sequence);
@@ -156,7 +155,7 @@
         ',
           'containt' => '$a8 = (array) $a8;',
           'notContain' => 'is_array',
-        ]
+        ],
       ];
     }
 
@@ -189,7 +188,7 @@
           }
         }
 
-        $s = array(')', '{', $token->getValue(), '=', '(array)', $token->getValue(), ';', '}');
+        $s = [')', '{', $token->getValue(), '=', '(array)', $token->getValue(), ';', '}'];
 
         $last = $q->sequence($s);
 
@@ -213,7 +212,7 @@
 
       $result = (string) $collection;
       if ($contain == null and $notContain === null) {
-        throw new \Exception("Please provide notContain or contain condition");
+        throw new \Exception('Please provide notContain or contain condition');
       }
 
       if ($contain !== null) {

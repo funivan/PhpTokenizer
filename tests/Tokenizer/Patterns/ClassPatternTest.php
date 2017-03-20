@@ -1,18 +1,19 @@
 <?php
 
+  declare(strict_types=1);
+
   namespace Test\Funivan\PhpTokenizer\Tokenizer\Patterns;
 
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern;
   use Funivan\PhpTokenizer\Strategy\Strict;
-  use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
    *
-   * @package Test\Funivan\PhpTokenizer\Tokenizer\Patterns
+   *
    */
-  class ClassPatternTest extends MainTestCase {
+  class ClassPatternTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testClassDetect() {
@@ -248,7 +249,7 @@
     }
 
 
-    public function testWithModifier(){
+    public function testWithModifier() {
 
       $baseChecker = new PatternMatcher(Collection::createFromString('<?php
       /**
@@ -283,7 +284,6 @@
       $checker->apply((new ClassPattern())->outputFull()->withAnyModifier());
       static::assertCount(5, $checker->getCollections());
 
-
     }
 
 
@@ -316,8 +316,6 @@
       $checker = clone $baseChecker;
       $checker->apply((new ClassPattern())->outputFull()->withoutModifier('final')->withModifier('abstract'));
       static::assertCount(1, $checker->getCollections());
-
-
 
     }
 

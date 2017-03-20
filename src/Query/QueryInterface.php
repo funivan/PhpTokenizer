@@ -1,10 +1,9 @@
 <?php
 
-  declare(strict_types = 1);
+  declare(strict_types=1);
 
   namespace Funivan\PhpTokenizer\Query;
 
-  use Funivan\PhpTokenizer;
   use Funivan\PhpTokenizer\Token;
 
   /**
