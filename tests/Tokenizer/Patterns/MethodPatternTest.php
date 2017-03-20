@@ -9,13 +9,12 @@
   use Funivan\PhpTokenizer\Query\Query;
   use Funivan\PhpTokenizer\Strategy\Strict;
   use Funivan\PhpTokenizer\Token;
-  use Test\Funivan\PhpTokenizer\MainTestCase;
 
   /**
    *
    * @package Test\Funivan\PhpTokenizer\Tokenizer\Patterns
    */
-  class MethodPatternTest extends MainTestCase {
+  class MethodPatternTest extends \Test\Funivan\PhpTokenizer\MainTestCase {
 
 
     public function testMatchMethodWithoutName() {

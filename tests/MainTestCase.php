@@ -9,12 +9,6 @@
    */
   class MainTestCase extends \PHPUnit_Framework_TestCase {
 
-    /**
-     * @return string
-     */
-    protected function getDemoDataDir() {
-      return __DIR__ . '/files';
-    }
 
     /**
      * @param $string
@@ -26,6 +20,7 @@
 
       return $path;
     }
+
 
     /**
      * @param $string

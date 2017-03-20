@@ -88,7 +88,6 @@ Let's make a simple hack. Change all variables `$a` to `$b`.
 
 Now your `$newCode` is
 ```php
-<?php 
    $b = 1;
    echo $b;
 ```
@@ -98,7 +97,7 @@ It is useful when we want to find tokens in a specific line. For example, remove
 
 # Token index
 Token index is my custom feature. This index inited when we create tokens from the string.
-```
+```php
 
   use Funivan\PhpTokenizer\Collection;
 

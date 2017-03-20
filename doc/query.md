@@ -5,7 +5,7 @@ You can validate token by simple `if` `else` keywords. But it is more preferable
 
 Let's see the simple example:
 
-```
+```php
   use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Query\Query;
 
@@ -61,6 +61,9 @@ Our `Query` checks token by type, value, index and etc. There are several most u
 
 ```php
 
+  use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\Query\Query;
+
   $source = '<?php 
    $a = 1;
    $b = 2;
@@ -84,7 +87,7 @@ You will find all `$a` variables.
 - Find/modify the sequence of tokens. This is a complicated example and you can read more about it in the next sections.
  
 ```php
- use Funivan\PhpTokenizer\Collection;
+  use Funivan\PhpTokenizer\Collection;
   use Funivan\PhpTokenizer\Pattern\PatternMatcher;
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
   use Funivan\PhpTokenizer\Strategy\Strict;
@@ -119,13 +122,11 @@ You will find all `$a` variables.
   });
 
 
-  echo $collection;
+  echo $collection; 
+  
+  // New code will be:  
+  // $this->redirect("/");
 
-```
-New code will be:
-```php
-<?php  
-   $this->redirect("/");
 ```
 
 
