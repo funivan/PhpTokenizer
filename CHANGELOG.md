@@ -1,8 +1,9 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
+## 0.1.3 - [unreleased]
 
-## 1.0.0-alpha.1 - [unreleased] 
- - remove `fiv/collection` package
+## 0.1.2 - [2017-03-20] 
+  - remove `fiv/collection` package
   - deprecated `Collection::map` use `Collection::each` 
   - deprecated `Collection::getItems` use `Collection::getToken` 
 
