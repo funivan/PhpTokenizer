@@ -19,7 +19,7 @@
      * @throws Exception
      */
     public static function getTokensFromString($code) {
-      $tokens = token_get_all($code);
+      $tokens = token_get_all($code, TOKEN_PARSE);
 
       foreach ($tokens as $index => $tokenData) {
 
