@@ -21,7 +21,7 @@ before_script:
   - travis_retry composer install --no-interaction --prefer-source --dev
 
 script:
-  - phpunit --coverage-text --coverage-clover=./build/coverage.clover
+  - ./vendor/bin/phpunit --coverage-text --coverage-clover=./build/coverage.clover
 
 after_script:
   - if [ "$COVERAGE" == "on" ]; then wget https://scrutinizer-ci.com/ocular.phar  -O build/ocular.phar; fi
