@@ -192,4 +192,13 @@
       static::assertEquals($last, $newCollection->getLast());
 
     }
+
+
+    public function testTokenParse() {
+      $collection = Collection::createFromString("<?php class Foo { function forEach() {} }");
+
+      $forEach = $collection[9];
+      static::assertEquals('forEach', $forEach->getValue());
+      static::assertEquals(T_STRING, $forEach->getType());
+    }
   }
