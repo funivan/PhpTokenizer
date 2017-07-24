@@ -27,12 +27,12 @@
     /**
      * @var int
      */
-    protected $steps = null;
+    protected $steps;
 
     /**
      * @var int
      */
-    protected $direction = null;
+    protected $direction;
 
 
     /**
