@@ -201,4 +201,12 @@
       static::assertEquals('forEach', $forEach->getValue());
       static::assertEquals(T_STRING, $forEach->getType());
     }
+
+    public function testParseInvalidCode() {
+      $collection = Collection::createFromString("<?php class { function forEach() {} }");
+      $function = $collection[5];
+      static::assertEquals('function', $function->getValue());
+      static::assertEquals(T_FUNCTION, $function->getType());
+    }
+
   }
