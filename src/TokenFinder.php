@@ -4,10 +4,10 @@
 
   namespace Funivan\PhpTokenizer;
 
-  use Funivan\PhpTokenizer\Query\Query;
+  use Funivan\PhpTokenizer\Query\QueryInterface;
 
   /**
-   * Simple toke  finder
+   * Simple token finder
    * You can pass query to search tokens in collection
    *
    * For example find all echo values
@@ -37,20 +37,17 @@
 
 
     /**
-     * @param Query $query
+     * @param QueryInterface $query
      * @return Collection
      */
-    public function find(Query $query) : Collection {
+    public function find(QueryInterface $query): Collection {
       $result = new Collection();
-
       foreach ($this->collection as $token) {
         if ($query->isValid($token)) {
           $result[] = $token;
         }
       }
-
       return $result;
-
     }
 
   }

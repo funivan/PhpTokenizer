@@ -59,18 +59,6 @@
 
 
     /**
-     * @codeCoverageIgnore
-     * @deprecated
-     * @param string $name
-     * @return $this
-     */
-    public function nameIs($name) {
-      trigger_error('Deprecated. Use withName', E_USER_DEPRECATED);
-      return $this->withName($name);
-    }
-
-
-    /**
      * @param QueryStrategy|string $name
      * @return $this
      */
@@ -139,18 +127,6 @@
     public function outputFull() : self {
       $this->outputType = self::OUTPUT_FULL;
       return $this;
-    }
-
-
-    /**
-     * @codeCoverageIgnore
-     * @deprecated
-     * @param QueryStrategy $strategy
-     * @return $this
-     */
-    public function whereName(QueryStrategy $strategy) {
-      trigger_error('Deprecated. Use withName', E_USER_DEPRECATED);
-      return $this->withName($strategy);
     }
 
 

@@ -65,19 +65,6 @@
 
 
     /**
-     * @codeCoverageIgnore
-     * @deprecated
-     * @see createFromString
-     * @param string $string
-     * @return Collection
-     */
-    public static function initFromString($string) {
-      trigger_error(__CLASS__ . '::' . __METHOD__ . ' deprecated and will be removed in 0.1.3 Use ' . __CLASS__ . '::createFromString', E_USER_DEPRECATED);
-      return Collection::createFromString($string);
-    }
-
-
-    /**
      *
      * @param string $string
      * @return Collection
@@ -372,12 +359,6 @@
     }
 
 
-    public function getItems() {
-      trigger_error('Deprecated. See getTokens', E_USER_DEPRECATED);
-      return $this->items;
-    }
-
-
     /**
      * Iterate over objects in collection
      *
@@ -406,12 +387,6 @@
       $this->rewind();
 
       return $this;
-    }
-
-
-    public function map(callable $callback) {
-      trigger_error('Deprecated. See each', E_USER_DEPRECATED);
-      return $this->each($callback);
     }
 
 

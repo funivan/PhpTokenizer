@@ -156,11 +156,9 @@
      * @return $this
      */
     public function setValue($value) : self {
-
       if (!is_string($value) and !is_numeric($value)) {
         throw new InvalidArgumentException('You can set only string. Given: ' . gettype($value));
       }
-
       $this->value = (string) $value;
       return $this;
     }
@@ -260,6 +258,7 @@
       $this->index = $index;
       return $this;
     }
+
 
     public function equal(Token $token) : bool {
       return (

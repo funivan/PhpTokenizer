@@ -1,7 +1,14 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
 ## 0.2.0 - [unreleased]
-
+  ### Removed
+    - Remove method `Collection::initFromString` use `Collection::createFromString` 
+    - Remove method `Collection::getItems` use `Collection::getTokens`
+    - Remove method `Collection::map` use `Collection::each` 
+    - Remove class `Pattern` use PatternMatcher
+    - Remove method `ClassPattern::nameIs` use `ClassPattern::withName`
+    - Remove method `ClassPattern::whereName` use `ClassPattern::withName`
+    
 ## 0.1.3 - [2017-07-24]
   ### Fixed
     - Use flag TOKEN_PARSE to parse tokens correctly
