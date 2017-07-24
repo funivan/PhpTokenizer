@@ -1,6 +1,7 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
 ## 0.1.3 - [unreleased]
+ - #3 added Add new method `Token::equal`
  - fixed Use flag TOKEN_PARSE to parse tokens correctly
 
 ## 0.1.2 - [2017-03-20] 

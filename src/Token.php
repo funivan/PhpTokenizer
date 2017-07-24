@@ -261,4 +261,12 @@
       return $this;
     }
 
+    public function equal(Token $token) : bool {
+      return (
+        $this->value === $token->getValue()
+        and
+        $this->type === $token->getType()
+      );
+    }
+
   }

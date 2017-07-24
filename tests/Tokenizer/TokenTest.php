@@ -154,4 +154,29 @@
       $token->prependToValue(null);
     }
 
+
+    public function testEqualOnSameTokens() {
+      self::assertTrue(
+        (new Token([T_STRING, 'test', 11]))
+          ->equal(new Token([T_STRING, 'test', 12]))
+      );
+    }
+
+
+    public function testEqualOnDifferentTokensTypes() {
+      self::assertFalse(
+        (new Token([T_STRING, 'user_name', 45]))
+          ->equal(new Token([T_FUNCTION, 'function', 45]))
+      );
+    }
+
+
+    public function testEqualOnDifferentTokensValues() {
+      self::assertFalse(
+        (new Token([T_STRING, 'test_string', 10]))
+          ->equal(new Token([T_STRING, 'string_test', 10]))
+      );
+    }
+
+
   }
