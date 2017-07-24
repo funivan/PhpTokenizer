@@ -30,7 +30,7 @@
     /**
      * @var QueryStrategy
      */
-    private $nameQuery = null;
+    private $nameQuery;
 
     /**
      * @var callable
@@ -62,7 +62,7 @@
      * @param QueryStrategy|string $name
      * @return $this
      */
-    public function withName($name) : self {
+    public function withName($name): self {
       if (is_string($name)) {
         $this->nameQuery = Strict::create()->valueIs($name);
       } elseif ($name instanceof QueryStrategy) {
@@ -78,7 +78,7 @@
     /**
      * @return $this
      */
-    public function withDocComment() : self {
+    public function withDocComment(): self {
       $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
         if ($comment->getType() !== T_DOC_COMMENT) {
           $q->setValid(false);
@@ -91,7 +91,7 @@
     /**
      * @return $this
      */
-    public function withPossibleDocComment() : self {
+    public function withPossibleDocComment(): self {
       $this->docCommentChecker = function () {
 
       };
@@ -102,7 +102,7 @@
     /**
      * @return $this
      */
-    public function withoutDocComment() : self {
+    public function withoutDocComment(): self {
       $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
         if ($comment->getType() === T_DOC_COMMENT) {
           $q->setValid(false);
@@ -115,7 +115,7 @@
     /**
      * @return $this
      */
-    public function outputBody() : self {
+    public function outputBody(): self {
       $this->outputType = self::OUTPUT_BODY;
       return $this;
     }
@@ -124,7 +124,7 @@
     /**
      * @return $this
      */
-    public function outputFull() : self {
+    public function outputFull(): self {
       $this->outputType = self::OUTPUT_FULL;
       return $this;
     }
@@ -190,7 +190,7 @@
     /**
      * @return $this
      */
-    public function withAnyModifier() : self {
+    public function withAnyModifier(): self {
       $this->modifierChecker = [];
       $this->modifierChecker[] = function () {
       };
@@ -202,7 +202,7 @@
      * @param string $modifier
      * @return $this
      */
-    public function withModifier(string $modifier) : self {
+    public function withModifier(string $modifier): self {
 
       $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
         if ($token->getValue() !== $modifier) {
@@ -219,7 +219,7 @@
      * @param string $modifier
      * @return $this
      */
-    public function withoutModifier(string $modifier) : self {
+    public function withoutModifier(string $modifier): self {
 
       $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
         if ($token->getValue() === $modifier) {

@@ -8,7 +8,7 @@
 
   /**
    *
-   * @package Funivan\PhpTokenizer\Strategy
+   *
    */
   class StrategyResult {
 

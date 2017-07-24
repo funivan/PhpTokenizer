@@ -341,8 +341,9 @@
           $fullFunction->slice(1);
         }
         return $fullFunction;
+      }
 
-      } elseif ($this->outputType === self::OUTPUT_DOC_COMMENT) {
+      if ($this->outputType === self::OUTPUT_DOC_COMMENT) {
         return new Collection([$docComment]);
       }
 

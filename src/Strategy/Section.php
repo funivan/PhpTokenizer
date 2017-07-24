@@ -10,7 +10,7 @@
 
   /**
    *
-   * @package Funivan\PhpTokenizer\Query\Strategy
+   *
    */
   class Section extends QueryStrategy {
 

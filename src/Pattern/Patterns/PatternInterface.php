@@ -8,7 +8,7 @@
   use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
   /**
-   * @package Funivan\PhpTokenizer\PatternMatcher\Patterns
+   *
    */
   interface PatternInterface {
 

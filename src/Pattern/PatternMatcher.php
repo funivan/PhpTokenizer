@@ -20,7 +20,6 @@
 
 
     /**
-     *
      * @param Collection $collection
      */
     public function __construct(Collection $collection) {

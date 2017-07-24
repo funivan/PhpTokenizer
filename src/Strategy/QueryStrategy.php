@@ -8,7 +8,7 @@
 
   /**
    *
-   * @package Funivan\PhpTokenizer\Strategy
+   *
    */
   abstract class QueryStrategy extends Query implements StrategyInterface {
 
