@@ -45,7 +45,7 @@
     /**
      * @var int
      */
-    private $outputType = self::OUTPUT_BODY;
+    private $outputType = self::OUTPUT_FULL;
 
 
     /**

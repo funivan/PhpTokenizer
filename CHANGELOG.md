@@ -4,6 +4,8 @@ All Notable changes to `PhpTokenizer` will be documented in this file
 ## 0.1.3 - [unreleased]
   ### Fixed
     - Use flag TOKEN_PARSE to parse tokens correctly
+  ### Changed
+    - #9 By default output full class instead of body
   ### Added 
     - #3 add new method `Token::equal`
 

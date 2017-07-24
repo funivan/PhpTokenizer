@@ -150,10 +150,8 @@
 
     public function testOutputFullClass() {
       $tokensChecker = new PatternMatcher($this->getDemoCollection());
-      $tokensChecker->apply((new ClassPattern())->outputFull());
-
+      $tokensChecker->apply(new ClassPattern());
       static::assertCount(2, $tokensChecker->getCollections());
-
       static::assertStringStartsWith('class B {', (string) $tokensChecker->getCollections()[0]);
     }
 
