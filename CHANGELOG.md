@@ -1,6 +1,7 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
 ## 0.1.3 - [unreleased]
+ - fixed Use flag TOKEN_PARSE to parse tokens correctly
 
 ## 0.1.2 - [2017-03-20] 
   - remove `fiv/collection` package
