@@ -1,7 +1,8 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
+## 0.2.0 - [unreleased]
 
-## 0.1.3 - [unreleased]
+## 0.1.3 - [2017-07-24]
   ### Fixed
     - Use flag TOKEN_PARSE to parse tokens correctly
   ### Changed
