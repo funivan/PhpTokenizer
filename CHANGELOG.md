@@ -1,32 +1,44 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
+
 ## 0.1.3 - [unreleased]
- - #3 added Add new method `Token::equal`
- - fixed Use flag TOKEN_PARSE to parse tokens correctly
+  ### Fixed
+    - Use flag TOKEN_PARSE to parse tokens correctly
+  ### Added 
+    - #3 add new method `Token::equal`
 
-## 0.1.2 - [2017-03-20] 
-  - remove `fiv/collection` package
-  - deprecated `Collection::map` use `Collection::each` 
-  - deprecated `Collection::getItems` use `Collection::getToken` 
+## 0.1.2 - [2017-03-20]
+  ### Removed 
+    - `fiv/collection` package
+  ### Deprecated 
+    - `Collection::map` use `Collection::each` 
+    - `Collection::getItems` use `Collection::getToken` 
 
- 
 ## 0.1.2-alpha5 - 2016-07-18
- - deprecated `Funivan\PhpTokenizer\Pattern\Pattern` use `Funivan\PhpTokenizer\Pattern\PatternMatcher`
- - deprecated `ClassPattern::nameIs`
- - deprecated `ClassPattern::whereName`
- - fixed  `Funivan\PhpTokenizer\Helper::getTokensFromString`. Better detection of token line
- - fixed `Funivan\PhpTokenizer\extractByTokens` We detect token range by token global index. See documentation
- - changed `Funivan\PhpTokenizer\Strategy\Section` Strict detection of section. Next token after current must be section start token 
- - added `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern` `withDocComment`, `withoutDocComment`, `withPossibleDocComment`
- - added `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern` `withModifier`, `withoutModifier`, `withAnyModifier`
- - added `Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern`
+ ### Deprecated
+   - `Funivan\PhpTokenizer\Pattern\Pattern` use `Funivan\PhpTokenizer\Pattern\PatternMatcher`
+   - `ClassPattern::nameIs`
+   - `ClassPattern::whereName`
+ ### Fixed
+   - `Funivan\PhpTokenizer\Helper::getTokensFromString`. Better detection of token line
+   - `Funivan\PhpTokenizer\extractByTokens` We detect token range by token global index. See documentation
+ ### Changed
+  - `Funivan\PhpTokenizer\Strategy\Section` Strict detection of section. Next token after current must be section start token 
+ ### Added 
+   - `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern` `withDocComment`, `withoutDocComment`, `withPossibleDocComment`
+   - `Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern` `withModifier`, `withoutModifier`, `withAnyModifier`
+   - `Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern`
 
 ## 0.1.1 - 2015-07-28
-  - fixed `\Funivan\PhpTokenizer\Strategy\Search::process`
-  - deprecated `\Funivan\PhpTokenizer\Collection::initFromString`
-  - added `\Funivan\PhpTokenizer\Strategy\QueryStrategy` 
-  - removed `\Funivan\PhpTokenizer\Strategy\BaseStrategy` 
-  - added `\Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern::whereName` 
-  - added `Funivan\PhpTokenizer\Helper::dump`
-  - removed `\Funivan\PhpTokenizer\Collection::getDumpString` 
-  - added `\Funivan\PhpTokenizer\Helper::dump`
+  ### Removed
+    - `\Funivan\PhpTokenizer\Strategy\BaseStrategy` 
+    - `\Funivan\PhpTokenizer\Collection::getDumpString`
+  ### Deprecated 
+    - `\Funivan\PhpTokenizer\Collection::initFromString`
+  ### Fixed
+    - `\Funivan\PhpTokenizer\Strategy\Search::process`
+  ### Added 
+    - `\Funivan\PhpTokenizer\Strategy\QueryStrategy` 
+    - `\Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern::whereName` 
+    - `Funivan\PhpTokenizer\Helper::dump`
+    - `\Funivan\PhpTokenizer\Helper::dump`
