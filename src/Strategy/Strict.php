@@ -7,7 +7,7 @@
 
   /**
    *
-   * @package Funivan\PhpTokenizer\Query\Strategy
+   *
    */
   class Strict extends QueryStrategy {
 

@@ -342,9 +342,11 @@
         }
         return $fullFunction;
       }
+
       if ($this->outputType === self::OUTPUT_DOC_COMMENT) {
         return new Collection([$docComment]);
       }
+
       # body by default
       $body->slice(0, -1);
       return $body;

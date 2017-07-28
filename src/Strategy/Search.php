@@ -8,7 +8,7 @@
 
   /**
    *
-   * @package Funivan\PhpTokenizer\Query\Strategy
+   *
    */
   class Search extends QueryStrategy {
 

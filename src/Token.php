@@ -12,7 +12,7 @@
    * Value is 2 type variable. It can be string or null
    * When you set value is automatically cast to string
    *
-   * @package Funivan\PhpTokenizer
+   *
    */
   class Token {
 

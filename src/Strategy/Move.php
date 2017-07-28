@@ -19,7 +19,7 @@
    * $result = (new Move(-10))->process($collection, 1);
    * ```
    *
-   * @package Funivan\PhpTokenizer\BlockExtractor
+   *
    */
   class Move implements StrategyInterface {
 
@@ -27,12 +27,12 @@
     /**
      * @var int
      */
-    protected $steps = null;
+    protected $steps;
 
     /**
      * @var int
      */
-    protected $direction = null;
+    protected $direction;
 
 
     /**
