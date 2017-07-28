@@ -30,7 +30,7 @@
     /**
      * @var QueryStrategy
      */
-    private $nameQuery = null;
+    private $nameQuery;
 
     /**
      * @var callable

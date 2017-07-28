@@ -296,7 +296,7 @@
         throw new \InvalidArgumentException('Expect Token object');
       }
 
-      if (is_null($offset)) {
+      if (null === $offset) {
         $this->append($item);
         return $this;
       }
@@ -381,7 +381,7 @@
       }
 
       foreach ($this->getTokens() as $index => $item) {
-        call_user_func_array($callback, [$item, $index, $this]);
+        call_user_func($callback, $item, $index, $this);
       }
 
       $this->rewind();

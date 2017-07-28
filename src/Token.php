@@ -217,7 +217,7 @@
         throw new InvalidArgumentException('You can append only string to value');
       }
 
-      $this->value = $this->value . $part;
+      $this->value .= $part;
 
       return $this;
     }
