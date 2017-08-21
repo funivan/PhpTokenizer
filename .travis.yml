@@ -10,7 +10,7 @@ env:
 
 matrix:
   fast_finish: true
-  exclude:
+  include:
     - php: 7.0
       env: COVERAGE=on
     - php: 7.1
