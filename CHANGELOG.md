@@ -1,6 +1,8 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
-## 0.2.0 - [unreleased]
+## Unreleased
+
+## 0.2.0 - [2018-06-11]
   ### Removed
     - Remove method `Collection::initFromString` use `Collection::createFromString` 
     - Remove method `Collection::getItems` use `Collection::getTokens`
