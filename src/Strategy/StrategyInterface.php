@@ -1,16 +1,17 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Funivan\PhpTokenizer\Strategy;
+namespace Funivan\PhpTokenizer\Strategy;
 
-  use Funivan\PhpTokenizer\Collection;
+use Funivan\PhpTokenizer\Collection;
 
-  /**
-   *
-   *
-   */
-  interface StrategyInterface {
+/**
+ *
+ *
+ */
+interface StrategyInterface
+{
 
     /**
      * Find next token for check
@@ -22,4 +23,4 @@
      */
     public function process(Collection $collection, $currentIndex);
 
-  }
+}

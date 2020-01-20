@@ -1,6 +1,8 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
-## Unreleased
+## 0.3.0 - [Unreleased]
+  ### Changed
+    - Update to php 7.2
 
 ## 0.2.0 - [2018-06-11]
   ### Removed

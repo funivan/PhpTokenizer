@@ -1,12 +1,10 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Funivan\PhpTokenizer\Exception;
+namespace Funivan\PhpTokenizer\Exception;
 
-  /**
-   * @author Ivan Shcherbak <dev@funivan.com>
-   */
-  class Exception extends \Exception {
+class Exception extends \Exception
+{
 
-  }
+}

@@ -1,31 +1,38 @@
 {
-  "name": "funivan/php-tokenizer",
-  "description": "Wrapper around token_get_all. Easy to extract and modify tokens",
-  "keywords": ["tokenizer"],
-  "homepage": "https://github.com/funivan/PhpTokenizer",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Ivan Scherbak",
-      "email": "dev@funivan.com",
-      "homepage": "http://funivan.com/",
-      "role": "Developer"
+    "name": "funivan/php-tokenizer",
+    "description": "Wrapper around token_get_all. Easy to extract and modify php code.",
+    "keywords": [
+        "tokenizer"
+    ],
+    "homepage": "https://github.com/funivan/PhpTokenizer",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ivan Shcherbak",
+            "email": "alotofall@gmail.com",
+            "homepage": "https://github.com/funivan/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Funivan\\PhpTokenizer\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\Funivan\\PhpTokenizer\\": "tests"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.2"
+        }
     }
-  ],
-  "require": {
-    "php": ">=7.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^5.5"
-  },
-  "autoload": {
-    "psr-4": {
-      "Funivan\\PhpTokenizer\\": "src"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Test\\Funivan\\PhpTokenizer\\": "tests"
-    }
-  }
 }

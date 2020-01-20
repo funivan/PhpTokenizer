@@ -1,17 +1,18 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Funivan\PhpTokenizer\Pattern;
+namespace Funivan\PhpTokenizer\Pattern;
 
-  use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Exception\Exception;
-  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
+use Funivan\PhpTokenizer\Collection;
+use Funivan\PhpTokenizer\Exception\Exception;
+use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
-  /**
-   *
-   */
-  class PatternMatcher implements PatternMatcherInterface {
+/**
+ *
+ */
+class PatternMatcher implements PatternMatcherInterface
+{
 
     /**
      * @var Collection[]
@@ -22,41 +23,44 @@
     /**
      * @param Collection $collection
      */
-    public function __construct(Collection $collection) {
-      $this->collections[] = $collection;
+    public function __construct(Collection $collection)
+    {
+        $this->collections[] = $collection;
     }
 
 
     /**
      * @inheritdoc
      */
-    public function apply(callable $pattern) {
+    public function apply(callable $pattern)
+    {
 
-      # Clear current collections.
-      # We will add new one and iterate over current
+        # Clear current collections.
+        # We will add new one and iterate over current
 
-      $collections = $this->collections;
-      $this->collections = [];
+        $collections = $this->collections;
+        $this->collections = [];
 
-      foreach ($collections as $collection) {
+        foreach ($collections as $collection) {
 
-        $collectionsResult = $this->iterateOverCollections($pattern, $collection);
+            $collectionsResult = $this->iterateOverCollections($pattern, $collection);
 
-        foreach ($collectionsResult as $resultCollection) {
-          $this->collections[] = $resultCollection;
+            foreach ($collectionsResult as $resultCollection) {
+                $this->collections[] = $resultCollection;
+            }
+
         }
 
-      }
-
-      return $this;
+        return $this;
     }
 
 
     /**
      * @inheritdoc
      */
-    public function getCollections() {
-      return $this->collections;
+    public function getCollections()
+    {
+        return $this->collections;
     }
 
 
@@ -66,26 +70,27 @@
      * @return Collection[]
      * @throws Exception
      */
-    protected function iterateOverCollections(callable $pattern, Collection $collection) {
-      $result = [];
+    protected function iterateOverCollections(callable $pattern, Collection $collection)
+    {
+        $result = [];
 
-      $collection->rewind();
-      foreach ($collection as $index => $token) {
-        $querySequence = new QuerySequence($collection, $index);
-        $patternResult = $pattern($querySequence);
-        if ($patternResult === null) {
-          continue;
+        $collection->rewind();
+        foreach ($collection as $index => $token) {
+            $querySequence = new QuerySequence($collection, $index);
+            $patternResult = $pattern($querySequence);
+            if ($patternResult === null) {
+                continue;
+            }
+
+            if (!($patternResult instanceof Collection)) {
+                throw new Exception('Invalid result from pattern callback. Expect Collection. Given:' . gettype($patternResult));
+            }
+
+            $result[] = $patternResult;
         }
 
-        if (!($patternResult instanceof Collection)) {
-          throw new Exception('Invalid result from pattern callback. Expect Collection. Given:' . gettype($patternResult));
-        }
-
-        $result[] = $patternResult;
-      }
-
-      return $result;
+        return $result;
     }
 
 
-  }
+}

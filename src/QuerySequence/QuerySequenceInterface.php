@@ -1,17 +1,15 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Funivan\PhpTokenizer\QuerySequence;
+namespace Funivan\PhpTokenizer\QuerySequence;
 
-  use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Strategy\StrategyInterface;
-  use Funivan\PhpTokenizer\Token;
+use Funivan\PhpTokenizer\Collection;
+use Funivan\PhpTokenizer\Strategy\StrategyInterface;
+use Funivan\PhpTokenizer\Token;
 
-  /**
-   * @author Ivan Shcherbak <dev@funivan.com> 4/19/15
-   */
-  interface QuerySequenceInterface {
+interface QuerySequenceInterface
+{
 
     /**
      * @param Collection $collection
@@ -32,4 +30,4 @@
      */
     public function getCollection();
 
-  }
+}

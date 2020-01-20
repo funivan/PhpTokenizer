@@ -1,148 +1,159 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Test\Funivan\PhpTokenizer\Tokenizer;
+namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
-  use Funivan\PhpTokenizer\Query\Query;
-  use Funivan\PhpTokenizer\Token;
-  use Test\Funivan\PhpTokenizer\FileCreationHelper;
+use Funivan\PhpTokenizer\File;
+use Funivan\PhpTokenizer\Query\Query;
+use Funivan\PhpTokenizer\Token;
+use PHPUnit\Framework\TestCase;
+use Test\Funivan\PhpTokenizer\FileCreationHelper;
+use function filemtime;
 
-  /**
-   *
-   */
-  class FileTest extends \PHPUnit_Framework_TestCase {
+/**
+ *
+ */
+class FileTest extends TestCase
+{
 
-    public function testStaticOpen() {
-      $file = FileCreationHelper::createFileFromCode('<?php 
+    public function testStaticOpen()
+    {
+        $file = FileCreationHelper::createFileFromCode('<?php 
       echo 1; ');
 
-      static::assertCount(7, $file->getCollection());
+        static::assertCount(7, $file->getCollection());
 
-      static::assertInternalType('string', $file->getPath());
-      $otherFile = \Funivan\PhpTokenizer\File::open($file->getPath());
-      static::assertCount(7, $otherFile->getCollection());
+        $otherFile = File::open($file->getPath());
+        static::assertCount(7, $otherFile->getCollection());
 
 
-      unlink($file->getPath());
+        unlink($file->getPath());
 
     }
 
 
-    public function testOpen() {
-      $file = FileCreationHelper::createFileFromCode('<?php
+    public function testOpen()
+    {
+        $file = FileCreationHelper::createFileFromCode('<?php
       echo 1; ');
 
-      static::assertCount(7, $file->getCollection());
-      unlink($file->getPath());
+        static::assertCount(7, $file->getCollection());
+        unlink($file->getPath());
     }
 
 
-    public function testFilePath() {
-      $file = FileCreationHelper::createFileFromCode('<?php echo 1; ');
-      static::assertNotEmpty($file->getPath());
-      unlink($file->getPath());
+    public function testFilePath()
+    {
+        $file = FileCreationHelper::createFileFromCode('<?php echo 1; ');
+        static::assertNotEmpty($file->getPath());
+        unlink($file->getPath());
     }
 
 
-    public function testSave() {
+    public function testSave()
+    {
 
-      $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
+        $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
-      $tokens = $file->find(Query::create()->valueIs('1'));
+        $tokens = $file->find(Query::create()->valueIs('1'));
 
-      static::assertCount(1, $tokens);
-      $tokens->each(function (Token $token) {
-        $token->setValue(2);
-      });
+        static::assertCount(1, $tokens);
+        $tokens->each(function (Token $token) {
+            $token->setValue(2);
+        });
 
-      $file->save();
+        $file->save();
 
-      $itemsNum = 0;
+        $itemsNum = 0;
 
-      $query = new Query();
-      $query->valueIs(1);
-      foreach ($file->getCollection() as $token) {
-        if ($query->isValid($token)) {
-          $itemsNum++;
+        $query = new Query();
+        $query->valueIs(1);
+        foreach ($file->getCollection() as $token) {
+            if ($query->isValid($token)) {
+                $itemsNum++;
+            }
         }
-      }
 
-      static::assertEquals(0, $itemsNum);
+        static::assertEquals(0, $itemsNum);
 
-      $itemsNum = 0;
-      $query = new Query();
-      $query->valueIs(2);
-      foreach ($file->getCollection() as $token) {
-        if ($query->isValid($token)) {
-          $itemsNum++;
+        $itemsNum = 0;
+        $query = new Query();
+        $query->valueIs(2);
+        foreach ($file->getCollection() as $token) {
+            if ($query->isValid($token)) {
+                $itemsNum++;
+            }
         }
-      }
 
-      static::assertEquals(1, $itemsNum);
+        static::assertEquals(1, $itemsNum);
 
-      unlink($file->getPath());
+        unlink($file->getPath());
     }
 
 
-    public function testRefresh() {
-      $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
+    public function testRefresh()
+    {
+        $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
-      static::assertCount(5, $file->getCollection());
+        static::assertCount(5, $file->getCollection());
 
-      $query = new Query();
-      $query->valueIs('echo');
-      foreach ($file->getCollection() as $token) {
-        if ($query->isValid($token)) {
-          $token->remove();
+        $query = new Query();
+        $query->valueIs('echo');
+        foreach ($file->getCollection() as $token) {
+            if ($query->isValid($token)) {
+                $token->remove();
+            }
         }
-      }
 
 
-      static::assertCount(5, $file->getCollection());
-      $file->refresh();
+        static::assertCount(5, $file->getCollection());
+        $file->refresh();
 
-      static::assertCount(4, $file->getCollection());
+        static::assertCount(4, $file->getCollection());
 
-      $code = $file->getCollection()->assemble();
-      static::assertEquals('<?php  1;', $code);
+        $code = $file->getCollection()->assemble();
+        static::assertEquals('<?php  1;', $code);
 
-      unlink($file->getPath());
+        unlink($file->getPath());
     }
 
 
-    public function testHtml() {
-      # create temp file
-      $code = '<html><?php echo 1 ?></html>';
+    public function testHtml()
+    {
+        # create temp file
+        $code = '<html><?php echo 1 ?></html>';
 
-      $file = FileCreationHelper::createFileFromCode($code);
+        $file = FileCreationHelper::createFileFromCode($code);
 
-      static::assertCount(8, $file->getCollection());
-      unlink($file->getPath());
+        static::assertCount(8, $file->getCollection());
+        unlink($file->getPath());
     }
 
 
-    public function testSaveFileWithoutChange() {
-      $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
+    public function testSaveFileWithoutChange()
+    {
+        $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
-      $startModificationTime = \filemtime($file->getPath());
+        $startModificationTime = filemtime($file->getPath());
 
-      $file->save();
+        $file->save();
 
-      $endModificationTime = \filemtime($file->getPath());
-      static::assertEquals($endModificationTime, $startModificationTime);
-      unlink($file->getPath());
+        $endModificationTime = filemtime($file->getPath());
+        static::assertEquals($endModificationTime, $startModificationTime);
+        unlink($file->getPath());
     }
 
 
-    public function testIsChanged() {
-      $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
+    public function testIsChanged()
+    {
+        $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
-      static::assertFalse($file->isChanged());
+        static::assertFalse($file->isChanged());
 
-      $file->getCollection()->getFirst()->setValue('<?php');
-      static::assertTrue($file->isChanged());
-      unlink($file->getPath());
+        $file->getCollection()->getFirst()->setValue('<?php');
+        static::assertTrue($file->isChanged());
+        unlink($file->getPath());
     }
 
-  }
+}

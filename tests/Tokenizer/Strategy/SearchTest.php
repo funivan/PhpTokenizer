@@ -1,21 +1,22 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
+namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
-  use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
-  use Funivan\PhpTokenizer\Strategy\Search;
+use Funivan\PhpTokenizer\Collection;
+use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
+use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
+use Funivan\PhpTokenizer\Strategy\Search;
+use PHPUnit\Framework\TestCase;
 
-  /**
-   * @author Ivan Shcherbak <dev@funivan.com> 4/17/15
-   */
-  class SearchTest extends \PHPUnit_Framework_TestCase {
+class SearchTest extends TestCase
+{
 
-    public function testSearchDefault() {
+    public function testSearchDefault()
+    {
 
-      $code = '<?php 
+        $code = '<?php 
       
       echo $a;
       echo 1 . $a;
@@ -23,22 +24,22 @@
       
       ';
 
-      $collection = Collection::createFromString($code);
-      $linesWithEcho = [];
+        $collection = Collection::createFromString($code);
+        $linesWithEcho = [];
 
-      foreach ($collection as $index => $token) {
-        $q = new QuerySequence($collection, $index);
-        $start = $q->strict('echo');
-        $end = $q->search(';');
+        foreach ($collection as $index => $token) {
+            $q = new QuerySequence($collection, $index);
+            $start = $q->strict('echo');
+            $end = $q->search(';');
 
-        if ($q->isValid()) {
-          $linesWithEcho[] = $collection->extractByTokens($start, $end);
+            if ($q->isValid()) {
+                $linesWithEcho[] = $collection->extractByTokens($start, $end);
+            }
         }
-      }
 
-      static::assertCount(2, $linesWithEcho);
-      static::assertEquals('echo $a;', $linesWithEcho[0]);
-      static::assertEquals('echo 1 . $a;', $linesWithEcho[1]);
+        static::assertCount(2, $linesWithEcho);
+        static::assertEquals('echo $a;', $linesWithEcho[0]);
+        static::assertEquals('echo 1 . $a;', $linesWithEcho[1]);
 
     }
 
@@ -46,9 +47,10 @@
     /**
      *
      */
-    public function testBackwardSearch() {
+    public function testBackwardSearch()
+    {
 
-      $code = '<?php 
+        $code = '<?php 
       
       
       echo $name;
@@ -57,39 +59,39 @@
       
       ';
 
-      $collection = Collection::createFromString($code);
+        $collection = Collection::createFromString($code);
 
-      $linesWithEcho = [];
+        $linesWithEcho = [];
 
-      foreach ($collection as $index => $token) {
-        $q = new QuerySequence($collection, $index);
+        foreach ($collection as $index => $token) {
+            $q = new QuerySequence($collection, $index);
 
-        $q->strict('echo');
-        $q->search(';');
-        $variable = $q->search(T_VARIABLE, Search::BACKWARD);
-        if ($q->isValid()) {
-          $linesWithEcho[] = $variable;
+            $q->strict('echo');
+            $q->search(';');
+            $variable = $q->search(T_VARIABLE, Search::BACKWARD);
+            if ($q->isValid()) {
+                $linesWithEcho[] = $variable;
+            }
         }
-      }
 
-      static::assertCount(2, $linesWithEcho);
-      static::assertEquals('$name', (string) $linesWithEcho[0]);
-      static::assertEquals('$userName', (string) $linesWithEcho[1]);
+        static::assertCount(2, $linesWithEcho);
+        static::assertEquals('$name', (string)$linesWithEcho[0]);
+        static::assertEquals('$userName', (string)$linesWithEcho[1]);
 
     }
 
 
-    /**
-     * @expectedException \Funivan\PhpTokenizer\Exception\InvalidArgumentException
-     */
-    public function testInvalidDirection() {
-      Search::create()->setDirection(null);
+    public function testInvalidDirection()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        Search::create()->setDirection(null);
     }
 
 
-    public function testSearchBackward() {
+    public function testSearchBackward()
+    {
 
-      $code = '<?php 
+        $code = '<?php 
       
       echo $name;
       echo $userName;
@@ -98,21 +100,21 @@
       
       ';
 
-      $collection = Collection::createFromString($code);
+        $collection = Collection::createFromString($code);
 
-      $linesWithEcho = [];
+        $linesWithEcho = [];
 
-      foreach ($collection as $index => $item) {
-        $q = new QuerySequence($collection, $index);
-        $q->strict('echo');
-        $q->search(';');
-        $variable = $q->search('(string)', Search::BACKWARD);
-        if ($q->isValid()) {
-          $linesWithEcho[] = $variable;
+        foreach ($collection as $index => $item) {
+            $q = new QuerySequence($collection, $index);
+            $q->strict('echo');
+            $q->search(';');
+            $variable = $q->search('(string)', Search::BACKWARD);
+            if ($q->isValid()) {
+                $linesWithEcho[] = $variable;
+            }
         }
-      }
 
-      static::assertCount(1, $linesWithEcho);
+        static::assertCount(1, $linesWithEcho);
     }
 
-  }
+}

@@ -1,16 +1,18 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Funivan\PhpTokenizer\Strategy;
+namespace Funivan\PhpTokenizer\Strategy;
 
-  use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
+use Funivan\PhpTokenizer\Collection;
+use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
 
-  /**
-   *
-   *
-   */
-  class Search extends QueryStrategy {
+/**
+ *
+ *
+ */
+class Search extends QueryStrategy
+{
 
     /**
      * Move forward flag
@@ -35,33 +37,34 @@
     /**
      * @inheritdoc
      */
-    public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+    public function process(Collection $collection, $currentIndex)
+    {
 
-      $result = new StrategyResult();
+        $result = new StrategyResult();
 
-      # getProcessor while we can check toke
+        # getProcessor while we can check toke
 
-      $index = $currentIndex;
-      $searchForward = ($this->direction === static::FORWARD);
+        $index = $currentIndex;
+        $searchForward = ($this->direction === static::FORWARD);
 
-      do {
+        do {
 
-        $token = $collection->offsetGet($index);
-        if ($token === null) {
-          return $result;
-        }
-        $index = $searchForward ? ++$index : --$index;
+            $token = $collection->offsetGet($index);
+            if ($token === null) {
+                return $result;
+            }
+            $index = $searchForward ? ++$index : --$index;
 
-        if ($this->isValid($token)) {
-          $result->setNexTokenIndex($index);
-          $result->setValid(true);
-          $result->setToken($token);
-          break;
-        }
+            if ($this->isValid($token)) {
+                $result->setNexTokenIndex($index);
+                $result->setValid(true);
+                $result->setToken($token);
+                break;
+            }
 
-      } while (!empty($token));
+        } while (!empty($token));
 
-      return $result;
+        return $result;
     }
 
 
@@ -69,14 +72,15 @@
      * @param int $direction
      * @return $this
      */
-    public function setDirection($direction) {
+    public function setDirection($direction)
+    {
 
-      if ($direction !== static::FORWARD and $direction !== static::BACKWARD) {
-        throw new InvalidArgumentException('Invalid direction option');
-      }
+        if ($direction !== static::FORWARD and $direction !== static::BACKWARD) {
+            throw new InvalidArgumentException('Invalid direction option');
+        }
 
-      $this->direction = $direction;
-      return $this;
+        $this->direction = $direction;
+        return $this;
     }
 
-  }
+}
