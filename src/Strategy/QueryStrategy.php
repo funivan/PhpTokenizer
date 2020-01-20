@@ -1,15 +1,16 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Funivan\PhpTokenizer\Strategy;
+namespace Funivan\PhpTokenizer\Strategy;
 
-  use Funivan\PhpTokenizer\Query\Query;
+use Funivan\PhpTokenizer\Query\Query;
 
-  /**
-   *
-   *
-   */
-  abstract class QueryStrategy extends Query implements StrategyInterface {
+/**
+ *
+ *
+ */
+abstract class QueryStrategy extends Query implements StrategyInterface
+{
 
-  }
+}

@@ -1,15 +1,13 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Funivan\PhpTokenizer;
+namespace Funivan\PhpTokenizer;
 
-  use Funivan\PhpTokenizer\Query\Query;
+use Funivan\PhpTokenizer\Query\Query;
 
-  /**
-   * @author Ivan Shcherbak <dev@funivan.com>
-   */
-  class File {
+class File
+{
 
     /**
      * @var string
@@ -36,26 +34,29 @@
      * @param string $path
      * @return File
      */
-    public static function open(string $path) : File {
-      return new File($path);
+    public static function open(string $path): File
+    {
+        return new File($path);
     }
 
 
     /**
      * @param string $path
      */
-    public function __construct(string $path) {
-      $this->path = $path;
-      $code = file_get_contents($path);
-      $this->collection = Collection::createFromString($code);
+    public function __construct(string $path)
+    {
+        $this->path = $path;
+        $code = file_get_contents($path);
+        $this->collection = Collection::createFromString($code);
     }
 
 
     /**
      * @return Collection
      */
-    public function getCollection() : Collection {
-      return $this->collection;
+    public function getCollection(): Collection
+    {
+        return $this->collection;
     }
 
 
@@ -64,12 +65,13 @@
      *
      * @return bool|int
      */
-    public function save() {
-      if (!$this->isChanged()) {
-        return true;
-      }
-      $newCode = $this->collection->assemble();
-      return file_put_contents($this->path, $newCode);
+    public function save()
+    {
+        if (!$this->isChanged()) {
+            return true;
+        }
+        $newCode = $this->collection->assemble();
+        return file_put_contents($this->path, $newCode);
     }
 
 
@@ -78,28 +80,31 @@
      *
      * @return self
      */
-    public function refresh() : self {
-      $newCode = $this->collection->assemble();
-      $tokens = Helper::getTokensFromString($newCode);
+    public function refresh(): self
+    {
+        $newCode = $this->collection->assemble();
+        $tokens = Helper::getTokensFromString($newCode);
 
-      $this->collection->setItems($tokens);
-      return $this;
+        $this->collection->setItems($tokens);
+        return $this;
     }
 
 
     /**
      * @return string
      */
-    public function getPath() : string {
-      return $this->path;
+    public function getPath(): string
+    {
+        return $this->path;
     }
 
 
     /**
      * @return bool
      */
-    public function isChanged() : bool {
-      return $this->collection->isChanged();
+    public function isChanged(): bool
+    {
+        return $this->collection->isChanged();
     }
 
 
@@ -109,11 +114,12 @@
      * @param Query $query
      * @return Collection
      */
-    public function find(Query $query) : Collection {
-      return $this->getCollection()->find($query);
+    public function find(Query $query): Collection
+    {
+        return $this->getCollection()->find($query);
     }
 
-  }
+}
 
 
 

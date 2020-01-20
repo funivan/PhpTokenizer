@@ -1,35 +1,39 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Funivan\PhpTokenizer\Strategy;
+namespace Funivan\PhpTokenizer\Strategy;
 
 
-  /**
-   *
-   *
-   */
-  class Strict extends QueryStrategy {
+use Funivan\PhpTokenizer\Collection;
+
+/**
+ *
+ *
+ */
+class Strict extends QueryStrategy
+{
 
     /**
      * @inheritdoc
      */
-    public function process(\Funivan\PhpTokenizer\Collection $collection, $currentIndex) {
+    public function process(Collection $collection, $currentIndex)
+    {
 
-      $result = new StrategyResult();
-      $result->setValid(true);
+        $result = new StrategyResult();
+        $result->setValid(true);
 
-      $token = $collection->offsetGet($currentIndex);
+        $token = $collection->offsetGet($currentIndex);
 
-      if ($token === null or $this->isValid($token) === false) {
-        $result->setValid(false);
+        if ($token === null or $this->isValid($token) === false) {
+            $result->setValid(false);
+            return $result;
+        }
+
+        $result->setNexTokenIndex(++$currentIndex);
+        $result->setToken($token);
+
         return $result;
-      }
-
-      $result->setNexTokenIndex(++$currentIndex);
-      $result->setToken($token);
-
-      return $result;
     }
 
-  }
+}

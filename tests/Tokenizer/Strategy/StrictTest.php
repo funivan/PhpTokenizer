@@ -1,39 +1,42 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
+namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
-  use Funivan\PhpTokenizer\Collection;
-  use Funivan\PhpTokenizer\Strategy\Strict;
+use Funivan\PhpTokenizer\Collection;
+use Funivan\PhpTokenizer\Strategy\Strict;
+use PHPUnit\Framework\TestCase;
 
-  /**
-   *
-   */
-  class StrictTest extends \PHPUnit_Framework_TestCase {
+/**
+ *
+ */
+class StrictTest extends TestCase
+{
 
 
     /**
      *
      */
-    public function testSimple() {
+    public function testSimple()
+    {
 
-      $code = '<?php echo $a; foreach($users as $user){}';
+        $code = '<?php echo $a; foreach($users as $user){}';
 
-      $variables = [];
-      $collection = Collection::createFromString($code);
+        $variables = [];
+        $collection = Collection::createFromString($code);
 
-      $query = Strict::create()->typeIs(T_VARIABLE);
+        $query = Strict::create()->typeIs(T_VARIABLE);
 
-      foreach ($collection as $index => $token) {
+        foreach ($collection as $index => $token) {
 
-        if ($query->isValid($token)) {
-          $variables[] = $token;
+            if ($query->isValid($token)) {
+                $variables[] = $token;
+            }
+
         }
 
-      }
-
-      static::assertCount(3, $variables);
+        static::assertCount(3, $variables);
 
     }
-  }
+}

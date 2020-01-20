@@ -1,28 +1,31 @@
 language: php
 
 php:
-  - 7.0
-  - 7.1
+    - 7.2
+    - 7.3
+    - 7.4
 
 env:
-  - COVERAGE=on
-  - COVERAGE=off
+    - COVERAGE=on
+    - COVERAGE=off
 
 matrix:
-  fast_finish: true
-  exclude:
-    - php: 7.0
-      env: COVERAGE=on
-    - php: 7.1
-      env: COVERAGE=off
+    fast_finish: true
+    exclude:
+        -   php: 7.2
+            env: COVERAGE=of
+        -   php: 7.3
+            env: COVERAGE=off
+        -   php: 7.4
+            env: COVERAGE=off
 
 before_script:
-  - travis_retry composer self-update
-  - travis_retry composer install --no-interaction --prefer-source --dev
+    - travis_retry composer self-update
+    - travis_retry composer install --no-interaction --prefer-source --dev
 
 script:
-  - ./vendor/bin/phpunit --coverage-text --coverage-clover=./build/coverage.clover
+    - ./vendor/bin/phpunit --coverage-text --coverage-clover=./build/coverage.clover
 
 after_script:
-  - if [ "$COVERAGE" == "on" ]; then wget https://scrutinizer-ci.com/ocular.phar  -O build/ocular.phar; fi
-  - if [ "$COVERAGE" == "on" ]; then php ./build/ocular.phar code-coverage:upload --format=php-clover ./build/coverage.clover; fi
+    - if [ "$COVERAGE" == "on" ]; then wget https://scrutinizer-ci.com/ocular.phar  -O build/ocular.phar; fi
+    - if [ "$COVERAGE" == "on" ]; then php ./build/ocular.phar code-coverage:upload --format=php-clover ./build/coverage.clover; fi

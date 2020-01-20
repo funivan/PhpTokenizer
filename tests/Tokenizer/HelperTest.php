@@ -1,35 +1,38 @@
 <?php
 
-  declare(strict_types=1);
+declare(strict_types=1);
 
-  namespace Test\Funivan\PhpTokenizer\Tokenizer;
+namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
-  use Funivan\PhpTokenizer\Collection;
+use Funivan\PhpTokenizer\Collection;
+use PHPUnit\Framework\TestCase;
 
-  /**
-   *
-   *
-   */
-  class HelperTest extends \PHPUnit_Framework_TestCase {
+/**
+ *
+ *
+ */
+class HelperTest extends TestCase
+{
 
     /**
      * @void
      */
-    public function testCheckLines() {
-      $code = '<?php return [
+    public function testCheckLines()
+    {
+        $code = '<?php return [
       ];';
 
-      $collection = Collection::createFromString($code);
-      $this->assertEquals(2, $collection->getLast()->getLine());
+        $collection = Collection::createFromString($code);
+        $this->assertEquals(2, $collection->getLast()->getLine());
 
-      $code = '<?php 
+        $code = '<?php 
       
       return [
       ];';
 
-      $collection = Collection::createFromString($code);
-      $this->assertEquals(4, $collection->getLast()->getLine());
+        $collection = Collection::createFromString($code);
+        $this->assertEquals(4, $collection->getLast()->getLine());
     }
 
 
-  }
+}
