@@ -314,9 +314,9 @@ class Collection implements Iterator, ArrayAccess, Countable
      *
      * @param int|null $offset
      * @param Token $item
-     * @return $this
+     * @return void
      */
-    public function offsetSet($offset, $item)
+    public function offsetSet($offset, $item): void
     {
         if (!($item instanceof Token)) {
             throw new InvalidArgumentException('Expect Token object');
@@ -324,15 +324,13 @@ class Collection implements Iterator, ArrayAccess, Countable
 
         if (null === $offset) {
             $this->append($item);
-            return $this;
+            return;
         }
 
         if (!is_int($offset)) {
             throw new InvalidArgumentException('Invalid type of index. Must be integer');
         }
         $this->items[$offset] = $item;
-
-        return $this;
     }
 
 
