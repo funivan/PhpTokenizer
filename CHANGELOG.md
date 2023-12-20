@@ -1,5 +1,9 @@
 #Changelog
 All Notable changes to `PhpTokenizer` will be documented in this file
+## 0.4.0 - [2023-12-20]
+  ### Changed
+    - BC. `Collection::offsetSet` now returns `void` instead of its previous return type `this`
+
 ## 0.3.0 - [2019-01-20]
   ### Changed
     - Update to php 7.2
