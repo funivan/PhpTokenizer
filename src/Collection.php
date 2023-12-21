@@ -87,10 +87,8 @@ class Collection implements Iterator, ArrayAccess, Countable
 
     /**
      * Return number of items in this collection
-     *
-     * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->items);
     }
@@ -209,7 +207,7 @@ class Collection implements Iterator, ArrayAccess, Countable
     /**
      * Rewind current collection
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
         $this->items = array_values($this->items);
@@ -269,10 +267,8 @@ class Collection implements Iterator, ArrayAccess, Countable
 
     /**
      * Return current item in collection
-     *
-     * @return Token
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->items[$this->position];
     }
@@ -280,10 +276,8 @@ class Collection implements Iterator, ArrayAccess, Countable
 
     /**
      * Return current position
-     *
-     * @return int
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->position;
     }
@@ -292,7 +286,7 @@ class Collection implements Iterator, ArrayAccess, Countable
     /**
      * Switch to next position
      */
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }
@@ -314,7 +308,6 @@ class Collection implements Iterator, ArrayAccess, Countable
      *
      * @param int|null $offset
      * @param Token $item
-     * @return void
      */
     public function offsetSet($offset, $item): void
     {
@@ -340,7 +333,7 @@ class Collection implements Iterator, ArrayAccess, Countable
      * @param int $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->items[$offset]);
     }
@@ -351,7 +344,7 @@ class Collection implements Iterator, ArrayAccess, Countable
      *
      * @param int $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->items[$offset]);
     }
@@ -361,9 +354,8 @@ class Collection implements Iterator, ArrayAccess, Countable
      * Get item from collection
      *
      * @param int $offset
-     * @return Token|null
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return isset($this->items[$offset]) ? $this->items[$offset] : null;
     }
