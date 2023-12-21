@@ -3,6 +3,9 @@ All Notable changes to `PhpTokenizer` will be documented in this file
 ## Planned changes
   ### Changed
     - BC. `Collection::offsetSet` now returns `void` instead of its previous return type `this`
+    - BC. `Collection::current` return type is now `mixed` instead of its previous return type `Token`
+    - BC. `Collection::key` return type is now `mixed` instead of its previous return type `int`
+    - BC. `Collection::offsetGet` return type is now `mixed` instead of its previous return type `Token|null`
 
 ## 0.3.0 - [2019-01-20]
   ### Changed
