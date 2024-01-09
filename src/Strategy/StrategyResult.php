@@ -60,7 +60,6 @@ class StrategyResult
 
 
     /**
-     * @param Token $token
      * @return $this
      */
     public function setToken(Token $token)

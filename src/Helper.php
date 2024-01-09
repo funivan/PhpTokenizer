@@ -21,7 +21,7 @@ class Helper
     {
         try {
             $tokens = token_get_all($code, TOKEN_PARSE);
-        } catch (ParseError $e) {
+        } catch (ParseError) {
             // with TOKEN_PARSE flag, the function throws on invalid code
             // let's just ignore the error and tokenize the code without the flag
             $tokens = token_get_all($code);
@@ -53,7 +53,6 @@ class Helper
 
 
     /**
-     * @param Collection $collection
      * @return string
      */
     public static function dump(Collection $collection)

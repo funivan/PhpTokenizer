@@ -20,19 +20,13 @@ class PatternMatcher implements PatternMatcherInterface
     protected $collections = [];
 
 
-    /**
-     * @param Collection $collection
-     */
     public function __construct(Collection $collection)
     {
         $this->collections[] = $collection;
     }
 
 
-    /**
-     * @inheritdoc
-     */
-    public function apply(callable $pattern)
+    public function apply(callable $pattern): self
     {
 
         # Clear current collections.
@@ -65,8 +59,6 @@ class PatternMatcher implements PatternMatcherInterface
 
 
     /**
-     * @param callable $pattern
-     * @param Collection $collection
      * @return Collection[]
      * @throws Exception
      */

@@ -19,11 +19,11 @@ use InvalidArgumentException;
 class MethodPattern implements PatternInterface
 {
 
-    const OUTPUT_BODY = 0;
+    final public const OUTPUT_BODY = 0;
 
-    const OUTPUT_FULL = 1;
+    final public const OUTPUT_FULL = 1;
 
-    const OUTPUT_DOC_COMMENT = 2;
+    final public const OUTPUT_DOC_COMMENT = 2;
 
 
     /**
@@ -66,14 +66,10 @@ class MethodPattern implements PatternInterface
         $this->withAnyModifier();
 
         /** @noinspection PhpUnusedParameterInspection */
-        $this->withBody(function (Collection $body) {
-            return true;
-        });
+        $this->withBody(fn(Collection $body) => true);
 
         /** @noinspection PhpUnusedParameterInspection */
-        $this->withDocComment(function (Token $token) {
-            return true;
-        });
+        $this->withDocComment(fn(Token $token) => true);
 
     }
 
@@ -127,7 +123,6 @@ class MethodPattern implements PatternInterface
 
 
     /**
-     * @param callable $check
      * @return $this
      */
     public function withBody(callable $check): self
@@ -138,7 +133,6 @@ class MethodPattern implements PatternInterface
 
 
     /**
-     * @param Collection $body
      * @return bool
      * @throws Exception
      */
@@ -150,16 +144,13 @@ class MethodPattern implements PatternInterface
 
 
     /**
-     * @param callable $check
      * @return $this
      */
     public function withDocComment(callable $check = null): self
     {
 
         if ($check === null) {
-            $check = function (Token $token) {
-                return $token->getType() === T_DOC_COMMENT;
-            };
+            $check = fn(Token $token) => $token->getType() === T_DOC_COMMENT;
         }
         $this->docCommentChecker = $check;
 
@@ -172,16 +163,13 @@ class MethodPattern implements PatternInterface
      */
     public function withoutDocComment(): self
     {
-        $this->docCommentChecker = function (Token $token) {
-            return $token->isValid() === false;
-        };
+        $this->docCommentChecker = fn(Token $token) => $token->isValid() === false;
 
         return $this;
     }
 
 
     /**
-     * @param ParametersPattern $pattern
      * @return $this
      */
     public function withParameters(ParametersPattern $pattern): self
@@ -197,37 +185,29 @@ class MethodPattern implements PatternInterface
     public function withAnyModifier(): self
     {
         $this->modifierChecker = [];
-        $this->modifierChecker[] = function () {
-            return true;
-        };
+        $this->modifierChecker[] = fn() => true;
         return $this;
     }
 
 
     /**
-     * @param string $modifier
      * @return $this
      */
     public function withModifier(string $modifier): self
     {
-        $this->modifierChecker[] = function ($allModifiers) use ($modifier) {
-            return in_array($modifier, $allModifiers);
-        };
+        $this->modifierChecker[] = fn($allModifiers) => in_array($modifier, $allModifiers);
 
         return $this;
     }
 
 
     /**
-     * @param string $modifier
      * @return $this
      */
     public function withoutModifier(string $modifier): self
     {
 
-        $this->modifierChecker[] = function ($allModifiers) use ($modifier) {
-            return !in_array($modifier, $allModifiers);
-        };
+        $this->modifierChecker[] = fn($allModifiers) => !in_array($modifier, $allModifiers);
 
         return $this;
     }
@@ -372,7 +352,6 @@ class MethodPattern implements PatternInterface
 
 
     /**
-     * @param Token $token
      * @return boolean
      * @throws Exception
      */
@@ -384,7 +363,6 @@ class MethodPattern implements PatternInterface
 
 
     /**
-     * @param Collection $parameters
      * @return bool
      */
     private function isValidArguments(Collection $parameters): bool

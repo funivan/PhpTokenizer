@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Funivan\PhpTokenizer;
 
+use Stringable;
 use Funivan\PhpTokenizer\Exception\Exception;
 use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
 
@@ -14,16 +15,16 @@ use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
  *
  *
  */
-class Token
+class Token implements Stringable
 {
 
-    const INVALID_TYPE = -1;
+    final public const INVALID_TYPE = -1;
 
-    const INVALID_LINE = -1;
+    final public const INVALID_LINE = -1;
 
-    const INVALID_VALUE = null;
+    final public const INVALID_VALUE = null;
 
-    const INVALID_INDEX = -1;
+    final public const INVALID_INDEX = -1;
 
     /**
      * @var int
@@ -51,7 +52,6 @@ class Token
     /**
      * You need to provide at least 3 elements
      *
-     * @param array $data
      * @throws Exception
      */
     public function __construct(array $data = [])
@@ -65,7 +65,7 @@ class Token
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->assemble();
     }
@@ -81,7 +81,6 @@ class Token
 
 
     /**
-     * @param array $data
      * @return $this
      * @throws Exception
      */
@@ -123,7 +122,6 @@ class Token
 
 
     /**
-     * @param int $type
      * @return $this
      */
     public function setType(int $type): self
@@ -185,7 +183,6 @@ class Token
 
 
     /**
-     * @param int $line
      * @return $this
      */
     public function setLine(int $line): self
@@ -269,7 +266,6 @@ class Token
 
 
     /**
-     * @param int $index
      * @return $this
      */
     public function setIndex(int $index): self

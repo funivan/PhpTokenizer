@@ -226,7 +226,6 @@ class SectionTest extends TestCase
 
     /**
      * @dataProvider functionDetectDataProvider
-     * @param callable $callback
      * @param $expectFunctionNum
      */
     public function testFunctionDetect(callable $callback, $expectFunctionNum)

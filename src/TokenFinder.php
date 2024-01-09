@@ -20,23 +20,12 @@ use Funivan\PhpTokenizer\Query\QueryInterface;
 class TokenFinder
 {
 
-    /**
-     * @var Collection
-     */
-    private $collection;
-
-
-    /**
-     * @param Collection $collection
-     */
-    public function __construct(Collection $collection)
+    public function __construct(private readonly Collection $collection)
     {
-        $this->collection = $collection;
     }
 
 
     /**
-     * @param QueryInterface $query
      * @return Collection
      */
     public function find(QueryInterface $query): Collection

@@ -9,15 +9,7 @@ use Funivan\PhpTokenizer\Query\Query;
 class File
 {
 
-    /**
-     * @var string
-     */
-    protected $path;
-
-    /**
-     * @var Collection
-     */
-    protected $collection;
+    protected Collection $collection;
 
 
     /**
@@ -31,7 +23,6 @@ class File
      * }
      * ```
      *
-     * @param string $path
      * @return File
      */
     public static function open(string $path): File
@@ -40,13 +31,9 @@ class File
     }
 
 
-    /**
-     * @param string $path
-     */
-    public function __construct(string $path)
+    public function __construct(protected string $path)
     {
-        $this->path = $path;
-        $code = file_get_contents($path);
+        $code = file_get_contents($this->path);
         $this->collection = Collection::createFromString($code);
     }
 
@@ -111,7 +98,6 @@ class File
     /**
      * Alias for Collection::find
      *
-     * @param Query $query
      * @return Collection
      */
     public function find(Query $query): Collection

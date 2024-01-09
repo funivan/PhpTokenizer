@@ -176,16 +176,12 @@ class MethodPatternTest extends TestCase
 
 
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-        $tokensChecker->apply((new MethodPattern())->withDocComment(function (Token $token) {
-            return strpos($token->getValue() ?? '', 'hello') !== false;
-        }));
+        $tokensChecker->apply((new MethodPattern())->withDocComment(fn(Token $token) => str_contains($token->getValue() ?? '', 'hello')));
 
         static::assertCount(2, $tokensChecker->getCollections());
 
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-        $tokensChecker->apply((new MethodPattern())->withDocComment(function (Token $token) {
-            return strpos($token->getValue() ?? '', 'test') !== false;
-        }));
+        $tokensChecker->apply((new MethodPattern())->withDocComment(fn(Token $token) => str_contains($token->getValue() ?? '', 'test')));
 
         static::assertCount(1, $tokensChecker->getCollections());
 
@@ -216,14 +212,10 @@ class MethodPatternTest extends TestCase
         static::assertCount(3, $tokensChecker->getCollections());
 
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-        $tokensChecker->apply((new MethodPattern())->withBody(function (Collection $collection) {
-            return $collection->find((new Query())->typeIs(T_ECHO))->count() > 0;
-        }));
+        $tokensChecker->apply((new MethodPattern())->withBody(fn(Collection $collection) => $collection->find((new Query())->typeIs(T_ECHO))->count() > 0));
 
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
-        $tokensChecker->apply((new MethodPattern())->withBody(function (Collection $collection) {
-            return $collection->find((new Query())->valueLike('!test22!'))->count() === 1;
-        }));
+        $tokensChecker->apply((new MethodPattern())->withBody(fn(Collection $collection) => $collection->find((new Query())->valueLike('!test22!'))->count() === 1));
 
         static::assertCount(1, $tokensChecker->getCollections());
 

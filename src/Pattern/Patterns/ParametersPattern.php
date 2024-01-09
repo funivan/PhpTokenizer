@@ -65,7 +65,7 @@ class ParametersPattern implements PatternInterface
 
         foreach ($this->argumentCheck as $index => $check) {
 
-            $argumentTokens = isset($arguments[$index]) ? $arguments[$index] : new Collection();
+            $argumentTokens = $arguments[$index] ?? new Collection();
             $result = $check($argumentTokens);
 
             if (!is_bool($result)) {
@@ -107,16 +107,12 @@ class ParametersPattern implements PatternInterface
 
 
     /**
-     * @param int $index
-     * @param callable $check
      * @return $this
      */
     public function withArgument(int $index, callable $check = null): self
     {
         if ($check === null) {
-            $check = function (Collection $argumentTokens) {
-                return $argumentTokens->count() !== 0;
-            };
+            $check = fn(Collection $argumentTokens) => $argumentTokens->count() !== 0;
         }
         $this->argumentCheck[$index] = $check;
         return $this;
@@ -124,14 +120,11 @@ class ParametersPattern implements PatternInterface
 
 
     /**
-     * @param int $index
      * @return $this
      */
     public function withoutArgument(int $index): self
     {
-        $check = function (Collection $argumentTokens) {
-            return $argumentTokens->count() === 0;
-        };
+        $check = fn(Collection $argumentTokens) => $argumentTokens->count() === 0;
 
         $this->argumentCheck[$index] = $check;
         return $this;
@@ -139,7 +132,6 @@ class ParametersPattern implements PatternInterface
 
 
     /**
-     * @param Collection $section
      * @return Collection[]
      */
     protected function getArguments(Collection $section): array
@@ -154,7 +146,7 @@ class ParametersPattern implements PatternInterface
             $token = $section->offsetGet($tokenIndex);
 
             if ($token === null) {
-                return null;
+                return [];
             }
 
             if ($skipToToken === null or $token->getIndex() >= $skipToToken->getIndex()) {
@@ -177,9 +169,6 @@ class ParametersPattern implements PatternInterface
 
 
     /**
-     * @param Token $token
-     * @param Collection $section
-     * @param int $index
      * @return Token
      */
     private function getEndArray(Token $token, Collection $section, int $index)
@@ -212,7 +201,6 @@ class ParametersPattern implements PatternInterface
 
 
     /**
-     * @param int $int
      * @param bool $prepared
      * @return $this
      */

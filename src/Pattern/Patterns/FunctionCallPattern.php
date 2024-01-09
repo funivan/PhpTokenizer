@@ -14,9 +14,9 @@ use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 class FunctionCallPattern implements PatternInterface
 {
 
-    const OUTPUT_FULL = 1;
+    final public const OUTPUT_FULL = 1;
 
-    const OUTPUT_ARGUMENTS = 2;
+    final public const OUTPUT_ARGUMENTS = 2;
 
     /**
      * @var Query|null
@@ -55,7 +55,6 @@ class FunctionCallPattern implements PatternInterface
 
 
     /**
-     * @param Query $query
      * @return $this
      */
     public function withName(Query $query): self
@@ -66,7 +65,6 @@ class FunctionCallPattern implements PatternInterface
 
 
     /**
-     * @param ParametersPattern $pattern
      * @return $this
      */
     public function withParameters(ParametersPattern $pattern): self
