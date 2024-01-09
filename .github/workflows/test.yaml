@@ -24,6 +24,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
+                  coverage: pcov
                   php-version: ${{ matrix.php-versions }}
 
             - name: Get Composer Cache Directory
