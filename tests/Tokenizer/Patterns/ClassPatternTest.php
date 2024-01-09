@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\Tokenizer\Patterns;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\Pattern\PatternMatcher;
 use Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern;
 use Funivan\PhpTokenizer\Strategy\Strict;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 

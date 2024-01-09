@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\Demo;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ExtractVariablesFromCurlyBracketsTest extends TestCase

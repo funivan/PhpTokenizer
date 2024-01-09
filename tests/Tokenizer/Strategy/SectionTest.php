@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
 use Funivan\PhpTokenizer\Pattern\PatternMatcher;
@@ -12,6 +11,7 @@ use Funivan\PhpTokenizer\Query\Query;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 use Funivan\PhpTokenizer\Strategy\Section;
 use Funivan\PhpTokenizer\Strategy\Strict;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class SectionTest extends TestCase

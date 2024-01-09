@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\QuerySequence;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 use Funivan\PhpTokenizer\Strategy\Possible;
@@ -12,6 +11,7 @@ use Funivan\PhpTokenizer\Strategy\Search;
 use Funivan\PhpTokenizer\Strategy\Strict;
 use Funivan\PhpTokenizer\Token;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
