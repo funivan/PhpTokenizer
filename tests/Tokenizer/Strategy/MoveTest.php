@@ -11,16 +11,8 @@ use Funivan\PhpTokenizer\Strategy\Move;
 use Funivan\PhpTokenizer\Token;
 use PHPUnit\Framework\TestCase;
 
-/**
- *
- *
- */
 class MoveTest extends TestCase
 {
-
-    /**
-     *
-     */
     public function testMove()
     {
         $code = '<?php  $a';
@@ -39,16 +31,13 @@ class MoveTest extends TestCase
         $token = $finder->process(Move::create(10));
         $this->assertEquals(Token::INVALID_VALUE, $token->getValue());
         $this->assertFalse($token->isValid());
-
     }
-
 
     public function testInvalidStepsValue()
     {
         $this->expectException(InvalidArgumentException::class);
         Move::create(null);
     }
-
 
     public function testMoveToToken()
     {
@@ -74,5 +63,4 @@ class MoveTest extends TestCase
         $this->assertEquals(null, $finder->moveToToken($token)->getValue());
         $this->assertFalse($finder->isValid());
     }
-
 }

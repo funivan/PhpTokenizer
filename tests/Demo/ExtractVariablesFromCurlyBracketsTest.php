@@ -10,13 +10,11 @@ use PHPUnit\Framework\TestCase;
 
 class ExtractVariablesFromCurlyBracketsTest extends TestCase
 {
-
     /**
      * @return array
      */
     public function getDemoCode()
     {
-
         return [
             [
                 'echo "{$user->getName} 123 ";',
@@ -38,7 +36,6 @@ class ExtractVariablesFromCurlyBracketsTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getDemoCode
      * @param string $code
@@ -48,7 +45,6 @@ class ExtractVariablesFromCurlyBracketsTest extends TestCase
     {
         $collection = Collection::createFromString('<?php ' . $code);
 
-
         # remove empty string and dot
         foreach ($collection as $index => $token) {
             $p = new QuerySequence($collection, $index);
@@ -57,29 +53,22 @@ class ExtractVariablesFromCurlyBracketsTest extends TestCase
                 $p->strict(T_ENCAPSED_AND_WHITESPACE);
             }
 
-
             $start = $p->strict('{');
             $p->strict(T_VARIABLE);
             $end = $p->search('}');
             $string = $p->possible(T_ENCAPSED_AND_WHITESPACE);
 
-            if (!$string->isValid()) {
+            if (! $string->isValid()) {
                 $p->strict('"');
             }
-
 
             if ($p->isValid()) {
                 $start->setValue('".');
                 $end->setValue('."');
-
             }
-
         }
 
-
         $collection[0]->remove();
-        $this->assertEquals($expectCode, (string)$collection);
-
+        $this->assertEquals($expectCode, (string) $collection);
     }
-
 }

@@ -7,13 +7,8 @@ namespace Test\Funivan\PhpTokenizer\Tokenizer;
 use Funivan\PhpTokenizer\Collection;
 use PHPUnit\Framework\TestCase;
 
-/**
- *
- *
- */
 class HelperTest extends TestCase
 {
-
     /**
      * @void
      */
@@ -33,6 +28,4 @@ class HelperTest extends TestCase
         $collection = Collection::createFromString($code);
         $this->assertEquals(4, $collection->getLast()->getLine());
     }
-
-
 }

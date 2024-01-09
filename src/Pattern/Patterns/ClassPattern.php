@@ -13,11 +13,9 @@ use InvalidArgumentException;
 
 /**
  * PatternMatcher used to finding classes in tour source code
- *
  */
 class ClassPattern implements PatternInterface
 {
-
     /**
      * Result of this pattern will be body of the class
      */
@@ -27,7 +25,6 @@ class ClassPattern implements PatternInterface
      * Result of this pattern will be full class
      */
     final public const OUTPUT_FULL = 2;
-
 
     /**
      * @var QueryStrategy
@@ -49,7 +46,6 @@ class ClassPattern implements PatternInterface
      */
     private $outputType = self::OUTPUT_FULL;
 
-
     /**
      * By default we search for classes with any name
      */
@@ -59,7 +55,6 @@ class ClassPattern implements PatternInterface
         $this->withPossibleDocComment();
         $this->withAnyModifier();
     }
-
 
     /**
      * @param QueryStrategy|string $name
@@ -78,7 +73,6 @@ class ClassPattern implements PatternInterface
         return $this;
     }
 
-
     /**
      * @return $this
      */
@@ -92,18 +86,15 @@ class ClassPattern implements PatternInterface
         return $this;
     }
 
-
     /**
      * @return $this
      */
     public function withPossibleDocComment(): self
     {
         $this->docCommentChecker = function () {
-
         };
         return $this;
     }
-
 
     /**
      * @return $this
@@ -118,7 +109,6 @@ class ClassPattern implements PatternInterface
         return $this;
     }
 
-
     /**
      * @return $this
      */
@@ -127,7 +117,6 @@ class ClassPattern implements PatternInterface
         $this->outputType = self::OUTPUT_BODY;
         return $this;
     }
-
 
     /**
      * @return $this
@@ -138,13 +127,8 @@ class ClassPattern implements PatternInterface
         return $this;
     }
 
-
-    /**
-     * @inheritdoc
-     */
     public function __invoke(QuerySequence $querySequence)
     {
-
         $comment = $querySequence->process(Possible::create()->typeIs(T_DOC_COMMENT));
 
         $querySequence->possible(T_WHITESPACE);
@@ -172,13 +156,11 @@ class ClassPattern implements PatternInterface
         $docCommentChecker = $this->docCommentChecker;
         $docCommentChecker($comment, $querySequence);
 
-
         foreach ($this->modifierChecker as $checker) {
             $checker($modifier, $querySequence);
         }
 
-
-        if (!$querySequence->isValid()) {
+        if (! $querySequence->isValid()) {
             return null;
         }
 
@@ -192,10 +174,8 @@ class ClassPattern implements PatternInterface
             return $body->extractItems(1, -1);
         }
 
-
         return $querySequence->getCollection()->extractByTokens($start, $lastBodyToken);
     }
-
 
     /**
      * @return $this
@@ -208,30 +188,25 @@ class ClassPattern implements PatternInterface
         return $this;
     }
 
-
     /**
      * @return $this
      */
     public function withModifier(string $modifier): self
     {
-
         $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
             if ($token->getValue() !== $modifier) {
                 $q->setValid(false);
             }
         };
 
-
         return $this;
     }
-
 
     /**
      * @return $this
      */
     public function withoutModifier(string $modifier): self
     {
-
         $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
             if ($token->getValue() === $modifier) {
                 $q->setValid(false);
@@ -239,6 +214,4 @@ class ClassPattern implements PatternInterface
         };
         return $this;
     }
-
-
 }

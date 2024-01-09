@@ -13,13 +13,11 @@ use PHPUnit\Framework\TestCase;
 
 class ValidateThisInStaticFunctionsTestCase extends TestCase
 {
-
     /**
      * @return array
      */
     public function getDemoCode()
     {
-
         return [
             [
                 'public static function test(){echo $this;}',
@@ -39,7 +37,6 @@ class ValidateThisInStaticFunctionsTestCase extends TestCase
             ],
         ];
     }
-
 
     /**
      * @dataProvider getDemoCode
@@ -65,8 +62,6 @@ class ValidateThisInStaticFunctionsTestCase extends TestCase
             }
         });
 
-
         self::assertEquals($expectThis, $containThis);
     }
-
 }

@@ -10,8 +10,6 @@ use Funivan\PhpTokenizer\Token;
 
 class Query implements QueryInterface
 {
-
-
     /**
      * Array of check functions
      * As first argument accept token
@@ -49,7 +47,6 @@ class Query implements QueryInterface
      */
     protected $index = [];
 
-
     /**
      * @return static
      */
@@ -58,21 +55,18 @@ class Query implements QueryInterface
         return new static();
     }
 
-
     /**
      * @param int|array $type Array<Int>|Int
      * @return $this
      */
     public function typeIs($type)
     {
-
         $types = $this->prepareIntValues($type);
 
-        $this->checkFunctions[] = fn(Token $token) => in_array($token->getType(), $types, true);
+        $this->checkFunctions[] = fn (Token $token) => in_array($token->getType(), $types, true);
 
         return $this;
     }
-
 
     /**
      * @param array|int $type Array<Int>|Int
@@ -80,14 +74,12 @@ class Query implements QueryInterface
      */
     public function typeNot($type)
     {
-
         $types = $this->prepareIntValues($type);
 
-        $this->checkFunctions[] = fn(Token $token) => !in_array($token->getType(), $types, true);
+        $this->checkFunctions[] = fn (Token $token) => ! in_array($token->getType(), $types, true);
 
         return $this;
     }
-
 
     /**
      * @param array|string $value Array<String>|String
@@ -97,11 +89,10 @@ class Query implements QueryInterface
     {
         $values = $this->prepareValues($value);
 
-        $this->checkFunctions[] = fn(Token $token) => in_array($token->getValue(), $values, true);
+        $this->checkFunctions[] = fn (Token $token) => in_array($token->getValue(), $values, true);
 
         return $this;
     }
-
 
     /**
      * @param array|string $value Array<String>|String
@@ -109,14 +100,12 @@ class Query implements QueryInterface
      */
     public function valueNot($value)
     {
-
         $values = $this->prepareValues($value);
 
-        $this->checkFunctions[] = fn(Token $token) => !in_array($token->getValue(), $values, true);
+        $this->checkFunctions[] = fn (Token $token) => ! in_array($token->getValue(), $values, true);
 
         return $this;
     }
-
 
     /**
      * @param string[]|string $regex string[]
@@ -137,7 +126,7 @@ class Query implements QueryInterface
                 return false;
             }
             foreach ($regexConditions as $regex) {
-                if (!preg_match($regex, $value)) {
+                if (! preg_match($regex, $value)) {
                     return false;
                 }
             }
@@ -148,21 +137,18 @@ class Query implements QueryInterface
         return $this;
     }
 
-
     /**
      * @param int|int[] $index
      * @return $this
      */
     public function indexIs($index)
     {
-
         $indexNumbers = $this->prepareIntValues($index);
 
-        $this->checkFunctions[] = fn(Token $token) => in_array($token->getIndex(), $indexNumbers, true);
+        $this->checkFunctions[] = fn (Token $token) => in_array($token->getIndex(), $indexNumbers, true);
 
         return $this;
     }
-
 
     /**
      * @param int|int[] $index
@@ -172,11 +158,10 @@ class Query implements QueryInterface
     {
         $indexNumbers = $this->prepareIntValues($index);
 
-        $this->checkFunctions[] = fn(Token $token) => !in_array($token->getIndex(), $indexNumbers, true);
+        $this->checkFunctions[] = fn (Token $token) => ! in_array($token->getIndex(), $indexNumbers, true);
 
         return $this;
     }
-
 
     /**
      * @param int|int[] $index
@@ -186,12 +171,10 @@ class Query implements QueryInterface
     {
         $indexNumbers = $this->prepareIntValues($index);
 
-        $this->checkFunctions[] = fn(Token $token) => $token->getIndex() > max($indexNumbers);
-
+        $this->checkFunctions[] = fn (Token $token) => $token->getIndex() > max($indexNumbers);
 
         return $this;
     }
-
 
     /**
      * @param int|int[] $index
@@ -201,34 +184,26 @@ class Query implements QueryInterface
     {
         $indexNumbers = $this->prepareIntValues($index);
 
-        $this->checkFunctions[] = fn(Token $token) => $token->getIndex() < min($indexNumbers);
+        $this->checkFunctions[] = fn (Token $token) => $token->getIndex() < min($indexNumbers);
 
         return $this;
     }
 
-
-    /**
-     * @inheritdoc
-     */
     public function isValid(Token $token)
     {
-
         foreach ($this->checkFunctions as $check) {
-
             $result = $check($token);
-            if (!is_bool($result)) {
+            if (! is_bool($result)) {
                 throw new Exception('Check function should return boolean value. Given:' . gettype($result));
             }
 
             if ($result === false) {
                 return false;
             }
-
         }
 
         return true;
     }
-
 
     /**
      * @param string|int|array $value String|Int|Array<String>|Array<Int>
@@ -237,7 +212,6 @@ class Query implements QueryInterface
      */
     protected function prepareValues($value)
     {
-
         if ($value === null) {
             return [];
         }
@@ -246,18 +220,17 @@ class Query implements QueryInterface
             throw new InvalidArgumentException('Invalid conditions. Must be string or array of string');
         }
 
-        $value = array_values((array)$value);
+        $value = array_values((array) $value);
 
         foreach ($value as $k => $val) {
-            if (!is_string($val) and !is_numeric($val)) {
+            if (! is_string($val) and ! is_numeric($val)) {
                 throw new InvalidArgumentException('Invalid conditions. Must be string');
             }
 
-            $value[$k] = (string)$val;
+            $value[$k] = (string) $val;
         }
         return $value;
     }
-
 
     /**
      * @param array|int $value Array<Int>|Int
@@ -266,7 +239,6 @@ class Query implements QueryInterface
      */
     protected function prepareIntValues($value)
     {
-
         if ($value === null) {
             return [];
         }
@@ -275,18 +247,16 @@ class Query implements QueryInterface
             throw new InvalidArgumentException('Invalid condition value. Must be int. Object given');
         }
 
-        $value = array_values((array)$value);
-
+        $value = array_values((array) $value);
 
         foreach ($value as $intValue) {
-            if (!is_int($intValue)) {
+            if (! is_int($intValue)) {
                 throw new InvalidArgumentException('Invalid conditions. Must be integer. Given:' . gettype($intValue));
             }
         }
 
         return $value;
     }
-
 
     /**
      * Under development
@@ -298,5 +268,4 @@ class Query implements QueryInterface
         $this->checkFunctions[] = $checkFunction;
         return $this;
     }
-
 }

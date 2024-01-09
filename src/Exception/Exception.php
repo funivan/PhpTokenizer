@@ -6,5 +6,4 @@ namespace Funivan\PhpTokenizer\Exception;
 
 class Exception extends \Exception
 {
-
 }

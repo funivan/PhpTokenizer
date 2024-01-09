@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 
 class SectionTest extends TestCase
 {
-
     /**
      * @return array
      */
@@ -42,12 +41,8 @@ class SectionTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider functionCallDataProvider
-     * @param $code
-     * @param $functionName
-     * @param $expectCode
      */
     public function testFunctionCall($code, $functionName, $expectCode)
     {
@@ -71,7 +66,6 @@ class SectionTest extends TestCase
         static::assertCount(1, $lines);
         static::assertEquals($expectCode, $lines[0]);
     }
-
 
     public function testWithEmptySection()
     {
@@ -97,9 +91,7 @@ class SectionTest extends TestCase
         }
 
         static::assertCount(0, $linesWithEcho);
-
     }
-
 
     public function testWithEmptySectionSearch()
     {
@@ -112,7 +104,6 @@ class SectionTest extends TestCase
       ';
 
         $collection = Collection::createFromString($code);
-
 
         $linesWithEcho = [];
 
@@ -127,13 +118,10 @@ class SectionTest extends TestCase
         }
 
         static::assertCount(0, $linesWithEcho);
-
     }
-
 
     public function testWithMultipleTokens()
     {
-
         $code = '<?php 
       
       class User { 
@@ -145,11 +133,9 @@ class SectionTest extends TestCase
 
         $collection = Collection::createFromString($code);
 
-
         $num = 0;
 
         (new PatternMatcher($collection))->apply(function (QuerySequence $q) use (&$num) {
-
             $q->strict(')');
             $q->possible(T_WHITESPACE);
             $q->section('{', '}');
@@ -157,13 +143,10 @@ class SectionTest extends TestCase
             if ($q->isValid()) {
                 $num++;
             }
-
         });
 
         static::assertEquals(1, $num);
-
     }
-
 
     /**
      * @return array
@@ -223,10 +206,8 @@ class SectionTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider functionDetectDataProvider
-     * @param $expectFunctionNum
      */
     public function testFunctionDetect(callable $callback, $expectFunctionNum)
     {
@@ -237,7 +218,6 @@ class SectionTest extends TestCase
 
         $collection = Collection::createFromString($code);
 
-
         $num = 0;
 
         (new PatternMatcher($collection))->apply(function (QuerySequence $q) use ($callback, &$num) {
@@ -246,12 +226,10 @@ class SectionTest extends TestCase
             if ($q->isValid()) {
                 $num++;
             }
-
         });
 
         static::assertEquals($expectFunctionNum, $num);
     }
-
 
     public function testInvalidSectionStartDefinition()
     {
@@ -260,7 +238,6 @@ class SectionTest extends TestCase
         $section->process(new Collection(), 0);
     }
 
-
     public function testInvalidSectionEndDefinition()
     {
         $section = new Section();
@@ -268,5 +245,4 @@ class SectionTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $section->process(new Collection(), 0);
     }
-
 }

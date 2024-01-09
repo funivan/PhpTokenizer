@@ -8,12 +8,8 @@ use Funivan\PhpTokenizer\Pattern\PatternMatcher;
 use Funivan\PhpTokenizer\Query\Query;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
-/**
- *
- */
 class FunctionCallPattern implements PatternInterface
 {
-
     final public const OUTPUT_FULL = 1;
 
     final public const OUTPUT_ARGUMENTS = 2;
@@ -33,7 +29,6 @@ class FunctionCallPattern implements PatternInterface
      */
     private $outputType = self::OUTPUT_FULL;
 
-
     /**
      * @return $this
      */
@@ -42,7 +37,6 @@ class FunctionCallPattern implements PatternInterface
         $this->outputType = self::OUTPUT_FULL;
         return $this;
     }
-
 
     /**
      * @return $this
@@ -53,7 +47,6 @@ class FunctionCallPattern implements PatternInterface
         return $this;
     }
 
-
     /**
      * @return $this
      */
@@ -62,7 +55,6 @@ class FunctionCallPattern implements PatternInterface
         $this->nameQuery = $query;
         return $this;
     }
-
 
     /**
      * @return $this
@@ -73,13 +65,8 @@ class FunctionCallPattern implements PatternInterface
         return $this;
     }
 
-
-    /**
-     * @inheritdoc
-     */
     public function __invoke(QuerySequence $querySequence)
     {
-
         $name = $querySequence->strict(T_STRING);
         if ($this->nameQuery !== null and $this->nameQuery->isValid($name) === false) {
             return null;
@@ -88,7 +75,7 @@ class FunctionCallPattern implements PatternInterface
         $querySequence->possible(T_WHITESPACE);
         $arguments = $querySequence->section('(', ')');
 
-        if (!$querySequence->isValid()) {
+        if (! $querySequence->isValid()) {
             return null;
         }
 
@@ -120,5 +107,4 @@ class FunctionCallPattern implements PatternInterface
 
         return $querySequence->getCollection()->extractByTokens($name, $lastToken);
     }
-
 }

@@ -6,22 +6,14 @@ namespace Test\Funivan\PhpTokenizer;
 
 use PHPUnit\Framework\TestCase;
 
-/**
- *
- */
 class DocumentationTestCase extends TestCase
 {
-
     final public const DIR = __DIR__ . '/..';
 
     final public const DOCS_DIR = self::DIR . '/doc';
 
     final public const BUILD_DIR = self::DIR . '/build';
 
-
-    /**
-     * @return array
-     */
     public function getDocumentationDataProvider(): array
     {
         $files = glob(self::DOCS_DIR . '/**');
@@ -33,7 +25,6 @@ class DocumentationTestCase extends TestCase
         return $data;
     }
 
-
     /**
      * @dataProvider getDocumentationDataProvider
      */
@@ -44,7 +35,7 @@ class DocumentationTestCase extends TestCase
         preg_match_all('!```php(.*)```!sU', $data, $fileCodeChunks);
         $autoloadPart = sprintf('<?php require "%s";', self::BUILD_DIR . '/../vendor/autoload.php');
         $errorHandler = 'set_error_handler(function($number, $message){echo $message;die(1);});';
-        foreach ((array)$fileCodeChunks[1] as $code) {
+        foreach ((array) $fileCodeChunks[1] as $code) {
             $filePath = self::BUILD_DIR . '/' . $i . '.php';
             file_put_contents($filePath, $autoloadPart . "\n" . $errorHandler . "\n" . $code);
             $i++;
@@ -59,5 +50,4 @@ class DocumentationTestCase extends TestCase
             }
         }
     }
-
 }

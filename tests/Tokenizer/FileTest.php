@@ -11,12 +11,8 @@ use PHPUnit\Framework\TestCase;
 use Test\Funivan\PhpTokenizer\FileCreationHelper;
 use function filemtime;
 
-/**
- *
- */
 class FileTest extends TestCase
 {
-
     public function testStaticOpen()
     {
         $file = FileCreationHelper::createFileFromCode('<?php 
@@ -27,11 +23,8 @@ class FileTest extends TestCase
         $otherFile = File::open($file->getPath());
         static::assertCount(7, $otherFile->getCollection());
 
-
         unlink($file->getPath());
-
     }
-
 
     public function testOpen()
     {
@@ -42,7 +35,6 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-
     public function testFilePath()
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1; ');
@@ -50,10 +42,8 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-
     public function testSave()
     {
-
         $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
         $tokens = $file->find(Query::create()->valueIs('1'));
@@ -91,7 +81,6 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-
     public function testRefresh()
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
@@ -106,7 +95,6 @@ class FileTest extends TestCase
             }
         }
 
-
         static::assertCount(5, $file->getCollection());
         $file->refresh();
 
@@ -118,7 +106,6 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-
     public function testHtml()
     {
         # create temp file
@@ -129,7 +116,6 @@ class FileTest extends TestCase
         static::assertCount(8, $file->getCollection());
         unlink($file->getPath());
     }
-
 
     public function testSaveFileWithoutChange()
     {
@@ -144,7 +130,6 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-
     public function testIsChanged()
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
@@ -155,5 +140,4 @@ class FileTest extends TestCase
         static::assertTrue($file->isChanged());
         unlink($file->getPath());
     }
-
 }

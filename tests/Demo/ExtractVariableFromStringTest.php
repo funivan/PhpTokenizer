@@ -10,11 +10,8 @@ use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 use Funivan\PhpTokenizer\Token;
 use PHPUnit\Framework\TestCase;
 
-
 final class ExtractVariableFromStringTest extends TestCase
 {
-
-
     public function getDemoCode(): array
     {
         return [
@@ -60,7 +57,6 @@ final class ExtractVariableFromStringTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getDemoCode
      */
@@ -88,6 +84,6 @@ final class ExtractVariableFromStringTest extends TestCase
             }
         });
         $collection[0]->remove();
-        self::assertEquals($expectCode, (string)$collection);
+        self::assertEquals($expectCode, (string) $collection);
     }
 }

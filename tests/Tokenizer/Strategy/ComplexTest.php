@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 class ComplexTest extends TestCase
 {
-
     public function testSkipWhitespaces()
     {
         $code = '<?php
@@ -25,7 +24,6 @@ class ComplexTest extends TestCase
       ';
         $collection = Collection::createFromString($code);
 
-
         $findItems = [];
         foreach ($collection as $index => $token) {
             $q = new QuerySequence($collection, $index);
@@ -35,13 +33,10 @@ class ComplexTest extends TestCase
             if ($q->isValid()) {
                 $findItems[] = $list;
             }
-
         }
-
 
         static::assertCount(3, $findItems);
     }
-
 
     /**
      * @return array
@@ -71,11 +66,8 @@ class ComplexTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getTestWithoutWhitespaceSkipDataProvider
-     * @param $sequence
-     * @param $expectItems
      */
     public function testWithoutWhitespaceSkip($sequence, $expectItems)
     {
@@ -99,9 +91,7 @@ class ComplexTest extends TestCase
         }
 
         static::assertCount($expectItems, $findItems);
-
     }
-
 
     /**
      * @return array
@@ -112,8 +102,7 @@ class ComplexTest extends TestCase
             [
                 'if (!is_array($a1)){
             $a1 = (array) $a1;
-          }'
-                ,
+          }',
                 'containt' => '$a1 = (array) $a1;',
                 'notContain' => 'is_array',
             ],
@@ -164,7 +153,6 @@ class ComplexTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider   getComplexTestData
      * @throws Exception
@@ -204,7 +192,7 @@ class ComplexTest extends TestCase
                 $collection[$end] = $newToken;
             }
         }
-        $result = (string)$collection;
+        $result = (string) $collection;
         if (is_string($contain)) {
             static::assertStringContainsString($contain, $result);
         }
@@ -212,7 +200,5 @@ class ComplexTest extends TestCase
         if (is_string($notContain)) {
             static::assertStringNotContainsString($notContain, $result);
         }
-
     }
-
 }

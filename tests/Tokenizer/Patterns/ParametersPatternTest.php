@@ -12,17 +12,10 @@ use Funivan\PhpTokenizer\Query\Query;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-/**
- *
- */
 class ParametersPatternTest extends TestCase
 {
-
-
     public function testSimpleParameters()
     {
-
-
         $code = '<?php
 
       function test(\Adm\Users\Model $df = []  ){
@@ -39,16 +32,13 @@ class ParametersPatternTest extends TestCase
         $collections = $tokensChecker->getCollections();
 
         static::assertCount(5, $collections);
-        static::assertEquals('\Adm\Users\Model $df = []  ', (string)$collections[0]);
-        static::assertEquals('$row, $col', (string)$collections[1]);
-        static::assertEquals('$df', (string)$collections[2]);
+        static::assertEquals('\Adm\Users\Model $df = []  ', (string) $collections[0]);
+        static::assertEquals('$row, $col', (string) $collections[1]);
+        static::assertEquals('$df', (string) $collections[2]);
     }
-
 
     public function testWithArgument()
     {
-
-
         $code = '<?php
 
       function test(\Adm\Users\Model $df = []){
@@ -65,7 +55,6 @@ class ParametersPatternTest extends TestCase
         $collections = $tokensChecker->getCollections();
         static::assertCount(3, $collections);
 
-
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
         $tokensChecker->apply((new ParametersPattern())->withArgument(1));
         $collections = $tokensChecker->getCollections();
@@ -75,27 +64,22 @@ class ParametersPatternTest extends TestCase
         $tokensChecker->apply((new ParametersPattern())->withArgument(2));
         $collections = $tokensChecker->getCollections();
         static::assertCount(2, $collections);
-        static::assertEquals('$data, $row', (string)$collections[0]);
-        static::assertEquals('$data, $row, $new ', (string)$collections[1]);
+        static::assertEquals('$data, $row', (string) $collections[0]);
+        static::assertEquals('$data, $row, $new ', (string) $collections[1]);
 
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
         $tokensChecker->apply((new ParametersPattern())->withArgument(3));
         $collections = $tokensChecker->getCollections();
         static::assertCount(1, $collections);
-        static::assertEquals('$data, $row, $new ', (string)$collections[0]);
+        static::assertEquals('$data, $row, $new ', (string) $collections[0]);
     }
-
 
     public function df()
     {
-
     }
-
 
     public function testWithArgumentCheck()
     {
-
-
         $code = '<?php
 
       function test(\Adm\Users\Model $df = []){
@@ -110,7 +94,6 @@ class ParametersPatternTest extends TestCase
         $collections = $tokensChecker->getCollections();
         static::assertCount(2, $collections);
 
-
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
         $tokensChecker->apply((new ParametersPattern())->withArgument(1, function (Collection $collection) {
             $assign = $collection->find((new Query())->valueIs('='));
@@ -118,14 +101,11 @@ class ParametersPatternTest extends TestCase
         }));
         $collections = $tokensChecker->getCollections();
         static::assertCount(1, $collections);
-        static::assertEquals('\Adm\Users\Model $df = []', (string)$collections[0]);
+        static::assertEquals('\Adm\Users\Model $df = []', (string) $collections[0]);
     }
-
 
     public function testWithArgumentAndArraysAsValues()
     {
-
-
         $code = '<?php
 
       function test($items = [45,array(1,4)], $data = [1,4]){
@@ -141,7 +121,6 @@ class ParametersPatternTest extends TestCase
         $tokensChecker->apply((new ParametersPattern()));
         $collections = $tokensChecker->getCollections();
         static::assertCount(3, $collections);
-
 
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
         $tokensChecker->apply(
@@ -159,7 +138,6 @@ class ParametersPatternTest extends TestCase
         static::assertCount(2, $collections);
     }
 
-
     /**
      * @return array
      */
@@ -167,7 +145,6 @@ class ParametersPatternTest extends TestCase
     {
         return [];
     }
-
 
     /**
      * @return array
@@ -203,7 +180,6 @@ class ParametersPatternTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getOutputParametersDataProvider
      * @param string $code
@@ -213,40 +189,33 @@ class ParametersPatternTest extends TestCase
      */
     public function testOutputParameters($code, $index, $expectPrepared, $expectRaw)
     {
-
         $tokensChecker = self::createPatternMatch($code);
         $tokensChecker->apply((new ParametersPattern())->outputArgument($index));
 
         $collections = $tokensChecker->getCollections();
         static::assertCount(1, $collections);
-        static::assertEquals($expectPrepared, (string)$collections[0]);
-
+        static::assertEquals($expectPrepared, (string) $collections[0]);
 
         $tokensChecker = self::createPatternMatch($code);
         $tokensChecker->apply((new ParametersPattern())->outputArgument($index, false));
 
         $collections = $tokensChecker->getCollections();
         static::assertCount(1, $collections);
-        static::assertEquals($expectRaw, (string)$collections[0]);
-
+        static::assertEquals($expectRaw, (string) $collections[0]);
     }
-
 
     public function testInvalidCheckFunction()
     {
         $tokensChecker = self::createPatternMatch('function custom($data, $row){ }');
-        $pattern = (new ParametersPattern())->withArgument(1, fn() => new stdClass());
-
+        $pattern = (new ParametersPattern())->withArgument(1, fn () => new stdClass());
 
         static::assertInstanceOf(ParametersPattern::class, $pattern);
         $this->expectException(Exception::class);
         $tokensChecker->apply($pattern);
     }
 
-
     public function testGetFirstArgument()
     {
-
         $pattern = new ParametersPattern();
         $pattern->withArgument(1);
 
@@ -259,7 +228,6 @@ class ParametersPatternTest extends TestCase
         self::assertEquals('$userCache', $result[0]->assemble());
     }
 
-
     /**
      * @param string $code
      * @return PatternMatcher
@@ -271,7 +239,6 @@ class ParametersPatternTest extends TestCase
   ');
         return new PatternMatcher($collection);
     }
-
 
     public function testGetWithSecondArgument()
     {
@@ -287,7 +254,6 @@ class ParametersPatternTest extends TestCase
         self::assertCount(1, $result);
         self::assertEquals('$repository', $result[0]->assemble());
     }
-
 
     /**
      * @return array
@@ -318,12 +284,8 @@ class ParametersPatternTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getFetchSpecificArgumentDataProvider
-     * @param $code
-     * @param $argumentIndex
-     * @param $output
      */
     public function testFetchSpecificArgument($code, $argumentIndex, $output)
     {
@@ -340,7 +302,5 @@ class ParametersPatternTest extends TestCase
             self::assertCount(1, $result);
             self::assertEquals($output, $result[0]->assemble());
         }
-
     }
-
 }

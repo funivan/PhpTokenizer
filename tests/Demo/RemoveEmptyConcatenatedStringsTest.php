@@ -12,11 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 class RemoveEmptyConcatenatedStringsTest extends TestCase
 {
-
-
-    /**
-     * @return array
-     */
     public function getDemoCode(): array
     {
         return [
@@ -67,7 +62,6 @@ class RemoveEmptyConcatenatedStringsTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getDemoCode
      * @param string $code
@@ -76,7 +70,6 @@ class RemoveEmptyConcatenatedStringsTest extends TestCase
     public function testRemoveEmptyString($code, $expectCode)
     {
         $collection = Collection::createFromString('<?php ' . $code);
-
 
         foreach ($collection as $index => $token) {
             $p = new QuerySequence($collection, $index);
@@ -108,11 +101,9 @@ class RemoveEmptyConcatenatedStringsTest extends TestCase
             if ($p->isValid()) {
                 $sequence->remove();
             }
-
         }
 
         $collection[0]->remove();
-        $this->assertEquals($expectCode, (string)$collection);
+        $this->assertEquals($expectCode, (string) $collection);
     }
-
 }

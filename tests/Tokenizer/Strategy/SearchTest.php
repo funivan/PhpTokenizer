@@ -12,10 +12,8 @@ use PHPUnit\Framework\TestCase;
 
 class SearchTest extends TestCase
 {
-
     public function testSearchDefault()
     {
-
         $code = '<?php 
       
       echo $a;
@@ -40,16 +38,10 @@ class SearchTest extends TestCase
         static::assertCount(2, $linesWithEcho);
         static::assertEquals('echo $a;', $linesWithEcho[0]);
         static::assertEquals('echo 1 . $a;', $linesWithEcho[1]);
-
     }
 
-
-    /**
-     *
-     */
     public function testBackwardSearch()
     {
-
         $code = '<?php 
       
       
@@ -75,11 +67,9 @@ class SearchTest extends TestCase
         }
 
         static::assertCount(2, $linesWithEcho);
-        static::assertEquals('$name', (string)$linesWithEcho[0]);
-        static::assertEquals('$userName', (string)$linesWithEcho[1]);
-
+        static::assertEquals('$name', (string) $linesWithEcho[0]);
+        static::assertEquals('$userName', (string) $linesWithEcho[1]);
     }
-
 
     public function testInvalidDirection()
     {
@@ -87,10 +77,8 @@ class SearchTest extends TestCase
         Search::create()->setDirection(null);
     }
 
-
     public function testSearchBackward()
     {
-
         $code = '<?php 
       
       echo $name;
@@ -116,5 +104,4 @@ class SearchTest extends TestCase
 
         static::assertCount(1, $linesWithEcho);
     }
-
 }
