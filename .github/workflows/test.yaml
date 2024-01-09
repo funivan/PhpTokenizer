@@ -48,5 +48,5 @@ jobs:
             - name: Run code style check
               run: ./vendor/bin/ecs
 
-            - name: 'Check coverage'
-              run: cat .tmp/clover.xml
+            - name: 'Show coverage'
+              run: cat .tmp/coverage.txt | grep -A 4 "Summary:" >> $GITHUB_STEP_SUMMARY

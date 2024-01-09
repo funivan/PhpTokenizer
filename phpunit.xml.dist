@@ -3,7 +3,7 @@
   <coverage>
     <report>
       <clover outputFile=".tmp/clover.xml"/>
-      <text outputFile="php://stdout" showUncoveredFiles="true"/>
+      <text outputFile=".tmp/coverage.txt" />
     </report>
   </coverage>
   <testsuites>
