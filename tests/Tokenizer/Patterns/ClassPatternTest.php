@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\Tokenizer\Patterns;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\Pattern\PatternMatcher;
 use Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern;
@@ -85,7 +86,7 @@ class ClassPatternTest extends TestCase
     /**
      * @return array
      */
-    public function getForSimpleDetectionProvider()
+    public static function getForSimpleDetectionProvider()
     {
         return [
             [
@@ -120,10 +121,10 @@ class ClassPatternTest extends TestCase
     }
 
     /**
-     * @dataProvider getForSimpleDetectionProvider
      * @param int $expectItems
      * @param string $code
      */
+    #[DataProvider('getForSimpleDetectionProvider')]
     public function testSimpleDetection($expectItems, $code): void
     {
         $collection = Collection::createFromString($code);

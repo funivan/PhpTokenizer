@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\Demo;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 use Funivan\PhpTokenizer\Strategy\Possible;
@@ -12,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class RemoveEmptyConcatenatedStringsTest extends TestCase
 {
-    public function getDemoCode(): array
+    public static function getDemoCode(): array
     {
         return [
             [
@@ -63,10 +64,10 @@ class RemoveEmptyConcatenatedStringsTest extends TestCase
     }
 
     /**
-     * @dataProvider getDemoCode
      * @param string $code
      * @param string $expectCode
      */
+    #[DataProvider('getDemoCode')]
     public function testRemoveEmptyString($code, $expectCode): void
     {
         $collection = Collection::createFromString('<?php ' . $code);

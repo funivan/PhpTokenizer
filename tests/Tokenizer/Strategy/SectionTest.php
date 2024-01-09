@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
 use Funivan\PhpTokenizer\Pattern\PatternMatcher;
@@ -18,7 +19,7 @@ class SectionTest extends TestCase
     /**
      * @return array
      */
-    public function functionCallDataProvider()
+    public static function functionCallDataProvider()
     {
         return [
             [
@@ -41,9 +42,7 @@ class SectionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider functionCallDataProvider
-     */
+    #[DataProvider('functionCallDataProvider')]
     public function testFunctionCall($code, $functionName, $expectCode): void
     {
         $code = '<?php ' . $code;
@@ -151,7 +150,7 @@ class SectionTest extends TestCase
     /**
      * @return array
      */
-    public function functionDetectDataProvider()
+    public static function functionDetectDataProvider()
     {
         return [
             [
@@ -206,9 +205,7 @@ class SectionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider functionDetectDataProvider
-     */
+    #[DataProvider('functionDetectDataProvider')]
     public function testFunctionDetect(callable $callback, $expectFunctionNum): void
     {
         $code = '<?php 

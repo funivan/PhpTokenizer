@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\Tokenizer\Strategy;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Exception;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
@@ -41,7 +42,7 @@ class ComplexTest extends TestCase
     /**
      * @return array
      */
-    public function getTestWithoutWhitespaceSkipDataProvider()
+    public static function getTestWithoutWhitespaceSkipDataProvider()
     {
         return [
             [
@@ -66,9 +67,7 @@ class ComplexTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestWithoutWhitespaceSkipDataProvider
-     */
+    #[DataProvider('getTestWithoutWhitespaceSkipDataProvider')]
     public function testWithoutWhitespaceSkip($sequence, $expectItems): void
     {
         $code = '<?php 
@@ -96,7 +95,7 @@ class ComplexTest extends TestCase
     /**
      * @return array
      */
-    public function getComplexTestData()
+    public static function getComplexTestData()
     {
         return [
             [
@@ -154,9 +153,9 @@ class ComplexTest extends TestCase
     }
 
     /**
-     * @dataProvider   getComplexTestData
      * @throws Exception
      */
+    #[DataProvider('getComplexTestData')]
     public function testComplex(string $code, string $contain = null, $notContain = null): void
     {
         if ($contain == null and $notContain === null) {

@@ -20,9 +20,7 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="tap" target="build/report.tap"/>
-        <log type="junit" target="build/report.junit.xml"/>
-        <log type="coverage-text" target="php://stdout"/>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
+        <log type="coverage-clover" target=".tmp/clover.xml" showUncoveredFiles="true"/>
     </logging>
 </phpunit>

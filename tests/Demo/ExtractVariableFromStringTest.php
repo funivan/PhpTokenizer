@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\Demo;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\Pattern\PatternMatcher;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
@@ -12,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ExtractVariableFromStringTest extends TestCase
 {
-    public function getDemoCode(): array
+    public static function getDemoCode(): array
     {
         return [
             [
@@ -57,9 +58,7 @@ final class ExtractVariableFromStringTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getDemoCode
-     */
+    #[DataProvider('getDemoCode')]
     public function testExtract(string $code, string $expectCode): void
     {
         $collection = Collection::createFromString('<?php ' . $code);

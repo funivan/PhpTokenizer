@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\Tokenizer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\Exception\Exception;
 use Funivan\PhpTokenizer\Pattern\PatternMatcher;
@@ -42,7 +43,7 @@ class PatternTest extends TestCase
     /**
      * @return array
      */
-    public function getStrictSectionAndSequencePatternDataProvider()
+    public static function getStrictSectionAndSequencePatternDataProvider()
     {
         return [
             [
@@ -62,10 +63,10 @@ class PatternTest extends TestCase
     }
 
     /**
-     * @dataProvider getStrictSectionAndSequencePatternDataProvider
      * @param string $data
      * @param boolean $expectResult
      */
+    #[DataProvider('getStrictSectionAndSequencePatternDataProvider')]
     public function testStrictSectionAndSequencePattern($data, $expectResult): void
     {
         $code = '<?php 

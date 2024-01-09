@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer\QuerySequence;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 use Funivan\PhpTokenizer\Strategy\Possible;
@@ -56,7 +57,7 @@ class QuerySequenceTest extends TestCase
     /**
      * @return array
      */
-    public function getTestStrictInvalidConditionDataProvider()
+    public static function getTestStrictInvalidConditionDataProvider()
     {
         return [
             [
@@ -73,9 +74,7 @@ class QuerySequenceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestStrictInvalidConditionDataProvider
-     */
+    #[DataProvider('getTestStrictInvalidConditionDataProvider')]
     public function testStrictInvalidCondition($condition): void
     {
         $code = '<?php echo $a;';
@@ -89,7 +88,7 @@ class QuerySequenceTest extends TestCase
     /**
      * @return array
      */
-    public function getTestStrictConditionDataProvider()
+    public static function getTestStrictConditionDataProvider()
     {
         return [
             [
@@ -130,9 +129,7 @@ class QuerySequenceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestStrictConditionDataProvider
-     */
+    #[DataProvider('getTestStrictConditionDataProvider')]
     public function testStrictCondition($condition, $isValid): void
     {
         $code = '<?php echo $a;';
@@ -146,7 +143,7 @@ class QuerySequenceTest extends TestCase
     /**
      * @return array
      */
-    public function getTestPossibleConditionDataProvider()
+    public static function getTestPossibleConditionDataProvider()
     {
         return [
             [
@@ -185,9 +182,7 @@ class QuerySequenceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestPossibleConditionDataProvider
-     */
+    #[DataProvider('getTestPossibleConditionDataProvider')]
     public function testPossibleCondition($condition, $isValidToken): void
     {
         $code = '<?php echo $a;';
@@ -203,7 +198,7 @@ class QuerySequenceTest extends TestCase
     /**
      * @return array
      */
-    public function getTestPossibleInvalidConditionDataProvider()
+    public static function getTestPossibleInvalidConditionDataProvider()
     {
         return [
             [
@@ -223,9 +218,7 @@ class QuerySequenceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestPossibleInvalidConditionDataProvider
-     */
+    #[DataProvider('getTestPossibleInvalidConditionDataProvider')]
     public function testPossibleInvalidCondition($condition): void
     {
         $code = '<?php echo $a;';
