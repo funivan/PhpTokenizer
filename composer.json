@@ -29,10 +29,5 @@
         "psr-4": {
             "Test\\Funivan\\PhpTokenizer\\": "tests"
         }
-    },
-    "config": {
-        "platform": {
-            "php": "7.2"
-        }
     }
 }
