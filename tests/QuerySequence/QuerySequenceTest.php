@@ -14,18 +14,9 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-/**
- *
- *
- */
 class QuerySequenceTest extends TestCase
 {
-
-
-    /**
-     *
-     */
-    public function testSimpleIterate()
+    public function testSimpleIterate(): void
     {
         $code = '<?php 
       echo $a;
@@ -46,11 +37,7 @@ class QuerySequenceTest extends TestCase
         static::assertCount(3, $findItems);
     }
 
-
-    /**
-     *
-     */
-    public function testMoveToToken()
+    public function testMoveToToken(): void
     {
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
@@ -60,13 +47,11 @@ class QuerySequenceTest extends TestCase
         $token = $finder->moveToToken($lastToken);
         static::assertEquals($lastToken, $token);
 
-
         $finder = new QuerySequence($collection);
         $token = $finder->moveToToken(new Token());
         static::assertNull($token->getValue());
         static::assertFalse($finder->isValid());
     }
-
 
     /**
      * @return array
@@ -88,14 +73,11 @@ class QuerySequenceTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getTestStrictInvalidConditionDataProvider
-     * @param $condition
      */
-    public function testStrictInvalidCondition($condition)
+    public function testStrictInvalidCondition($condition): void
     {
-
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
 
@@ -103,7 +85,6 @@ class QuerySequenceTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $q->strict($condition);
     }
-
 
     /**
      * @return array
@@ -149,24 +130,18 @@ class QuerySequenceTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getTestStrictConditionDataProvider
-     * @param $condition
-     * @param $isValid
      */
-    public function testStrictCondition($condition, $isValid)
+    public function testStrictCondition($condition, $isValid): void
     {
-
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
-
 
         $q = new QuerySequence($collection, 3);
         $q->strict($condition);
         static::assertEquals($isValid, $q->isValid());
     }
-
 
     /**
      * @return array
@@ -210,27 +185,20 @@ class QuerySequenceTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getTestPossibleConditionDataProvider
-     * @param $condition
-     * @param $isValidToken
      */
-    public function testPossibleCondition($condition, $isValidToken)
+    public function testPossibleCondition($condition, $isValidToken): void
     {
-
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
-
 
         $q = new QuerySequence($collection, 3);
         $token = $q->possible($condition);
 
         static::assertEquals($isValidToken, $token->isValid());
         static::assertTrue($q->isValid());
-
     }
-
 
     /**
      * @return array
@@ -255,14 +223,11 @@ class QuerySequenceTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getTestPossibleInvalidConditionDataProvider
-     * @param $condition
      */
-    public function testPossibleInvalidCondition($condition)
+    public function testPossibleInvalidCondition($condition): void
     {
-
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
 
@@ -271,8 +236,7 @@ class QuerySequenceTest extends TestCase
         $q->possible($condition);
     }
 
-
-    public function testSectionWithoutEndDelimiter()
+    public function testSectionWithoutEndDelimiter(): void
     {
         $code = '<?php foreach($users as $user ){ $a;';
         $collection = Collection::createFromString($code);
@@ -283,11 +247,10 @@ class QuerySequenceTest extends TestCase
         static::assertCount(0, $section);
     }
 
-
     /**
      *  Check move strategy
      */
-    public function testMove()
+    public function testMove(): void
     {
         $code = '<?php echo 1';
         $collection = Collection::createFromString($code);
@@ -311,14 +274,11 @@ class QuerySequenceTest extends TestCase
         static::assertFalse($q->isValid());
     }
 
-
-    public function testSetValidWithInvalidFlag()
+    public function testSetValidWithInvalidFlag(): void
     {
         $q = new QuerySequence(new Collection(), 0);
         /** @noinspection PhpParamsInspection */
         $this->expectException(InvalidArgumentException::class);
         $q->setValid(new stdClass());
     }
-
-
 }

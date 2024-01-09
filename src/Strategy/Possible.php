@@ -4,22 +4,12 @@ declare(strict_types=1);
 
 namespace Funivan\PhpTokenizer\Strategy;
 
-
 use Funivan\PhpTokenizer\Collection;
 
-/**
- *
- *
- */
 class Possible extends QueryStrategy
 {
-
-    /**
-     * @inheritdoc
-     */
     public function process(Collection $collection, $currentIndex)
     {
-
         $result = new StrategyResult();
         $result->setValid(true);
 
@@ -34,5 +24,4 @@ class Possible extends QueryStrategy
 
         return $result;
     }
-
 }

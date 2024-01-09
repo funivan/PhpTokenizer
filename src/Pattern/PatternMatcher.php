@@ -8,27 +8,20 @@ use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\Exception\Exception;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 
-/**
- *
- */
 class PatternMatcher implements PatternMatcherInterface
 {
-
     /**
      * @var Collection[]
      */
     protected $collections = [];
-
 
     public function __construct(Collection $collection)
     {
         $this->collections[] = $collection;
     }
 
-
     public function apply(callable $pattern): self
     {
-
         # Clear current collections.
         # We will add new one and iterate over current
 
@@ -36,27 +29,20 @@ class PatternMatcher implements PatternMatcherInterface
         $this->collections = [];
 
         foreach ($collections as $collection) {
-
             $collectionsResult = $this->iterateOverCollections($pattern, $collection);
 
             foreach ($collectionsResult as $resultCollection) {
                 $this->collections[] = $resultCollection;
             }
-
         }
 
         return $this;
     }
 
-
-    /**
-     * @inheritdoc
-     */
     public function getCollections()
     {
         return $this->collections;
     }
-
 
     /**
      * @return Collection[]
@@ -74,7 +60,7 @@ class PatternMatcher implements PatternMatcherInterface
                 continue;
             }
 
-            if (!($patternResult instanceof Collection)) {
+            if (! ($patternResult instanceof Collection)) {
                 throw new Exception('Invalid result from pattern callback. Expect Collection. Given:' . gettype($patternResult));
             }
 
@@ -83,6 +69,4 @@ class PatternMatcher implements PatternMatcherInterface
 
         return $result;
     }
-
-
 }

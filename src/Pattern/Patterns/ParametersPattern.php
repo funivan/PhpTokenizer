@@ -10,12 +10,8 @@ use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 use Funivan\PhpTokenizer\Strategy\Section;
 use Funivan\PhpTokenizer\Token;
 
-/**
- *
- */
 class ParametersPattern implements PatternInterface
 {
-
     /**
      * @var array
      */
@@ -31,18 +27,12 @@ class ParametersPattern implements PatternInterface
      */
     private $outputPreparedArgument = null;
 
-
-    /**
-     *
-     */
     public function __construct()
     {
         $this->outputFull();
     }
 
-
     /**
-     * @param QuerySequence $querySequence
      * @return Collection|null
      * @throws Exception
      */
@@ -59,16 +49,14 @@ class ParametersPattern implements PatternInterface
             return $section;
         }
 
-
         /** @var Collection[] $arguments */
         $arguments = $this->getArguments($section);
 
         foreach ($this->argumentCheck as $index => $check) {
-
             $argumentTokens = $arguments[$index] ?? new Collection();
             $result = $check($argumentTokens);
 
-            if (!is_bool($result)) {
+            if (! is_bool($result)) {
                 throw new Exception('Argument check function should return boolean');
             }
 
@@ -78,7 +66,7 @@ class ParametersPattern implements PatternInterface
         }
 
         if ($this->outputArgument !== null) {
-            $argumentCollection = !empty($arguments[$this->outputArgument]) ? $arguments[$this->outputArgument] : null;
+            $argumentCollection = ! empty($arguments[$this->outputArgument]) ? $arguments[$this->outputArgument] : null;
 
             # Do not remove T_WHITESPACE tokens from the argument output
             if ($this->outputPreparedArgument === false) {
@@ -105,31 +93,28 @@ class ParametersPattern implements PatternInterface
         return $section;
     }
 
-
     /**
      * @return $this
      */
     public function withArgument(int $index, callable $check = null): self
     {
         if ($check === null) {
-            $check = fn(Collection $argumentTokens) => $argumentTokens->count() !== 0;
+            $check = fn (Collection $argumentTokens) => $argumentTokens->count() !== 0;
         }
         $this->argumentCheck[$index] = $check;
         return $this;
     }
-
 
     /**
      * @return $this
      */
     public function withoutArgument(int $index): self
     {
-        $check = fn(Collection $argumentTokens) => $argumentTokens->count() === 0;
+        $check = fn (Collection $argumentTokens) => $argumentTokens->count() === 0;
 
         $this->argumentCheck[$index] = $check;
         return $this;
     }
-
 
     /**
      * @return Collection[]
@@ -142,7 +127,6 @@ class ParametersPattern implements PatternInterface
         $arguments = [];
         $tokensNum = ($section->count() - 1);
         for ($tokenIndex = 0; $tokenIndex <= $tokensNum; $tokenIndex++) {
-
             $token = $section->offsetGet($tokenIndex);
 
             if ($token === null) {
@@ -157,8 +141,7 @@ class ParametersPattern implements PatternInterface
                 $skipToToken = $this->getEndArray($token, $section, $tokenIndex);
             }
 
-
-            if (!isset($arguments[$argumentIndex])) {
+            if (! isset($arguments[$argumentIndex])) {
                 $arguments[$argumentIndex] = new Collection();
             }
             $arguments[$argumentIndex][] = $token;
@@ -166,7 +149,6 @@ class ParametersPattern implements PatternInterface
 
         return $arguments;
     }
-
 
     /**
      * @return Token
@@ -188,7 +170,6 @@ class ParametersPattern implements PatternInterface
         return null;
     }
 
-
     /**
      * @return $this
      */
@@ -198,7 +179,6 @@ class ParametersPattern implements PatternInterface
         $this->outputPreparedArgument = null;
         return $this;
     }
-
 
     /**
      * @param bool $prepared
@@ -210,5 +190,4 @@ class ParametersPattern implements PatternInterface
         $this->outputPreparedArgument = $prepared;
         return $this;
     }
-
 }

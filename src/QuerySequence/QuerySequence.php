@@ -20,26 +20,18 @@ use Funivan\PhpTokenizer\Token;
  */
 class QuerySequence implements QuerySequenceInterface
 {
-
     /**
      * @var bool
      */
     private $valid = true;
 
-    /**
-     * @var
-     */
     private $skipWhitespaces = false;
 
-
-    /**
-     * @inheritdoc
-     * @param int $initialPosition
-     */
-    public function __construct(private Collection $collection, private $position = 0)
-    {
+    public function __construct(
+        private Collection $collection,
+        private $position = 0
+    ) {
     }
-
 
     /**
      * @return Collection
@@ -48,7 +40,6 @@ class QuerySequence implements QuerySequenceInterface
     {
         return $this->collection;
     }
-
 
     /**
      * @param int $position
@@ -60,7 +51,6 @@ class QuerySequence implements QuerySequenceInterface
         return $this;
     }
 
-
     /**
      * @return int
      */
@@ -68,7 +58,6 @@ class QuerySequence implements QuerySequenceInterface
     {
         return $this->position;
     }
-
 
     /**
      * Strict validation of condition
@@ -82,7 +71,6 @@ class QuerySequence implements QuerySequenceInterface
         return $this->process($query);
     }
 
-
     /**
      * Check if token possible valid for our condition
      *
@@ -95,7 +83,6 @@ class QuerySequence implements QuerySequenceInterface
         return $this->process($query);
     }
 
-
     /**
      * @param string $start
      * @param string $end
@@ -103,9 +90,8 @@ class QuerySequence implements QuerySequenceInterface
      */
     public function section($start, $end)
     {
-
         $token = $this->strict($start);
-        if (!$token->isValid()) {
+        if (! $token->isValid()) {
             # cant find start position
             return new Collection();
         }
@@ -115,13 +101,12 @@ class QuerySequence implements QuerySequenceInterface
         $section = new Section();
         $section->setDelimiters($start, $end);
         $lastToken = $this->process($section);
-        if (!$lastToken->isValid()) {
+        if (! $lastToken->isValid()) {
             return new Collection();
         }
 
         return $this->collection->extractByTokens($token, $lastToken);
     }
-
 
     /**
      * By default we search forward
@@ -140,7 +125,6 @@ class QuerySequence implements QuerySequenceInterface
         return $this->process($query);
     }
 
-
     /**
      * Relative move
      * +10 move forward 10 tokens
@@ -154,7 +138,6 @@ class QuerySequence implements QuerySequenceInterface
         return $this->process(Move::create($steps));
     }
 
-
     /**
      * Move to specific position
      *
@@ -162,14 +145,12 @@ class QuerySequence implements QuerySequenceInterface
      */
     public function moveToToken(Token $token)
     {
-
-        if (!$token->isValid()) {
+        if (! $token->isValid()) {
             $this->setValid(false);
             return new Token();
         }
 
         $tokenIndex = $token->getIndex();
-
 
         foreach ($this->collection as $index => $collectionToken) {
             if ($collectionToken->getIndex() === $tokenIndex) {
@@ -181,7 +162,6 @@ class QuerySequence implements QuerySequenceInterface
         $this->setValid(false);
         return new Token();
     }
-
 
     /**
      * Array may contain Int, String or any StrategyInterface object
@@ -198,7 +178,6 @@ class QuerySequence implements QuerySequenceInterface
         return $range;
     }
 
-
     /**
      * @param string|int|StrategyInterface $value
      * @return Token
@@ -214,13 +193,8 @@ class QuerySequence implements QuerySequenceInterface
         return $this->process($query);
     }
 
-
-    /**
-     * @inheritdoc
-     */
     public function process(StrategyInterface $strategy)
     {
-
         if ($this->isValid() === false) {
             return new Token();
         }
@@ -248,15 +222,12 @@ class QuerySequence implements QuerySequenceInterface
         return $token;
     }
 
-
     /**
-     *
      * @param StrategyInterface|string|int $value
      * @return QueryStrategy
      */
     private function buildStrategyCondition($value, QueryStrategy $defaultStrategy)
     {
-
         if ($value instanceof $defaultStrategy) {
             return $value;
         }
@@ -278,10 +249,8 @@ class QuerySequence implements QuerySequenceInterface
             return $query;
         }
 
-
         throw new InvalidArgumentException('Invalid token condition. Expect string or int or StrategyInterface');
     }
-
 
     /**
      * @param boolean $valid
@@ -289,13 +258,12 @@ class QuerySequence implements QuerySequenceInterface
      */
     public function setValid($valid)
     {
-        if (!is_bool($valid)) {
+        if (! is_bool($valid)) {
             throw new InvalidArgumentException('Invalid flag. Expect boolean. Given:' . gettype($valid));
         }
         $this->valid = $valid;
         return $this;
     }
-
 
     /**
      * @return Token
@@ -312,7 +280,6 @@ class QuerySequence implements QuerySequenceInterface
         return new Token();
     }
 
-
     /**
      * Indicate state of all conditions
      *
@@ -323,7 +290,6 @@ class QuerySequence implements QuerySequenceInterface
         return ($this->valid === true);
     }
 
-
     /**
      * @param boolean $skipWhitespaces
      * @return $this
@@ -333,5 +299,4 @@ class QuerySequence implements QuerySequenceInterface
         $this->skipWhitespaces = $skipWhitespaces;
         return $this;
     }
-
 }

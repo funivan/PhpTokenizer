@@ -18,13 +18,11 @@ use InvalidArgumentException;
  */
 class MethodPattern implements PatternInterface
 {
-
     final public const OUTPUT_BODY = 0;
 
     final public const OUTPUT_FULL = 1;
 
     final public const OUTPUT_DOC_COMMENT = 2;
-
 
     /**
      * @var QueryStrategy
@@ -56,23 +54,17 @@ class MethodPattern implements PatternInterface
      */
     private $argumentsPattern;
 
-
-    /**
-     *
-     */
     public function __construct()
     {
         $this->withName(Strict::create()->valueLike('!.+!'));
         $this->withAnyModifier();
 
         /** @noinspection PhpUnusedParameterInspection */
-        $this->withBody(fn(Collection $body) => true);
+        $this->withBody(fn (Collection $body) => true);
 
         /** @noinspection PhpUnusedParameterInspection */
-        $this->withDocComment(fn(Token $token) => true);
-
+        $this->withDocComment(fn (Token $token) => true);
     }
-
 
     /**
      * @return $this
@@ -83,7 +75,6 @@ class MethodPattern implements PatternInterface
         return $this;
     }
 
-
     /**
      * @return $this
      */
@@ -93,7 +84,6 @@ class MethodPattern implements PatternInterface
         return $this;
     }
 
-
     /**
      * @return $this
      */
@@ -102,7 +92,6 @@ class MethodPattern implements PatternInterface
         $this->outputType = self::OUTPUT_DOC_COMMENT;
         return $this;
     }
-
 
     /**
      * @param string|QueryStrategy $name
@@ -121,7 +110,6 @@ class MethodPattern implements PatternInterface
         return $this;
     }
 
-
     /**
      * @return $this
      */
@@ -131,9 +119,7 @@ class MethodPattern implements PatternInterface
         return $this;
     }
 
-
     /**
-     * @return bool
      * @throws Exception
      */
     private function isValidBody(Collection $body): bool
@@ -142,32 +128,28 @@ class MethodPattern implements PatternInterface
         return $checker($body);
     }
 
-
     /**
      * @return $this
      */
     public function withDocComment(callable $check = null): self
     {
-
         if ($check === null) {
-            $check = fn(Token $token) => $token->getType() === T_DOC_COMMENT;
+            $check = fn (Token $token) => $token->getType() === T_DOC_COMMENT;
         }
         $this->docCommentChecker = $check;
 
         return $this;
     }
 
-
     /**
      * Find functions without doc comments
      */
     public function withoutDocComment(): self
     {
-        $this->docCommentChecker = fn(Token $token) => $token->isValid() === false;
+        $this->docCommentChecker = fn (Token $token) => $token->isValid() === false;
 
         return $this;
     }
-
 
     /**
      * @return $this
@@ -178,44 +160,38 @@ class MethodPattern implements PatternInterface
         return $this;
     }
 
-
     /**
      * @return $this
      */
     public function withAnyModifier(): self
     {
         $this->modifierChecker = [];
-        $this->modifierChecker[] = fn() => true;
+        $this->modifierChecker[] = fn () => true;
         return $this;
     }
-
 
     /**
      * @return $this
      */
     public function withModifier(string $modifier): self
     {
-        $this->modifierChecker[] = fn($allModifiers) => in_array($modifier, $allModifiers);
+        $this->modifierChecker[] = fn ($allModifiers) => in_array($modifier, $allModifiers);
 
         return $this;
     }
-
 
     /**
      * @return $this
      */
     public function withoutModifier(string $modifier): self
     {
-
-        $this->modifierChecker[] = fn($allModifiers) => !in_array($modifier, $allModifiers);
+        $this->modifierChecker[] = fn ($allModifiers) => ! in_array($modifier, $allModifiers);
 
         return $this;
     }
 
-
     /**
      * @param string[] $modifiers
-     * @return bool
      * @throws Exception
      */
     private function isValidModifiers(array $modifiers): bool
@@ -223,7 +199,7 @@ class MethodPattern implements PatternInterface
         foreach ($this->modifierChecker as $checkModifier) {
             $result = $checkModifier($modifiers);
 
-            if (!is_bool($result)) {
+            if (! is_bool($result)) {
                 throw new Exception('Modifier checker should return boolean result');
             }
             if ($result === false) {
@@ -234,9 +210,7 @@ class MethodPattern implements PatternInterface
         return true;
     }
 
-
     /**
-     * @param QuerySequence $querySequence
      * @return Collection|null
      */
     public function __invoke(QuerySequence $querySequence)
@@ -249,7 +223,6 @@ class MethodPattern implements PatternInterface
             T_FINAL,
         ];
 
-
         # detect function
         $functionKeyword = $querySequence->strict('function');
         $querySequence->strict(T_WHITESPACE);
@@ -258,7 +231,7 @@ class MethodPattern implements PatternInterface
         $querySequence->possible(T_WHITESPACE);
         $body = $querySequence->section('{', '}');
 
-        if (!$querySequence->isValid()) {
+        if (! $querySequence->isValid()) {
             return null;
         }
 
@@ -279,10 +252,8 @@ class MethodPattern implements PatternInterface
 
         $modifiers = [];
 
-
         /** @var Token[] $items */
         foreach ($items as $item) {
-
             if ($item->getType() === T_WHITESPACE) {
                 $startFrom = $item;
                 continue;
@@ -294,7 +265,6 @@ class MethodPattern implements PatternInterface
                 $docComment = $item;
                 continue;
             }
-
 
             if (in_array($item->getType(), $availableModifiers)) {
                 $startFrom = $item;
@@ -330,7 +300,6 @@ class MethodPattern implements PatternInterface
             $startFrom = $functionKeyword;
         }
 
-
         if ($this->outputType === self::OUTPUT_FULL) {
             # all conditions are ok, so extract full function
             $fullFunction = $collection->extractByTokens($startFrom, $lastToken);
@@ -350,7 +319,6 @@ class MethodPattern implements PatternInterface
         return $body;
     }
 
-
     /**
      * @return boolean
      * @throws Exception
@@ -361,10 +329,6 @@ class MethodPattern implements PatternInterface
         return $checker($token);
     }
 
-
-    /**
-     * @return bool
-     */
     private function isValidArguments(Collection $parameters): bool
     {
         if ($this->argumentsPattern === null) {
@@ -375,6 +339,4 @@ class MethodPattern implements PatternInterface
 
         return (count($pattern->getCollections()) !== 0);
     }
-
-
 }

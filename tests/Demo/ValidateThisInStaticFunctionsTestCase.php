@@ -13,13 +13,11 @@ use PHPUnit\Framework\TestCase;
 
 class ValidateThisInStaticFunctionsTestCase extends TestCase
 {
-
     /**
      * @return array
      */
     public function getDemoCode()
     {
-
         return [
             [
                 'public static function test(){echo $this;}',
@@ -40,17 +38,16 @@ class ValidateThisInStaticFunctionsTestCase extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider getDemoCode
      * @param string $code
      * @param boolean $expectThis
      */
-    public function testExtract($code, $expectThis)
+    public function testExtract($code, $expectThis): void
     {
         $collection = Collection::createFromString("<?php " . $code);
         $containThis = false;
-        (new PatternMatcher($collection))->apply(function (QuerySequence $q) use (&$containThis) {
+        (new PatternMatcher($collection))->apply(function (QuerySequence $q) use (&$containThis): void {
             $q->setSkipWhitespaces(true);
             $q->strict('static');
             $q->process(Possible::create()->valueIs(['public', 'protected', 'private']));
@@ -65,8 +62,6 @@ class ValidateThisInStaticFunctionsTestCase extends TestCase
             }
         });
 
-
         self::assertEquals($expectThis, $containThis);
     }
-
 }

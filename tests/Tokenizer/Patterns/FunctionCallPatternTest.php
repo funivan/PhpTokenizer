@@ -11,16 +11,10 @@ use Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern;
 use Funivan\PhpTokenizer\Query\Query;
 use PHPUnit\Framework\TestCase;
 
-/**
- *
- */
 class FunctionCallPatternTest extends TestCase
 {
-
-    public function testDetectFunctionCall()
+    public function testDetectFunctionCall(): void
     {
-
-
         $code = '<?php
 
       echo @trigger_error("Deprecated", E_USER_DEPRECATED);
@@ -44,15 +38,12 @@ class FunctionCallPatternTest extends TestCase
         $collections = $tokensChecker->getCollections();
         static::assertCount(2, $collections);
 
-        static::assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string)$collections[0]);
-        static::assertEquals('strlen(123)', (string)$collections[1]);
+        static::assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
+        static::assertEquals('strlen(123)', (string) $collections[1]);
     }
 
-
-    public function testWithName()
+    public function testWithName(): void
     {
-
-
         $code = '<?php
 
       echo @trigger_error("Deprecated", E_USER_DEPRECATED);
@@ -68,21 +59,18 @@ class FunctionCallPatternTest extends TestCase
         $tokensChecker->apply((new FunctionCallPattern())->withName((new Query())->valueLike('!^str.+$!')));
         $collections = $tokensChecker->getCollections();
         static::assertCount(1, $collections);
-
     }
-
 
     /**
      * @faq function :: How to find function and fetch only its arguments
      */
-    public function testOutputArguments()
+    public function testOutputArguments(): void
     {
         $code = '<?php
 
       echo @trigger_error("Deprecated", E_USER_DEPRECATED);
       echo strlen(123);
       ';
-
 
         $matcher = (new PatternMatcher(Collection::createFromString($code)))
             ->apply(
@@ -93,17 +81,14 @@ class FunctionCallPatternTest extends TestCase
         $collections = $matcher->getCollections();
 
         static::assertCount(2, $collections);
-        static::assertEquals('("Deprecated", E_USER_DEPRECATED)', (string)$collections[0]);
+        static::assertEquals('("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
     }
-
 
     /**
      * @faq How to find function with specific arguments num
      */
-    public function testWithParameters()
+    public function testWithParameters(): void
     {
-
-
         $code = '<?php
 
       echo @trigger_error("Deprecated", E_USER_DEPRECATED);
@@ -128,7 +113,6 @@ class FunctionCallPatternTest extends TestCase
 
         static::assertCount(1, $collections);
 
-        static::assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string)$collections[0]);
+        static::assertEquals('trigger_error("Deprecated", E_USER_DEPRECATED)', (string) $collections[0]);
     }
-
 }

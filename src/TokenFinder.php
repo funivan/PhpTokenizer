@@ -19,15 +19,11 @@ use Funivan\PhpTokenizer\Query\QueryInterface;
  */
 class TokenFinder
 {
-
-    public function __construct(private readonly Collection $collection)
-    {
+    public function __construct(
+        private readonly Collection $collection
+    ) {
     }
 
-
-    /**
-     * @return Collection
-     */
     public function find(QueryInterface $query): Collection
     {
         $result = new Collection();
@@ -38,5 +34,4 @@ class TokenFinder
         }
         return $result;
     }
-
 }

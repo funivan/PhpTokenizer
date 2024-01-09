@@ -6,18 +6,12 @@ namespace Funivan\PhpTokenizer\Strategy;
 
 use Funivan\PhpTokenizer\Token;
 
-/**
- *
- *
- */
 class StrategyResult
 {
-
     /**
      * @var Token
      */
     private $token = null;
-
 
     /**
      * @var int|null
@@ -29,7 +23,6 @@ class StrategyResult
      */
     private $valid = false;
 
-
     /**
      * @return Token|null
      */
@@ -37,7 +30,6 @@ class StrategyResult
     {
         return $this->token;
     }
-
 
     /**
      * @return boolean
@@ -47,17 +39,15 @@ class StrategyResult
         return ($this->valid === true);
     }
 
-
     /**
      * @param boolean $valid
      * @return $this
      */
     public function setValid($valid)
     {
-        $this->valid = (boolean)$valid;
+        $this->valid = (bool) $valid;
         return $this;
     }
-
 
     /**
      * @return $this
@@ -67,7 +57,6 @@ class StrategyResult
         $this->token = $token;
         return $this;
     }
-
 
     /**
      * @param int $nexTokenIndex
@@ -79,7 +68,6 @@ class StrategyResult
         return $this;
     }
 
-
     /**
      * @return int|null
      */
@@ -87,5 +75,4 @@ class StrategyResult
     {
         return $this->nexTokenIndex;
     }
-
 }

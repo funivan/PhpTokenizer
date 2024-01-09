@@ -7,17 +7,12 @@ namespace Test\Funivan\PhpTokenizer\Tokenizer;
 use Funivan\PhpTokenizer\Collection;
 use PHPUnit\Framework\TestCase;
 
-/**
- *
- *
- */
 class HelperTest extends TestCase
 {
-
     /**
      * @void
      */
-    public function testCheckLines()
+    public function testCheckLines(): void
     {
         $code = '<?php return [
       ];';
@@ -33,6 +28,4 @@ class HelperTest extends TestCase
         $collection = Collection::createFromString($code);
         $this->assertEquals(4, $collection->getLast()->getLine());
     }
-
-
 }

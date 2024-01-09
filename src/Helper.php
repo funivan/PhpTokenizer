@@ -9,7 +9,6 @@ use ParseError;
 
 class Helper
 {
-
     /**
      * Convert php code to array of tokens
      *
@@ -28,8 +27,7 @@ class Helper
         }
 
         foreach ($tokens as $index => $tokenData) {
-
-            if (!is_array($tokenData)) {
+            if (! is_array($tokenData)) {
                 $previousIndex = $index - 1;
 
                 /** @var Token $previousToken */
@@ -45,12 +43,10 @@ class Helper
             $token = new Token($tokenData);
             $token->setIndex($index);
             $tokens[$index] = $token;
-
         }
 
         return $tokens;
     }
-
 
     /**
      * @return string
@@ -64,6 +60,4 @@ class Helper
         $string .= ' </pre > ';
         return $string;
     }
-
-
 }

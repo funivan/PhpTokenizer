@@ -9,13 +9,8 @@ use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
 use Funivan\PhpTokenizer\Query\Query;
 use Funivan\PhpTokenizer\Query\QueryInterface;
 
-/**
- *
- *
- */
 class Section extends QueryStrategy
 {
-
     /**
      * @var QueryInterface
      */
@@ -25,7 +20,6 @@ class Section extends QueryStrategy
      * @var QueryInterface
      */
     private $endQuery;
-
 
     /**
      * @param string $start
@@ -45,13 +39,8 @@ class Section extends QueryStrategy
         return $this;
     }
 
-
-    /**
-     * @inheritdoc
-     */
     public function process(Collection $collection, $currentIndex)
     {
-
         $this->requireQueries();
 
         $result = new StrategyResult();
@@ -73,7 +62,6 @@ class Section extends QueryStrategy
                 if ($blockEndFlag === 1) {
                     $startIndex = $tokenIndex;
                 }
-
             } elseif ($startIndex !== null and $this->endQuery->isValid($token)) {
                 $blockEndFlag--;
             }
@@ -94,7 +82,6 @@ class Section extends QueryStrategy
         return $result;
     }
 
-
     /**
      * @return $this
      */
@@ -103,7 +90,6 @@ class Section extends QueryStrategy
         $this->startQuery = $startQuery;
         return $this;
     }
-
 
     /**
      * @return $this
@@ -114,8 +100,7 @@ class Section extends QueryStrategy
         return $this;
     }
 
-
-    protected function requireQueries()
+    protected function requireQueries(): void
     {
         if (empty($this->startQuery)) {
             throw new InvalidArgumentException('Empty start Query. ');
@@ -125,5 +110,4 @@ class Section extends QueryStrategy
             throw new InvalidArgumentException('Empty end Query. ');
         }
     }
-
 }

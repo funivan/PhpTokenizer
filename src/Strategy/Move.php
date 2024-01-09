@@ -19,13 +19,9 @@ use Funivan\PhpTokenizer\Exception\InvalidArgumentException;
  * ```
  * $result = (new Move(-10))->process($collection, 1);
  * ```
- *
- *
  */
 class Move implements StrategyInterface
 {
-
-
     /**
      * @var int
      */
@@ -36,7 +32,6 @@ class Move implements StrategyInterface
      */
     protected $direction;
 
-
     /**
      * @param int $steps
      * @return static
@@ -45,7 +40,6 @@ class Move implements StrategyInterface
     {
         return new static($steps);
     }
-
 
     /**
      * You can pass positive and negative numbers
@@ -56,19 +50,13 @@ class Move implements StrategyInterface
      */
     public function __construct($steps)
     {
-
-        if (!is_int($steps)) {
+        if (! is_int($steps)) {
             throw new InvalidArgumentException('Invalid steps. Expect integer. Given: ' . gettype($steps));
         }
 
         $this->steps = $steps;
-
     }
 
-
-    /**
-     * @inheritdoc
-     */
     public function process(Collection $collection, $currentIndex)
     {
         $result = new StrategyResult();
@@ -85,5 +73,4 @@ class Move implements StrategyInterface
 
         return $result;
     }
-
 }
