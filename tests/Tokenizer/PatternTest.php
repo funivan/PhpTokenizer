@@ -170,9 +170,7 @@ class PatternTest extends TestCase
         $tokensChecker = new PatternMatcher(Collection::createFromString('<?php echo 1;'));
         /** @noinspection PhpUnusedParameterInspection */
         $this->expectException(Exception::class);
-        $tokensChecker->apply(function (QuerySequence $process) {
-            return new stdClass();
-        });
+        $tokensChecker->apply(fn(QuerySequence $process) => new stdClass());
 
     }
 
@@ -182,9 +180,7 @@ class PatternTest extends TestCase
         $tokensChecker = new PatternMatcher(Collection::createFromString('<?php echo 1;'));
         /** @noinspection PhpUnusedParameterInspection */
         $this->expectException(Exception::class);
-        $tokensChecker->apply(function (QuerySequence $process) {
-            return [new stdClass()];
-        });
+        $tokensChecker->apply(fn(QuerySequence $process) => [new stdClass()]);
 
     }
 

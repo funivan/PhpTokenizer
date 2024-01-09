@@ -21,12 +21,12 @@ class ClassPattern implements PatternInterface
     /**
      * Result of this pattern will be body of the class
      */
-    const OUTPUT_BODY = 1;
+    final public const OUTPUT_BODY = 1;
 
     /**
      * Result of this pattern will be full class
      */
-    const OUTPUT_FULL = 2;
+    final public const OUTPUT_FULL = 2;
 
 
     /**
@@ -210,7 +210,6 @@ class ClassPattern implements PatternInterface
 
 
     /**
-     * @param string $modifier
      * @return $this
      */
     public function withModifier(string $modifier): self
@@ -228,7 +227,6 @@ class ClassPattern implements PatternInterface
 
 
     /**
-     * @param string $modifier
      * @return $this
      */
     public function withoutModifier(string $modifier): self

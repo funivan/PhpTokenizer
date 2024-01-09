@@ -235,9 +235,7 @@ class ParametersPatternTest extends TestCase
     public function testInvalidCheckFunction()
     {
         $tokensChecker = self::createPatternMatch('function custom($data, $row){ }');
-        $pattern = (new ParametersPattern())->withArgument(1, function () {
-            return new stdClass();
-        });
+        $pattern = (new ParametersPattern())->withArgument(1, fn() => new stdClass());
 
 
         static::assertInstanceOf(ParametersPattern::class, $pattern);

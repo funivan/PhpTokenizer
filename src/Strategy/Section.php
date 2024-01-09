@@ -96,7 +96,6 @@ class Section extends QueryStrategy
 
 
     /**
-     * @param QueryInterface $startQuery
      * @return $this
      */
     public function setStartQuery(QueryInterface $startQuery)
@@ -107,7 +106,6 @@ class Section extends QueryStrategy
 
 
     /**
-     * @param QueryInterface $endQuery
      * @return $this
      */
     public function setEndQuery(QueryInterface $endQuery)

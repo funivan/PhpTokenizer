@@ -242,10 +242,7 @@ class QueryTest extends TestCase
     public function testCustomCallback()
     {
         $q = new Query();
-        $q->custom(function (Token $token) {
-
-            return ($token->isValid() and $token->getLine() < 10);
-        });
+        $q->custom(fn(Token $token) => $token->isValid() and $token->getLine() < 10);
 
         $token = new Token();
         static::assertFalse($q->isValid($token));
@@ -261,9 +258,7 @@ class QueryTest extends TestCase
     public function testCustomInvalidCallback(): void
     {
         $q = new Query();
-        $q->custom(function (Token $token) {
-            return $token;
-        });
+        $q->custom(fn(Token $token) => $token);
         $this->expectException(Exception::class);
         $q->isValid(new Token());
     }

@@ -68,9 +68,7 @@ class Query implements QueryInterface
 
         $types = $this->prepareIntValues($type);
 
-        $this->checkFunctions[] = function (Token $token) use ($types) {
-            return in_array($token->getType(), $types, true);
-        };
+        $this->checkFunctions[] = fn(Token $token) => in_array($token->getType(), $types, true);
 
         return $this;
     }
@@ -85,9 +83,7 @@ class Query implements QueryInterface
 
         $types = $this->prepareIntValues($type);
 
-        $this->checkFunctions[] = function (Token $token) use ($types) {
-            return !in_array($token->getType(), $types, true);
-        };
+        $this->checkFunctions[] = fn(Token $token) => !in_array($token->getType(), $types, true);
 
         return $this;
     }
@@ -101,9 +97,7 @@ class Query implements QueryInterface
     {
         $values = $this->prepareValues($value);
 
-        $this->checkFunctions[] = function (Token $token) use ($values) {
-            return in_array($token->getValue(), $values, true);
-        };
+        $this->checkFunctions[] = fn(Token $token) => in_array($token->getValue(), $values, true);
 
         return $this;
     }
@@ -118,9 +112,7 @@ class Query implements QueryInterface
 
         $values = $this->prepareValues($value);
 
-        $this->checkFunctions[] = function (Token $token) use ($values) {
-            return !in_array($token->getValue(), $values, true);
-        };
+        $this->checkFunctions[] = fn(Token $token) => !in_array($token->getValue(), $values, true);
 
         return $this;
     }
@@ -166,9 +158,7 @@ class Query implements QueryInterface
 
         $indexNumbers = $this->prepareIntValues($index);
 
-        $this->checkFunctions[] = function (Token $token) use ($indexNumbers) {
-            return in_array($token->getIndex(), $indexNumbers, true);
-        };
+        $this->checkFunctions[] = fn(Token $token) => in_array($token->getIndex(), $indexNumbers, true);
 
         return $this;
     }
@@ -182,9 +172,7 @@ class Query implements QueryInterface
     {
         $indexNumbers = $this->prepareIntValues($index);
 
-        $this->checkFunctions[] = function (Token $token) use ($indexNumbers) {
-            return !in_array($token->getIndex(), $indexNumbers, true);
-        };
+        $this->checkFunctions[] = fn(Token $token) => !in_array($token->getIndex(), $indexNumbers, true);
 
         return $this;
     }
@@ -198,9 +186,7 @@ class Query implements QueryInterface
     {
         $indexNumbers = $this->prepareIntValues($index);
 
-        $this->checkFunctions[] = function (Token $token) use ($indexNumbers) {
-            return ($token->getIndex() > max($indexNumbers));
-        };
+        $this->checkFunctions[] = fn(Token $token) => $token->getIndex() > max($indexNumbers);
 
 
         return $this;
@@ -215,9 +201,7 @@ class Query implements QueryInterface
     {
         $indexNumbers = $this->prepareIntValues($index);
 
-        $this->checkFunctions[] = function (Token $token) use ($indexNumbers) {
-            return ($token->getIndex() < min($indexNumbers));
-        };
+        $this->checkFunctions[] = fn(Token $token) => $token->getIndex() < min($indexNumbers);
 
         return $this;
     }
@@ -307,7 +291,6 @@ class Query implements QueryInterface
     /**
      * Under development
      *
-     * @param callable $checkFunction
      * @return $this
      */
     public function custom(callable $checkFunction)

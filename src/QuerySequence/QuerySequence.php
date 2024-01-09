@@ -27,16 +27,6 @@ class QuerySequence implements QuerySequenceInterface
     private $valid = true;
 
     /**
-     * @var int
-     */
-    private $position;
-
-    /**
-     * @var Collection
-     */
-    private $collection;
-
-    /**
      * @var
      */
     private $skipWhitespaces = false;
@@ -44,11 +34,10 @@ class QuerySequence implements QuerySequenceInterface
 
     /**
      * @inheritdoc
+     * @param int $initialPosition
      */
-    public function __construct(Collection $collection, $initialPosition = 0)
+    public function __construct(private Collection $collection, private $position = 0)
     {
-        $this->collection = $collection;
-        $this->position = $initialPosition;
     }
 
 
@@ -169,7 +158,6 @@ class QuerySequence implements QuerySequenceInterface
     /**
      * Move to specific position
      *
-     * @param Token $token
      * @return Token|null
      */
     public function moveToToken(Token $token)
@@ -198,7 +186,6 @@ class QuerySequence implements QuerySequenceInterface
     /**
      * Array may contain Int, String or any StrategyInterface object
      *
-     * @param array $conditions
      * @return Collection
      */
     public function sequence(array $conditions)
@@ -265,7 +252,6 @@ class QuerySequence implements QuerySequenceInterface
     /**
      *
      * @param StrategyInterface|string|int $value
-     * @param QueryStrategy $defaultStrategy
      * @return QueryStrategy
      */
     private function buildStrategyCondition($value, QueryStrategy $defaultStrategy)

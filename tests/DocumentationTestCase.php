@@ -12,11 +12,11 @@ use PHPUnit\Framework\TestCase;
 class DocumentationTestCase extends TestCase
 {
 
-    const DIR = __DIR__ . '/..';
+    final public const DIR = __DIR__ . '/..';
 
-    const DOCS_DIR = self::DIR . '/doc';
+    final public const DOCS_DIR = self::DIR . '/doc';
 
-    const BUILD_DIR = self::DIR . '/build';
+    final public const BUILD_DIR = self::DIR . '/build';
 
 
     /**
@@ -36,7 +36,6 @@ class DocumentationTestCase extends TestCase
 
     /**
      * @dataProvider getDocumentationDataProvider
-     * @param string $docFilePath
      */
     public function testDocumentation(string $docFilePath)
     {

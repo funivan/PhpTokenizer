@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Funivan\PhpTokenizer;
 
+use Stringable;
 use ArrayAccess;
 use Countable;
 use Funivan\PhpTokenizer\Exception\Exception;
@@ -14,31 +15,22 @@ use Iterator;
 /**
  *
  */
-class Collection implements Iterator, ArrayAccess, Countable
+class Collection implements Iterator, ArrayAccess, Countable, Stringable
 {
-
     /**
      * @var int
      */
     protected $position = 0;
-
     /**
      * Array of objects
      *
      * @var array
      */
     protected $items = [];
-
-
     /**
      * @var string
      */
     protected $initialContentHash;
-
-
-    /**
-     * @param array $items
-     */
     public function __construct(array $items = [])
     {
         if (!empty($items)) {
@@ -46,8 +38,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         }
         $this->storeContentHash();
     }
-
-
     /**
      *
      */
@@ -59,19 +49,15 @@ class Collection implements Iterator, ArrayAccess, Countable
         }
         $this->setItems($items);
     }
-
-
     /**
      * Extract each value from token
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->assemble();
     }
-
-
     /**
      *
      * @param string $string
@@ -83,8 +69,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         $tokens = Helper::getTokensFromString($string);
         return new Collection($tokens);
     }
-
-
     /**
      * Return number of items in this collection
      */
@@ -92,8 +76,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         return count($this->items);
     }
-
-
     /**
      * Add one item to begin of collection
      * This item is accessible via `$collection->getFirst();`
@@ -106,8 +88,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         array_unshift($this->items, $item);
         return $this;
     }
-
-
     /**
      * Add one item to the end of collection
      * This item is accessible via `$collection->getLast();`
@@ -120,8 +100,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         $this->items[] = $item;
         return $this;
     }
-
-
     /**
      * @param int $index
      * @param array $items
@@ -150,12 +128,9 @@ class Collection implements Iterator, ArrayAccess, Countable
         $this->items = array_merge($firstPart, $items, $secondPart);
         return $this;
     }
-
-
     /**
      * Truncate current list of items and add new
      *
-     * @param array $items
      * @return $this
      */
     public function setItems(array $items): self
@@ -170,14 +145,11 @@ class Collection implements Iterator, ArrayAccess, Countable
         $this->rewind();
         return $this;
     }
-
-
     /**
      * Remove part of items from collection
      * Works as array_slice
      *
      *
-     * @param int $offset
      * @param int|null $length
      * @return $this
      */
@@ -186,14 +158,11 @@ class Collection implements Iterator, ArrayAccess, Countable
         $this->items = array_slice($this->items, $offset, $length);
         return $this;
     }
-
-
     /**
      * Take part of items and return new collection
      * Works as array_slice
      * At this point items in 2 collection is same
      *
-     * @param int $offset
      * @param null $length
      * @return Collection
      */
@@ -202,8 +171,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         $items = array_slice($this->items, $offset, $length);
         return new Collection($items);
     }
-
-
     /**
      * Rewind current collection
      */
@@ -212,8 +179,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         $this->position = 0;
         $this->items = array_values($this->items);
     }
-
-
     /**
      * Return last item from collection
      *
@@ -224,8 +189,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         $lastToken = end($this->items);
         return ($lastToken !== false) ? $lastToken : null;
     }
-
-
     /**
      * Return first item from collection
      * @return Token|null
@@ -235,13 +198,10 @@ class Collection implements Iterator, ArrayAccess, Countable
         $first = reset($this->items);
         return $first !== false ? $first : null;
     }
-
-
     /**
      * Return next item from current
      * Also can return item with position from current + $step
      *
-     * @param int $step
      * @return Token
      */
     public function getNext(int $step = 1): Token
@@ -249,13 +209,10 @@ class Collection implements Iterator, ArrayAccess, Countable
         $position = ($this->position + $step);
         return $this->items[$position] ?? new Token();
     }
-
-
     /**
      * Return previous item
      * Also can return previous from current position + $step
      *
-     * @param int $step
      * @return Token
      */
     public function getPrevious(int $step = 1): Token
@@ -263,8 +220,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         $position = ($this->position - $step);
         return ($this->items[$position]) ?? new Token();
     }
-
-
     /**
      * Return current item in collection
      */
@@ -272,8 +227,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         return $this->items[$this->position];
     }
-
-
     /**
      * Return current position
      */
@@ -281,8 +234,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         return $this->position;
     }
-
-
     /**
      * Switch to next position
      */
@@ -290,8 +241,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         ++$this->position;
     }
-
-
     /**
      * Check if item exist in current position
      *
@@ -301,8 +250,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         return isset($this->items[$this->position]);
     }
-
-
     /**
      * Add item to the end or modify item with given key
      *
@@ -325,8 +272,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         }
         $this->items[$offset] = $item;
     }
-
-
     /**
      * Check if item with given offset exists
      *
@@ -336,8 +281,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         return isset($this->items[$offset]);
     }
-
-
     /**
      * Remove item from collection
      *
@@ -347,8 +290,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         unset($this->items[$offset]);
     }
-
-
     /**
      * Get item from collection
      *
@@ -356,10 +297,8 @@ class Collection implements Iterator, ArrayAccess, Countable
      */
     public function offsetGet($offset): ?Token
     {
-        return isset($this->items[$offset]) ? $this->items[$offset] : null;
+        return $this->items[$offset] ?? null;
     }
-
-
     /**
      * Return array of items connected to this collection
      *
@@ -376,8 +315,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         return $this->items;
     }
-
-
     /**
      * Iterate over objects in collection
      *
@@ -389,7 +326,6 @@ class Collection implements Iterator, ArrayAccess, Countable
      * })
      * </code>
      *
-     * @param callable $callback
      * @return $this
      * @throws InvalidArgumentException
      */
@@ -408,8 +344,6 @@ class Collection implements Iterator, ArrayAccess, Countable
 
         return $this;
     }
-
-
     /**
      * Remove all tokens in collection
      *
@@ -422,10 +356,7 @@ class Collection implements Iterator, ArrayAccess, Countable
         }
         return $this;
     }
-
-
     /**
-     * @param Query $query
      * @return Collection
      */
     public function find(Query $query)
@@ -433,8 +364,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         $finder = new TokenFinder($this);
         return $finder->find($query);
     }
-
-
     /**
      * Remove all invalid tokens in collection
      * Refresh index.
@@ -452,11 +381,7 @@ class Collection implements Iterator, ArrayAccess, Countable
         $this->rewind();
         return $this;
     }
-
-
     /**
-     * @param Token $tokenStart
-     * @param Token $tokenEnd
      * @return Collection
      */
     public function extractByTokens(Token $tokenStart, Token $tokenEnd): Collection
@@ -475,8 +400,6 @@ class Collection implements Iterator, ArrayAccess, Countable
 
         return $collection;
     }
-
-
     /**
      * @return $this
      */
@@ -485,8 +408,6 @@ class Collection implements Iterator, ArrayAccess, Countable
         $this->initialContentHash = $this->getContentHash();
         return $this;
     }
-
-
     /**
      * @return bool
      */
@@ -494,8 +415,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         return ($this->getContentHash() !== $this->initialContentHash);
     }
-
-
     /**
      * @return string
      */
@@ -503,8 +422,6 @@ class Collection implements Iterator, ArrayAccess, Countable
     {
         return md5($this->assemble());
     }
-
-
     /**
      * @return string
      */
@@ -521,8 +438,6 @@ class Collection implements Iterator, ArrayAccess, Countable
 
         return $string;
     }
-
-
     /**
      * Remove invalid tokens from collection
      *

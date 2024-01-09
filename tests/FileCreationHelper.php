@@ -11,7 +11,6 @@ class FileCreationHelper
 {
 
     /**
-     * @param string $code
      * @return File
      */
     public static function createFileFromCode(string $code): File
