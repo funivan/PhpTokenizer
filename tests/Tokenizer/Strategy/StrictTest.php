@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class StrictTest extends TestCase
 {
-    public function testSimple()
+    public function testSimple(): void
     {
         $code = '<?php echo $a; foreach($users as $user){}';
 

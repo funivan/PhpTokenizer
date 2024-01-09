@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class MoveTest extends TestCase
 {
-    public function testMove()
+    public function testMove(): void
     {
         $code = '<?php  $a';
 
@@ -33,13 +33,13 @@ class MoveTest extends TestCase
         $this->assertFalse($token->isValid());
     }
 
-    public function testInvalidStepsValue()
+    public function testInvalidStepsValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         Move::create(null);
     }
 
-    public function testMoveToToken()
+    public function testMoveToToken(): void
     {
         $code = '<?php echo $a;';
 

@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class FunctionCallPatternTest extends TestCase
 {
-    public function testDetectFunctionCall()
+    public function testDetectFunctionCall(): void
     {
         $code = '<?php
 
@@ -42,7 +42,7 @@ class FunctionCallPatternTest extends TestCase
         static::assertEquals('strlen(123)', (string) $collections[1]);
     }
 
-    public function testWithName()
+    public function testWithName(): void
     {
         $code = '<?php
 
@@ -64,7 +64,7 @@ class FunctionCallPatternTest extends TestCase
     /**
      * @faq function :: How to find function and fetch only its arguments
      */
-    public function testOutputArguments()
+    public function testOutputArguments(): void
     {
         $code = '<?php
 
@@ -87,7 +87,7 @@ class FunctionCallPatternTest extends TestCase
     /**
      * @faq How to find function with specific arguments num
      */
-    public function testWithParameters()
+    public function testWithParameters(): void
     {
         $code = '<?php
 

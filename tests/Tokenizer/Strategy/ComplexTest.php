@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class ComplexTest extends TestCase
 {
-    public function testSkipWhitespaces()
+    public function testSkipWhitespaces(): void
     {
         $code = '<?php
       echo $a;
@@ -69,7 +69,7 @@ class ComplexTest extends TestCase
     /**
      * @dataProvider getTestWithoutWhitespaceSkipDataProvider
      */
-    public function testWithoutWhitespaceSkip($sequence, $expectItems)
+    public function testWithoutWhitespaceSkip($sequence, $expectItems): void
     {
         $code = '<?php 
       echo $a;

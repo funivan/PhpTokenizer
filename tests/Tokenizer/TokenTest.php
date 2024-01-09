@@ -11,7 +11,7 @@ use Test\Funivan\PhpTokenizer\FileCreationHelper;
 
 class TokenTest extends TestCase
 {
-    public function testGetTypeName()
+    public function testGetTypeName(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1');
         $lastToken = $file->getCollection()->getLast();
@@ -21,7 +21,7 @@ class TokenTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testSetType()
+    public function testSetType(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1');
         $lastToken = $file->getCollection()->getLast();
@@ -32,7 +32,7 @@ class TokenTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testGetData()
+    public function testGetData(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1');
         $firstToken = $file->getCollection()->getFirst();
@@ -42,7 +42,7 @@ class TokenTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1');
         $firstToken = $file->getCollection()->getFirst();
@@ -52,7 +52,7 @@ class TokenTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testAssemble()
+    public function testAssemble(): void
     {
         $token = new Token();
         $token->setValue('123');
@@ -60,7 +60,7 @@ class TokenTest extends TestCase
         static::assertEquals('123', $token->assemble());
     }
 
-    public function testInvalidTokenType()
+    public function testInvalidTokenType(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Token([
@@ -68,7 +68,7 @@ class TokenTest extends TestCase
         ]);
     }
 
-    public function testInvalidValue()
+    public function testInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Token([
@@ -76,20 +76,20 @@ class TokenTest extends TestCase
         ]);
     }
 
-    public function testInvalidLine()
+    public function testInvalidLine(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Token([1, 'test']);
     }
 
-    public function testAppendToValue()
+    public function testAppendToValue(): void
     {
         $token = new Token();
         $token->setValue('123')->appendToValue('test');
         static::assertEquals('123test', $token->getValue());
     }
 
-    public function testTokenData()
+    public function testTokenData(): void
     {
         $token = new Token([1, 'test', 1, 1]);
 
@@ -99,7 +99,7 @@ class TokenTest extends TestCase
         static::assertEquals(1, $token->getType());
     }
 
-    public function testSetValue()
+    public function testSetValue(): void
     {
         $token = new Token();
         static::assertNull($token->getValue());
@@ -113,7 +113,7 @@ class TokenTest extends TestCase
         $token->setValue(null);
     }
 
-    public function testPrependToTheValue()
+    public function testPrependToTheValue(): void
     {
         $token = new Token();
         static::assertNull($token->getValue());
@@ -129,7 +129,7 @@ class TokenTest extends TestCase
         $token->prependToValue(null);
     }
 
-    public function testAppendToTheValue()
+    public function testAppendToTheValue(): void
     {
         $token = new Token();
         $token->setValue('123');
@@ -144,7 +144,7 @@ class TokenTest extends TestCase
         $token->prependToValue(null);
     }
 
-    public function testEqualOnSameTokens()
+    public function testEqualOnSameTokens(): void
     {
         self::assertTrue(
             (new Token([T_STRING, 'test', 11]))
@@ -152,7 +152,7 @@ class TokenTest extends TestCase
         );
     }
 
-    public function testEqualOnDifferentTokensTypes()
+    public function testEqualOnDifferentTokensTypes(): void
     {
         self::assertFalse(
             (new Token([T_STRING, 'user_name', 45]))
@@ -160,7 +160,7 @@ class TokenTest extends TestCase
         );
     }
 
-    public function testEqualOnDifferentTokensValues()
+    public function testEqualOnDifferentTokensValues(): void
     {
         self::assertFalse(
             (new Token([T_STRING, 'test_string', 10]))

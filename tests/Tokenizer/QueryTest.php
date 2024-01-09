@@ -15,7 +15,7 @@ use stdClass;
 
 class QueryTest extends TestCase
 {
-    public function testType()
+    public function testType(): void
     {
         $collection = Collection::createFromString('<?php echo $user;');
         $finder = new TokenFinder($collection);
@@ -33,7 +33,7 @@ class QueryTest extends TestCase
         static::assertCount(count($collection) - 1, $finder->find($query));
     }
 
-    public function testValue()
+    public function testValue(): void
     {
         $collection = Collection::createFromString('<?php 
         echo 1; 
@@ -55,28 +55,28 @@ class QueryTest extends TestCase
         static::assertCount(0, $collection->find($q->valueIs(null)));
     }
 
-    public function testWithInvalidValue()
+    public function testWithInvalidValue(): void
     {
         $query = new Query();
         $this->expectException(InvalidArgumentException::class);
         $query->valueNot(new stdClass());
     }
 
-    public function testWithInvalidArrayValue()
+    public function testWithInvalidArrayValue(): void
     {
         $query = new Query();
         $this->expectException(InvalidArgumentException::class);
         $query->valueNot([new stdClass()]);
     }
 
-    public function testQueryWithoutConditions()
+    public function testQueryWithoutConditions(): void
     {
         $query = new Query();
         $token = new Token();
         static::assertTrue($query->isValid($token));
     }
 
-    public function testIndexIs()
+    public function testIndexIs(): void
     {
         $query = new Query();
         $query->indexIs(1);
@@ -88,7 +88,7 @@ class QueryTest extends TestCase
         static::assertFalse($query->isValid($token));
     }
 
-    public function testIndexIsMultipleDefinition()
+    public function testIndexIsMultipleDefinition(): void
     {
         $query = new Query();
         $query->indexIs([4, 5, 6, 1]);
@@ -100,7 +100,7 @@ class QueryTest extends TestCase
         static::assertFalse($query->isValid($token));
     }
 
-    public function testIndexNot()
+    public function testIndexNot(): void
     {
         $query = new Query();
         $query->indexIs(1);
@@ -112,7 +112,7 @@ class QueryTest extends TestCase
         static::assertTrue($query->isValid($token));
     }
 
-    public function testIndexNotMultipleDefinition()
+    public function testIndexNotMultipleDefinition(): void
     {
         $query = new Query();
         $query->indexNot([4, 5, 6, 1]);
@@ -125,7 +125,7 @@ class QueryTest extends TestCase
         static::assertFalse($query->isValid($token));
     }
 
-    public function testLt()
+    public function testLt(): void
     {
         $query = new Query();
         $query->indexLt(10);
@@ -144,7 +144,7 @@ class QueryTest extends TestCase
         static::assertFalse($query->isValid($token));
     }
 
-    public function testGt()
+    public function testGt(): void
     {
         $query = new Query();
         $query->indexGt(10);
@@ -171,7 +171,7 @@ class QueryTest extends TestCase
         static::assertTrue($query->isValid($token));
     }
 
-    public function testPrepareNullValueCondition()
+    public function testPrepareNullValueCondition(): void
     {
         $q = new Query();
         $q->valueIs(null);
@@ -184,7 +184,7 @@ class QueryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testPrepareNullIntValues()
+    public function testPrepareNullIntValues(): void
     {
         $q = new Query();
         $q->typeIs(null);
@@ -194,7 +194,7 @@ class QueryTest extends TestCase
         static::assertFalse($q->isValid($token));
     }
 
-    public function testPrepareObjectIntValues()
+    public function testPrepareObjectIntValues(): void
     {
         $q = new Query();
         /** @noinspection PhpParamsInspection */
@@ -202,14 +202,14 @@ class QueryTest extends TestCase
         $q->typeIs(new stdClass());
     }
 
-    public function testPrepareArrayOfInvalidValuesForIntValueCondition()
+    public function testPrepareArrayOfInvalidValuesForIntValueCondition(): void
     {
         $q = new Query();
         $this->expectException(InvalidArgumentException::class);
         $q->typeIs([null]);
     }
 
-    public function testCustomCallback()
+    public function testCustomCallback(): void
     {
         $q = new Query();
         $q->custom(fn (Token $token) => $token->isValid() and $token->getLine() < 10);

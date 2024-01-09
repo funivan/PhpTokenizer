@@ -42,3 +42,6 @@ jobs:
 
             - name: Run tests
               run: ./vendor/bin/phpunit
+
+            - name: Run code style check
+              run: ./vendor/bin/ecs

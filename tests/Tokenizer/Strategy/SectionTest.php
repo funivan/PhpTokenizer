@@ -44,7 +44,7 @@ class SectionTest extends TestCase
     /**
      * @dataProvider functionCallDataProvider
      */
-    public function testFunctionCall($code, $functionName, $expectCode)
+    public function testFunctionCall($code, $functionName, $expectCode): void
     {
         $code = '<?php ' . $code;
 
@@ -67,7 +67,7 @@ class SectionTest extends TestCase
         static::assertEquals($expectCode, $lines[0]);
     }
 
-    public function testWithEmptySection()
+    public function testWithEmptySection(): void
     {
         $code = '<?php 
       
@@ -93,7 +93,7 @@ class SectionTest extends TestCase
         static::assertCount(0, $linesWithEcho);
     }
 
-    public function testWithEmptySectionSearch()
+    public function testWithEmptySectionSearch(): void
     {
         $code = '<?php 
       
@@ -120,7 +120,7 @@ class SectionTest extends TestCase
         static::assertCount(0, $linesWithEcho);
     }
 
-    public function testWithMultipleTokens()
+    public function testWithMultipleTokens(): void
     {
         $code = '<?php 
       
@@ -135,7 +135,7 @@ class SectionTest extends TestCase
 
         $num = 0;
 
-        (new PatternMatcher($collection))->apply(function (QuerySequence $q) use (&$num) {
+        (new PatternMatcher($collection))->apply(function (QuerySequence $q) use (&$num): void {
             $q->strict(')');
             $q->possible(T_WHITESPACE);
             $q->section('{', '}');
@@ -155,7 +155,7 @@ class SectionTest extends TestCase
     {
         return [
             [
-                function (QuerySequence $q) {
+                function (QuerySequence $q): void {
                     $q->strict(')');
                     $q->possible(T_WHITESPACE);
                     $q->section('{', '}');
@@ -163,14 +163,14 @@ class SectionTest extends TestCase
                 2,
             ],
             [
-                function (QuerySequence $q) {
+                function (QuerySequence $q): void {
                     $q->strict(')');
                     $q->section('{', '}');
                 },
                 1,
             ],
             [
-                function (QuerySequence $q) {
+                function (QuerySequence $q): void {
                     $q->setSkipWhitespaces(true);
                     $q->strict(')');
                     $q->section('{', '}');
@@ -178,7 +178,7 @@ class SectionTest extends TestCase
                 2,
             ],
             [
-                function (QuerySequence $q) {
+                function (QuerySequence $q): void {
                     $q->setSkipWhitespaces(true);
                     $q->strict(Strict::create()->valueLike('!^[a-z]+$!i'));
                     $q->section('(', ')');
@@ -187,7 +187,7 @@ class SectionTest extends TestCase
                 2,
             ],
             [
-                function (QuerySequence $q) {
+                function (QuerySequence $q): void {
                     $q->strict(Strict::create()->valueLike('!^[a-z]+$!i'));
                     $q->section('(', ')');
                     $q->section('{', '}');
@@ -195,7 +195,7 @@ class SectionTest extends TestCase
                 0,
             ],
             [
-                function (QuerySequence $q) {
+                function (QuerySequence $q): void {
                     $q->strict(Strict::create()->valueLike('!^[a-z]+$!i'));
                     $q->strict(T_WHITESPACE);
                     $q->section('(', ')');
@@ -209,7 +209,7 @@ class SectionTest extends TestCase
     /**
      * @dataProvider functionDetectDataProvider
      */
-    public function testFunctionDetect(callable $callback, $expectFunctionNum)
+    public function testFunctionDetect(callable $callback, $expectFunctionNum): void
     {
         $code = '<?php 
       function getInfo ($df){}
@@ -220,7 +220,7 @@ class SectionTest extends TestCase
 
         $num = 0;
 
-        (new PatternMatcher($collection))->apply(function (QuerySequence $q) use ($callback, &$num) {
+        (new PatternMatcher($collection))->apply(function (QuerySequence $q) use ($callback, &$num): void {
             $callback($q);
 
             if ($q->isValid()) {
@@ -231,14 +231,14 @@ class SectionTest extends TestCase
         static::assertEquals($expectFunctionNum, $num);
     }
 
-    public function testInvalidSectionStartDefinition()
+    public function testInvalidSectionStartDefinition(): void
     {
         $section = new Section();
         $this->expectException(InvalidArgumentException::class);
         $section->process(new Collection(), 0);
     }
 
-    public function testInvalidSectionEndDefinition()
+    public function testInvalidSectionEndDefinition(): void
     {
         $section = new Section();
         $section->setStartQuery(new Query());

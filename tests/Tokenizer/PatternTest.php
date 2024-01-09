@@ -19,7 +19,7 @@ class PatternTest extends TestCase
     /**
      * Prototype for new version
      */
-    public function testWithCallbackPattern()
+    public function testWithCallbackPattern(): void
     {
         $code = '<?php class A { public $user = null; }';
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
@@ -66,13 +66,13 @@ class PatternTest extends TestCase
      * @param string $data
      * @param boolean $expectResult
      */
-    public function testStrictSectionAndSequencePattern($data, $expectResult)
+    public function testStrictSectionAndSequencePattern($data, $expectResult): void
     {
         $code = '<?php 
       ' . $data;
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
         $result = [];
-        $tokensChecker->apply(function (QuerySequence $q) use (&$result) {
+        $tokensChecker->apply(function (QuerySequence $q) use (&$result): void {
             $q->setSkipWhitespaces(true);
             $start = $q->strict('preg_match');
             $q->section('(', ')');
@@ -95,7 +95,7 @@ class PatternTest extends TestCase
         static::assertEquals($expectResult, ! empty($result));
     }
 
-    public function testWithClassPattern()
+    public function testWithClassPattern(): void
     {
         $code = '<?php class A { public $user = null; } class customUser { }';
         $tokensChecker = new PatternMatcher(Collection::createFromString($code));
@@ -125,7 +125,7 @@ class PatternTest extends TestCase
         static::assertCount(1, $tokensChecker->getCollections());
     }
 
-    public function testWithNestedPatterns()
+    public function testWithNestedPatterns(): void
     {
         # find class with property
         $code = '<?php class A { public $user = null; static $name;} class customUser { $value; }';
@@ -156,7 +156,7 @@ class PatternTest extends TestCase
         static::assertEquals('$name', (string) $collections[1]);
     }
 
-    public function testInvalidPatternResult()
+    public function testInvalidPatternResult(): void
     {
         $tokensChecker = new PatternMatcher(Collection::createFromString('<?php echo 1;'));
         /** @noinspection PhpUnusedParameterInspection */
@@ -164,7 +164,7 @@ class PatternTest extends TestCase
         $tokensChecker->apply(fn (QuerySequence $process) => new stdClass());
     }
 
-    public function testInvalidPatternResultArray()
+    public function testInvalidPatternResultArray(): void
     {
         $tokensChecker = new PatternMatcher(Collection::createFromString('<?php echo 1;'));
         /** @noinspection PhpUnusedParameterInspection */
@@ -175,7 +175,7 @@ class PatternTest extends TestCase
     /**
      * @requires PHP 5.5
      */
-    public function testFluentInterface()
+    public function testFluentInterface(): void
     {
         $code = '<?php 
       class UsersController extends Base { 
@@ -189,7 +189,7 @@ class PatternTest extends TestCase
         $tokensChecker = new PatternMatcher($collection);
         $tokensChecker->apply(
             (new ClassPattern())->withName('UsersController')
-        )->apply(function (QuerySequence $q) {
+        )->apply(function (QuerySequence $q): void {
             $function = $q->strict('header');
             $q->strict('(');
             if ($q->isValid()) {
@@ -200,7 +200,7 @@ class PatternTest extends TestCase
         static::assertStringContainsString('$this->response()->redirect("123")', $collection->__toString());
     }
 
-    public function testPatternWithNullResult()
+    public function testPatternWithNullResult(): void
     {
         $code = '<?php 
       class UsersController extends Base { 
@@ -219,7 +219,7 @@ class PatternTest extends TestCase
         });
     }
 
-    public function testCombinedPatterns()
+    public function testCombinedPatterns(): void
     {
         $code = '<?php
       

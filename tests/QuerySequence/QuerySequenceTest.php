@@ -16,7 +16,7 @@ use stdClass;
 
 class QuerySequenceTest extends TestCase
 {
-    public function testSimpleIterate()
+    public function testSimpleIterate(): void
     {
         $code = '<?php 
       echo $a;
@@ -37,7 +37,7 @@ class QuerySequenceTest extends TestCase
         static::assertCount(3, $findItems);
     }
 
-    public function testMoveToToken()
+    public function testMoveToToken(): void
     {
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
@@ -76,7 +76,7 @@ class QuerySequenceTest extends TestCase
     /**
      * @dataProvider getTestStrictInvalidConditionDataProvider
      */
-    public function testStrictInvalidCondition($condition)
+    public function testStrictInvalidCondition($condition): void
     {
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
@@ -133,7 +133,7 @@ class QuerySequenceTest extends TestCase
     /**
      * @dataProvider getTestStrictConditionDataProvider
      */
-    public function testStrictCondition($condition, $isValid)
+    public function testStrictCondition($condition, $isValid): void
     {
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
@@ -188,7 +188,7 @@ class QuerySequenceTest extends TestCase
     /**
      * @dataProvider getTestPossibleConditionDataProvider
      */
-    public function testPossibleCondition($condition, $isValidToken)
+    public function testPossibleCondition($condition, $isValidToken): void
     {
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
@@ -226,7 +226,7 @@ class QuerySequenceTest extends TestCase
     /**
      * @dataProvider getTestPossibleInvalidConditionDataProvider
      */
-    public function testPossibleInvalidCondition($condition)
+    public function testPossibleInvalidCondition($condition): void
     {
         $code = '<?php echo $a;';
         $collection = Collection::createFromString($code);
@@ -236,7 +236,7 @@ class QuerySequenceTest extends TestCase
         $q->possible($condition);
     }
 
-    public function testSectionWithoutEndDelimiter()
+    public function testSectionWithoutEndDelimiter(): void
     {
         $code = '<?php foreach($users as $user ){ $a;';
         $collection = Collection::createFromString($code);
@@ -250,7 +250,7 @@ class QuerySequenceTest extends TestCase
     /**
      *  Check move strategy
      */
-    public function testMove()
+    public function testMove(): void
     {
         $code = '<?php echo 1';
         $collection = Collection::createFromString($code);
@@ -274,7 +274,7 @@ class QuerySequenceTest extends TestCase
         static::assertFalse($q->isValid());
     }
 
-    public function testSetValidWithInvalidFlag()
+    public function testSetValidWithInvalidFlag(): void
     {
         $q = new QuerySequence(new Collection(), 0);
         /** @noinspection PhpParamsInspection */

@@ -17,7 +17,7 @@ use stdClass;
 
 class MethodPatternTest extends TestCase
 {
-    public function testMatchMethodWithoutName()
+    public function testMatchMethodWithoutName(): void
     {
         $code = '<?php
       
@@ -47,7 +47,7 @@ class MethodPatternTest extends TestCase
         static::assertCount(1, $tokensChecker->apply($pattern)->getCollections());
     }
 
-    public function testMatchWithEmptyStartFrom()
+    public function testMatchWithEmptyStartFrom(): void
     {
         $code = '<?php function test(){
 
@@ -60,7 +60,7 @@ class MethodPatternTest extends TestCase
         static::assertCount(1, $tokensChecker->getCollections());
     }
 
-    public function testMatchWithParameters()
+    public function testMatchWithParameters(): void
     {
         $code = '<?php
       function showUser($user){ }
@@ -78,7 +78,7 @@ class MethodPatternTest extends TestCase
         static::assertCount(1, $tokensChecker->getCollections());
     }
 
-    public function testMatchWithMultipleKeywords()
+    public function testMatchWithMultipleKeywords(): void
     {
         $code = '<?php
 
@@ -113,7 +113,7 @@ class MethodPatternTest extends TestCase
         static::assertCount(1, $tokensChecker->getCollections());
     }
 
-    public function testDocCommentMatch()
+    public function testDocCommentMatch(): void
     {
         $code = '<?php
      /**
@@ -160,7 +160,7 @@ class MethodPatternTest extends TestCase
         static::assertCount(1, $tokensChecker->getCollections());
     }
 
-    public function testBodyFiler()
+    public function testBodyFiler(): void
     {
         $code = '<?php
 
@@ -191,7 +191,7 @@ class MethodPatternTest extends TestCase
         static::assertCount(1, $tokensChecker->getCollections());
     }
 
-    public function testOutput()
+    public function testOutput(): void
     {
         $code = '<?php
              /**
@@ -235,7 +235,7 @@ class MethodPatternTest extends TestCase
         static::assertEquals($comment->getValue(), (string) $collections[0]);
     }
 
-    public function testInvalidNameQuery()
+    public function testInvalidNameQuery(): void
     {
         $pattern = new MethodPattern();
         $this->expectException(InvalidArgumentException::class);

@@ -12,7 +12,7 @@ class HelperTest extends TestCase
     /**
      * @void
      */
-    public function testCheckLines()
+    public function testCheckLines(): void
     {
         $code = '<?php return [
       ];';

@@ -12,13 +12,13 @@ use PHPUnit\Framework\TestCase;
 
 class CollectionTest extends TestCase
 {
-    public function testBuildFromString()
+    public function testBuildFromString(): void
     {
         $collection = Collection::createFromString('<?php echo 123;');
         static::assertInstanceOf(Collection::class, $collection);
     }
 
-    public function testGetNext()
+    public function testGetNext(): void
     {
         $collection = Collection::createFromString('<?php echo 123;');
         $nextToken = $collection->getNext();
@@ -33,7 +33,7 @@ class CollectionTest extends TestCase
         static::assertEquals(null, $nextToken->getValue());
     }
 
-    public function testGetPrevious()
+    public function testGetPrevious(): void
     {
         $collection = Collection::createFromString('<?php echo 123;');
 
@@ -52,7 +52,7 @@ class CollectionTest extends TestCase
         static::assertEquals(null, $previous->getValue());
     }
 
-    public function testAssemble()
+    public function testAssemble(): void
     {
         $code = '<?php echo 123;';
         $collection = Collection::createFromString($code);
@@ -60,7 +60,7 @@ class CollectionTest extends TestCase
         static::assertEquals($code, (string) $collection);
     }
 
-    public function testSetToken()
+    public function testSetToken(): void
     {
         $collection = Collection::createFromString('<?php echo 123;');
 
@@ -78,7 +78,7 @@ class CollectionTest extends TestCase
         static::assertCount($itemsNum + 1, $collection);
     }
 
-    public function testAddTokenAfter()
+    public function testAddTokenAfter(): void
     {
         $collection = Collection::createFromString('<?php echo 123;');
 
@@ -97,7 +97,7 @@ class CollectionTest extends TestCase
         static::assertInstanceOf('Exception', $exception);
     }
 
-    public function testAddCollectionAfter()
+    public function testAddCollectionAfter(): void
     {
         $collection = Collection::createFromString('<?php echo 123;');
 
@@ -112,7 +112,7 @@ class CollectionTest extends TestCase
         static::assertEquals($otherCollection->assemble(), $collection->assemble());
     }
 
-    public function testDump()
+    public function testDump(): void
     {
         $collection = Collection::createFromString("<?php echo 123;");
         $dumpString = Helper::dump($collection);
@@ -120,7 +120,7 @@ class CollectionTest extends TestCase
         static::assertStringContainsString("T_ECHO", $dumpString);
     }
 
-    public function testRefresh()
+    public function testRefresh(): void
     {
         $collection = Collection::createFromString("<?php function();");
 
@@ -134,7 +134,7 @@ class CollectionTest extends TestCase
         static::assertCount($itemsNum, $collection);
     }
 
-    public function testNewCollection()
+    public function testNewCollection(): void
     {
         $error = null;
         try {
@@ -147,7 +147,7 @@ class CollectionTest extends TestCase
         static::assertInstanceOf('Exception', $error);
     }
 
-    public function testExtractByTokens()
+    public function testExtractByTokens(): void
     {
         $collection = new Collection();
 
@@ -180,7 +180,7 @@ class CollectionTest extends TestCase
         static::assertEquals($last, $newCollection->getLast());
     }
 
-    public function testTokenParse()
+    public function testTokenParse(): void
     {
         $collection = Collection::createFromString("<?php class Foo { function forEach() {} }");
 
@@ -189,7 +189,7 @@ class CollectionTest extends TestCase
         static::assertEquals(T_STRING, $forEach->getType());
     }
 
-    public function testParseInvalidCode()
+    public function testParseInvalidCode(): void
     {
         $collection = Collection::createFromString("<?php class { function forEach() {} }");
         $function = $collection[5];

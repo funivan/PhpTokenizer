@@ -100,7 +100,7 @@ class Section extends QueryStrategy
         return $this;
     }
 
-    protected function requireQueries()
+    protected function requireQueries(): void
     {
         if (empty($this->startQuery)) {
             throw new InvalidArgumentException('Empty start Query. ');

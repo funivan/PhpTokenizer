@@ -78,7 +78,7 @@ class ClassPattern implements PatternInterface
      */
     public function withDocComment(): self
     {
-        $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
+        $this->docCommentChecker = function (Token $comment, QuerySequence $q): void {
             if ($comment->getType() !== T_DOC_COMMENT) {
                 $q->setValid(false);
             }
@@ -91,7 +91,7 @@ class ClassPattern implements PatternInterface
      */
     public function withPossibleDocComment(): self
     {
-        $this->docCommentChecker = function () {
+        $this->docCommentChecker = function (): void {
         };
         return $this;
     }
@@ -101,7 +101,7 @@ class ClassPattern implements PatternInterface
      */
     public function withoutDocComment(): self
     {
-        $this->docCommentChecker = function (Token $comment, QuerySequence $q) {
+        $this->docCommentChecker = function (Token $comment, QuerySequence $q): void {
             if ($comment->getType() === T_DOC_COMMENT) {
                 $q->setValid(false);
             }
@@ -183,7 +183,7 @@ class ClassPattern implements PatternInterface
     public function withAnyModifier(): self
     {
         $this->modifierChecker = [];
-        $this->modifierChecker[] = function () {
+        $this->modifierChecker[] = function (): void {
         };
         return $this;
     }
@@ -193,7 +193,7 @@ class ClassPattern implements PatternInterface
      */
     public function withModifier(string $modifier): self
     {
-        $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
+        $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier): void {
             if ($token->getValue() !== $modifier) {
                 $q->setValid(false);
             }
@@ -207,7 +207,7 @@ class ClassPattern implements PatternInterface
      */
     public function withoutModifier(string $modifier): self
     {
-        $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier) {
+        $this->modifierChecker[] = function (Token $token, QuerySequence $q) use ($modifier): void {
             if ($token->getValue() === $modifier) {
                 $q->setValid(false);
             }

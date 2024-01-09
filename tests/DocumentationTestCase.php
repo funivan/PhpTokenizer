@@ -28,7 +28,7 @@ class DocumentationTestCase extends TestCase
     /**
      * @dataProvider getDocumentationDataProvider
      */
-    public function testDocumentation(string $docFilePath)
+    public function testDocumentation(string $docFilePath): void
     {
         $i = 0;
         $data = file_get_contents($docFilePath);

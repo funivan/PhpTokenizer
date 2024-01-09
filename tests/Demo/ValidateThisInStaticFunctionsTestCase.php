@@ -43,11 +43,11 @@ class ValidateThisInStaticFunctionsTestCase extends TestCase
      * @param string $code
      * @param boolean $expectThis
      */
-    public function testExtract($code, $expectThis)
+    public function testExtract($code, $expectThis): void
     {
         $collection = Collection::createFromString("<?php " . $code);
         $containThis = false;
-        (new PatternMatcher($collection))->apply(function (QuerySequence $q) use (&$containThis) {
+        (new PatternMatcher($collection))->apply(function (QuerySequence $q) use (&$containThis): void {
             $q->setSkipWhitespaces(true);
             $q->strict('static');
             $q->process(Possible::create()->valueIs(['public', 'protected', 'private']));

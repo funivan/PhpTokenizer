@@ -14,7 +14,7 @@ use stdClass;
 
 class ClassPatternTest extends TestCase
 {
-    public function testClassDetect()
+    public function testClassDetect(): void
     {
         $tokensChecker = new PatternMatcher($this->getDemoCollection());
         $tokensChecker->apply((new ClassPattern()));
@@ -22,7 +22,7 @@ class ClassPatternTest extends TestCase
         static::assertCount(2, $collections);
     }
 
-    public function testNameIs()
+    public function testNameIs(): void
     {
         $tokensChecker = new PatternMatcher($this->getDemoCollection());
         $checker = new ClassPattern();
@@ -43,7 +43,7 @@ class ClassPatternTest extends TestCase
         static::assertCount(1, $tokensChecker->getCollections());
     }
 
-    public function testNameCustomCheck()
+    public function testNameCustomCheck(): void
     {
         $tokensChecker = new PatternMatcher($this->getDemoCollection());
         $checker = new ClassPattern();
@@ -75,7 +75,7 @@ class ClassPatternTest extends TestCase
         return $collection;
     }
 
-    public function testInvalidNameCondition()
+    public function testInvalidNameCondition(): void
     {
         $pattern = new ClassPattern();
         $this->expectException(InvalidArgumentException::class);
@@ -124,7 +124,7 @@ class ClassPatternTest extends TestCase
      * @param int $expectItems
      * @param string $code
      */
-    public function testSimpleDetection($expectItems, $code)
+    public function testSimpleDetection($expectItems, $code): void
     {
         $collection = Collection::createFromString($code);
         $checker = new PatternMatcher($collection);
@@ -135,7 +135,7 @@ class ClassPatternTest extends TestCase
         static::assertCount($expectItems, $checker->getCollections());
     }
 
-    public function testOutputFullClass()
+    public function testOutputFullClass(): void
     {
         $tokensChecker = new PatternMatcher($this->getDemoCollection());
         $tokensChecker->apply(new ClassPattern());
@@ -143,7 +143,7 @@ class ClassPatternTest extends TestCase
         static::assertStringStartsWith('class B {', (string) $tokensChecker->getCollections()[0]);
     }
 
-    public function testOutputFullClassWithAllKeywords()
+    public function testOutputFullClassWithAllKeywords(): void
     {
         $checker = new PatternMatcher(Collection::createFromString('<?php abstract class B{} final class A {}'));
 
@@ -154,7 +154,7 @@ class ClassPatternTest extends TestCase
         static::assertStringStartsWith('final class A ', (string) $checker->getCollections()[1]);
     }
 
-    public function testOutputBody()
+    public function testOutputBody(): void
     {
         $checker = new PatternMatcher(Collection::createFromString('<?php abstract class B{public $a=1;} final class A {}'));
 
@@ -166,7 +166,7 @@ class ClassPatternTest extends TestCase
         static::assertEmpty((string) $checker->getCollections()[1]);
     }
 
-    public function testSelectWithOrWithoutDocComment()
+    public function testSelectWithOrWithoutDocComment(): void
     {
         $checker = new PatternMatcher(Collection::createFromString(
             '<?php
@@ -187,7 +187,7 @@ class ClassPatternTest extends TestCase
         static::assertStringStartsWith('final class', (string) $checker->getCollections()[1]);
     }
 
-    public function testSelectWithDocComment()
+    public function testSelectWithDocComment(): void
     {
         $checker = new PatternMatcher(Collection::createFromString(
             '<?php
@@ -206,7 +206,7 @@ class ClassPatternTest extends TestCase
         static::assertStringContainsString('class B', (string) $checker->getCollections()[0]);
     }
 
-    public function testSelectWithoutDocComment()
+    public function testSelectWithoutDocComment(): void
     {
         $checker = new PatternMatcher(Collection::createFromString(
             '<?php
@@ -229,7 +229,7 @@ class ClassPatternTest extends TestCase
         static::assertStringContainsString('final class D', (string) $checker->getCollections()[1]);
     }
 
-    public function testWithModifier()
+    public function testWithModifier(): void
     {
         $baseChecker = new PatternMatcher(Collection::createFromString(
             '<?php
@@ -266,7 +266,7 @@ class ClassPatternTest extends TestCase
         static::assertCount(5, $checker->getCollections());
     }
 
-    public function testWithoutModifier()
+    public function testWithoutModifier(): void
     {
         $baseChecker = new PatternMatcher(Collection::createFromString(
             '<?php

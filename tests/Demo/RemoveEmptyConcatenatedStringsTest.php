@@ -67,7 +67,7 @@ class RemoveEmptyConcatenatedStringsTest extends TestCase
      * @param string $code
      * @param string $expectCode
      */
-    public function testRemoveEmptyString($code, $expectCode)
+    public function testRemoveEmptyString($code, $expectCode): void
     {
         $collection = Collection::createFromString('<?php ' . $code);
 

@@ -14,7 +14,7 @@ use stdClass;
 
 class ParametersPatternTest extends TestCase
 {
-    public function testSimpleParameters()
+    public function testSimpleParameters(): void
     {
         $code = '<?php
 
@@ -37,7 +37,7 @@ class ParametersPatternTest extends TestCase
         static::assertEquals('$df', (string) $collections[2]);
     }
 
-    public function testWithArgument()
+    public function testWithArgument(): void
     {
         $code = '<?php
 
@@ -74,11 +74,11 @@ class ParametersPatternTest extends TestCase
         static::assertEquals('$data, $row, $new ', (string) $collections[0]);
     }
 
-    public function df()
+    public function df(): void
     {
     }
 
-    public function testWithArgumentCheck()
+    public function testWithArgumentCheck(): void
     {
         $code = '<?php
 
@@ -104,7 +104,7 @@ class ParametersPatternTest extends TestCase
         static::assertEquals('\Adm\Users\Model $df = []', (string) $collections[0]);
     }
 
-    public function testWithArgumentAndArraysAsValues()
+    public function testWithArgumentAndArraysAsValues(): void
     {
         $code = '<?php
 
@@ -187,7 +187,7 @@ class ParametersPatternTest extends TestCase
      * @param string $expectPrepared
      * @param string $expectRaw
      */
-    public function testOutputParameters($code, $index, $expectPrepared, $expectRaw)
+    public function testOutputParameters($code, $index, $expectPrepared, $expectRaw): void
     {
         $tokensChecker = self::createPatternMatch($code);
         $tokensChecker->apply((new ParametersPattern())->outputArgument($index));
@@ -204,7 +204,7 @@ class ParametersPatternTest extends TestCase
         static::assertEquals($expectRaw, (string) $collections[0]);
     }
 
-    public function testInvalidCheckFunction()
+    public function testInvalidCheckFunction(): void
     {
         $tokensChecker = self::createPatternMatch('function custom($data, $row){ }');
         $pattern = (new ParametersPattern())->withArgument(1, fn () => new stdClass());
@@ -214,7 +214,7 @@ class ParametersPatternTest extends TestCase
         $tokensChecker->apply($pattern);
     }
 
-    public function testGetFirstArgument()
+    public function testGetFirstArgument(): void
     {
         $pattern = new ParametersPattern();
         $pattern->withArgument(1);
@@ -240,7 +240,7 @@ class ParametersPatternTest extends TestCase
         return new PatternMatcher($collection);
     }
 
-    public function testGetWithSecondArgument()
+    public function testGetWithSecondArgument(): void
     {
         $pattern = new ParametersPattern();
         $pattern->withArgument(2);
@@ -287,7 +287,7 @@ class ParametersPatternTest extends TestCase
     /**
      * @dataProvider getFetchSpecificArgumentDataProvider
      */
-    public function testFetchSpecificArgument($code, $argumentIndex, $output)
+    public function testFetchSpecificArgument($code, $argumentIndex, $output): void
     {
         $pattern = new ParametersPattern();
         $pattern->withArgument($argumentIndex);

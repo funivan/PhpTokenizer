@@ -13,7 +13,7 @@ use function filemtime;
 
 class FileTest extends TestCase
 {
-    public function testStaticOpen()
+    public function testStaticOpen(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php 
       echo 1; ');
@@ -26,7 +26,7 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testOpen()
+    public function testOpen(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php
       echo 1; ');
@@ -35,21 +35,21 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testFilePath()
+    public function testFilePath(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1; ');
         static::assertNotEmpty($file->getPath());
         unlink($file->getPath());
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
         $tokens = $file->find(Query::create()->valueIs('1'));
 
         static::assertCount(1, $tokens);
-        $tokens->each(function (Token $token) {
+        $tokens->each(function (Token $token): void {
             $token->setValue(2);
         });
 
@@ -81,7 +81,7 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testRefresh()
+    public function testRefresh(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
@@ -106,7 +106,7 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testHtml()
+    public function testHtml(): void
     {
         # create temp file
         $code = '<html><?php echo 1 ?></html>';
@@ -117,7 +117,7 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testSaveFileWithoutChange()
+    public function testSaveFileWithoutChange(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 
@@ -130,7 +130,7 @@ class FileTest extends TestCase
         unlink($file->getPath());
     }
 
-    public function testIsChanged()
+    public function testIsChanged(): void
     {
         $file = FileCreationHelper::createFileFromCode('<?php echo 1;');
 

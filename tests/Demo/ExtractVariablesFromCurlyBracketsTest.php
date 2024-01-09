@@ -41,7 +41,7 @@ class ExtractVariablesFromCurlyBracketsTest extends TestCase
      * @param string $code
      * @param string $expectCode
      */
-    public function testExtract($code, $expectCode)
+    public function testExtract($code, $expectCode): void
     {
         $collection = Collection::createFromString('<?php ' . $code);
 

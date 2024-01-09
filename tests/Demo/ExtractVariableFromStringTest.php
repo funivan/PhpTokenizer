@@ -64,7 +64,7 @@ final class ExtractVariableFromStringTest extends TestCase
     {
         $collection = Collection::createFromString('<?php ' . $code);
         $checker = new PatternMatcher($collection);
-        $checker->apply(function (QuerySequence $q) {
+        $checker->apply(function (QuerySequence $q): void {
             $q->strict('"');
             $q->possible(T_ENCAPSED_AND_WHITESPACE);
             $variable = $q->strict(T_VARIABLE);
