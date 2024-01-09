@@ -3,6 +3,7 @@ All Notable changes to `PhpTokenizer` will be documented in this file
 ## Planned changes
   ### Changed
     - BC. `Collection::offsetSet` now returns `void` instead of its previous return type `this`
+    - BC. Use php 8.1
 
 ## 0.3.0 - [2019-01-20]
   ### Changed
