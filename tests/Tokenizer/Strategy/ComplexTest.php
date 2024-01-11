@@ -9,6 +9,7 @@ use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 use Funivan\PhpTokenizer\Strategy\Possible;
 use Funivan\PhpTokenizer\Token;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ComplexTest extends TestCase
@@ -41,7 +42,7 @@ class ComplexTest extends TestCase
     /**
      * @return array
      */
-    public function getTestWithoutWhitespaceSkipDataProvider()
+    public static function getTestWithoutWhitespaceSkipDataProvider()
     {
         return [
             [
@@ -66,9 +67,7 @@ class ComplexTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestWithoutWhitespaceSkipDataProvider
-     */
+    #[DataProvider('getTestWithoutWhitespaceSkipDataProvider')]
     public function testWithoutWhitespaceSkip($sequence, $expectItems): void
     {
         $code = '<?php 
@@ -96,7 +95,7 @@ class ComplexTest extends TestCase
     /**
      * @return array
      */
-    public function getComplexTestData()
+    public static function getComplexTestData()
     {
         return [
             [
@@ -154,9 +153,9 @@ class ComplexTest extends TestCase
     }
 
     /**
-     * @dataProvider   getComplexTestData
      * @throws Exception
      */
+    #[DataProvider('getComplexTestData')]
     public function testComplex(string $code, string $contain = null, $notContain = null): void
     {
         if ($contain == null and $notContain === null) {

@@ -11,6 +11,7 @@ use Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern;
 use Funivan\PhpTokenizer\Pattern\Patterns\MethodPattern;
 use Funivan\PhpTokenizer\QuerySequence\QuerySequence;
 use Funivan\PhpTokenizer\Strategy\Strict;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -42,7 +43,7 @@ class PatternTest extends TestCase
     /**
      * @return array
      */
-    public function getStrictSectionAndSequencePatternDataProvider()
+    public static function getStrictSectionAndSequencePatternDataProvider()
     {
         return [
             [
@@ -62,10 +63,10 @@ class PatternTest extends TestCase
     }
 
     /**
-     * @dataProvider getStrictSectionAndSequencePatternDataProvider
      * @param string $data
      * @param boolean $expectResult
      */
+    #[DataProvider('getStrictSectionAndSequencePatternDataProvider')]
     public function testStrictSectionAndSequencePattern($data, $expectResult): void
     {
         $code = '<?php 

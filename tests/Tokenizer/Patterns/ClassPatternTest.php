@@ -9,6 +9,7 @@ use Funivan\PhpTokenizer\Pattern\PatternMatcher;
 use Funivan\PhpTokenizer\Pattern\Patterns\ClassPattern;
 use Funivan\PhpTokenizer\Strategy\Strict;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -85,7 +86,7 @@ class ClassPatternTest extends TestCase
     /**
      * @return array
      */
-    public function getForSimpleDetectionProvider()
+    public static function getForSimpleDetectionProvider()
     {
         return [
             [
@@ -120,10 +121,10 @@ class ClassPatternTest extends TestCase
     }
 
     /**
-     * @dataProvider getForSimpleDetectionProvider
      * @param int $expectItems
      * @param string $code
      */
+    #[DataProvider('getForSimpleDetectionProvider')]
     public function testSimpleDetection($expectItems, $code): void
     {
         $collection = Collection::createFromString($code);

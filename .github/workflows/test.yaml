@@ -24,6 +24,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
+                  coverage: pcov
                   php-version: ${{ matrix.php-versions }}
 
             - name: Get Composer Cache Directory
@@ -33,7 +34,7 @@ jobs:
             - uses: actions/cache@v2
               with:
                   path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
                   restore-keys: |
                       ${{ runner.os }}-composer-
 
@@ -43,5 +44,15 @@ jobs:
             - name: Run tests
               run: ./vendor/bin/phpunit
 
+
             - name: Run code style check
               run: ./vendor/bin/ecs
+
+            - name: 'Show coverage'
+              run: |
+                echo "===="
+                summary=$(cat .tmp/coverage.txt | grep -A 4 "Summary:")
+                echo "$summary"
+                echo "===="
+                echo "## Coverage metrics" > $GITHUB_STEP_SUMMARY
+                echo "$summary" > $GITHUB_STEP_SUMMARY

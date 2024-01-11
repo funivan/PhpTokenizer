@@ -9,6 +9,7 @@ use Funivan\PhpTokenizer\Collection;
 use Funivan\PhpTokenizer\Pattern\PatternMatcher;
 use Funivan\PhpTokenizer\Pattern\Patterns\ParametersPattern;
 use Funivan\PhpTokenizer\Query\Query;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -149,7 +150,7 @@ class ParametersPatternTest extends TestCase
     /**
      * @return array
      */
-    public function getOutputParametersDataProvider()
+    public static function getOutputParametersDataProvider()
     {
         return [
             [
@@ -181,12 +182,12 @@ class ParametersPatternTest extends TestCase
     }
 
     /**
-     * @dataProvider getOutputParametersDataProvider
      * @param string $code
      * @param int $index
      * @param string $expectPrepared
      * @param string $expectRaw
      */
+    #[DataProvider('getOutputParametersDataProvider')]
     public function testOutputParameters($code, $index, $expectPrepared, $expectRaw): void
     {
         $tokensChecker = self::createPatternMatch($code);
@@ -258,7 +259,7 @@ class ParametersPatternTest extends TestCase
     /**
      * @return array
      */
-    public function getFetchSpecificArgumentDataProvider()
+    public static function getFetchSpecificArgumentDataProvider()
     {
         return [
             [
@@ -284,9 +285,7 @@ class ParametersPatternTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getFetchSpecificArgumentDataProvider
-     */
+    #[DataProvider('getFetchSpecificArgumentDataProvider')]
     public function testFetchSpecificArgument($code, $argumentIndex, $output): void
     {
         $pattern = new ParametersPattern();

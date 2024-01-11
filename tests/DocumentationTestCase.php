@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Funivan\PhpTokenizer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class DocumentationTestCase extends TestCase
@@ -14,7 +15,7 @@ class DocumentationTestCase extends TestCase
 
     final public const BUILD_DIR = self::DIR . '/build';
 
-    public function getDocumentationDataProvider(): array
+    public static function getDocumentationDataProvider(): array
     {
         $files = glob(self::DOCS_DIR . '/**');
         $files[] = self::DIR . '/README.md';
@@ -25,9 +26,7 @@ class DocumentationTestCase extends TestCase
         return $data;
     }
 
-    /**
-     * @dataProvider getDocumentationDataProvider
-     */
+    #[DataProvider('getDocumentationDataProvider')]
     public function testDocumentation(string $docFilePath): void
     {
         $i = 0;
