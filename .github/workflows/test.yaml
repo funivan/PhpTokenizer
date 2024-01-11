@@ -34,7 +34,7 @@ jobs:
             - uses: actions/cache@v2
               with:
                   path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
                   restore-keys: |
                       ${{ runner.os }}-composer-
 
@@ -49,4 +49,10 @@ jobs:
               run: ./vendor/bin/ecs
 
             - name: 'Show coverage'
-              run: cat .tmp/coverage.txt | grep -A 4 "Summary:" >> $GITHUB_STEP_SUMMARY
+              run: |
+                echo "===="
+                summary=$(cat .tmp/coverage.txt | grep -A 4 "Summary:")
+                echo "$summary"
+                echo "===="
+                echo "## Coverage metrics" > $GITHUB_STEP_SUMMARY
+                echo "$summary" > $GITHUB_STEP_SUMMARY
