@@ -10,13 +10,14 @@ on:
         branches:
             - master
 env:
-  PHP_MIN: 8.1
+  PHP_MIN: '8.1'
+  PHP_NIGHTLY: '8.4'
 jobs:
     run:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php-version: [ '8.1', '8.2', '8.3']
+                php-version: [ '$PHP_MIN', '8.2', '8.3', '$PHP_NIGHTLY']
         name: PHP ${{ matrix.php-version }}
         steps:
             - name: Checkout
@@ -43,6 +44,7 @@ jobs:
 
             - name: Run tests
               run: ./vendor/bin/phpunit
+              continue-on-error: ${{ matrix.php-version == env.PHP_NIGHTLY }}
 
             - name: Run code style check
               if: matrix.php-version == env.PHP_MIN
