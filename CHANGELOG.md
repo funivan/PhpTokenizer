@@ -2,6 +2,9 @@
 All Notable changes to `PhpTokenizer` will be documented in this file
 ## Planned changes
   ### Changed
+    - BC. `Collection::getFirst` added return type `Token|null`
+    - BC. `Collection::getLast` added return type `Token|null`
+    - BC. `Collection::find` added return type `Collection`
     - BC. `Collection::offsetSet` now returns `void` instead of its previous return type `this`
     - BC. Use php 8.1
 

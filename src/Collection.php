@@ -129,7 +129,7 @@ class Collection implements Iterator, ArrayAccess, Countable, Stringable
 
     /**
      * Truncate current list of items and add new
-     *
+     * @param Token[] $items
      * @return $this
      */
     public function setItems(array $items): self
@@ -179,12 +179,7 @@ class Collection implements Iterator, ArrayAccess, Countable, Stringable
         $this->items = array_values($this->items);
     }
 
-    /**
-     * Return last item from collection
-     *
-     * @return Token|null
-     */
-    public function getLast()
+    public function getLast(): ?Token
     {
         $lastToken = end($this->items);
         return ($lastToken !== false) ? $lastToken : null;
@@ -192,9 +187,8 @@ class Collection implements Iterator, ArrayAccess, Countable, Stringable
 
     /**
      * Return first item from collection
-     * @return Token|null
      */
-    public function getFirst()
+    public function getFirst(): ?Token
     {
         $first = reset($this->items);
         return $first !== false ? $first : null;
@@ -364,10 +358,7 @@ class Collection implements Iterator, ArrayAccess, Countable, Stringable
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
-    public function find(Query $query)
+    public function find(Query $query): Collection
     {
         $finder = new TokenFinder($this);
         return $finder->find($query);
