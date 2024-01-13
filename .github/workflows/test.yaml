@@ -9,15 +9,18 @@ on:
     pull_request:
         branches:
             - master
-env:
-  PHP_MIN: '8.1'
-  PHP_NIGHTLY: '8.4'
 jobs:
     run:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php-version: [ ${{ env.PHP_MIN }}, '8.2', '8.3', ${{ PHP_NIGHTLY }} ]
+              include:
+                - php-version: '8.1'
+                  main: true
+                - php-version: '8.2'
+                - php-version: '8.3'
+                - php-version: '8.4'
+                  nightly: true
         name: PHP ${{ matrix.php-version }}
         steps:
             - name: Checkout
@@ -44,14 +47,18 @@ jobs:
 
             - name: Run tests
               run: ./vendor/bin/phpunit
-              continue-on-error: ${{ matrix.php-version == env.PHP_NIGHTLY }}
+              continue-on-error: ${{ matrix.nightly }}
 
             - name: Run code style check
-              if: matrix.php-version == env.PHP_MIN
+              if: ${{ matrix.main }}
               run: ./vendor/bin/ecs
 
+            - name: Run rector
+              if: ${{ matrix.main }}
+              run: ./vendor/bin/rector --dry-run
+
             - name: Upload coverage reports to Codecov
-              if: matrix.php-version == env.PHP_MIN
+              if: ${{ matrix.main }}
               uses: codecov/codecov-action@v3
               env:
                 CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
