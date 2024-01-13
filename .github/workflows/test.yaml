@@ -17,7 +17,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php-version: [ "$PHP_MIN", '8.2', '8.3', '$PHP_NIGHTLY']
+                php-version: [ ${{ env.PHP_MIN }}, '8.2', '8.3', ${{ PHP_NIGHTLY }} ]
         name: PHP ${{ matrix.php-version }}
         steps:
             - name: Checkout
