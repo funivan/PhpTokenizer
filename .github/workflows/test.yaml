@@ -9,14 +9,15 @@ on:
     pull_request:
         branches:
             - master
-
+env:
+  PHP_MIN: 8.1
 jobs:
     run:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php-versions: ['8.1', '8.2', '8.3']
-        name: PHP ${{ matrix.php-versions }}
+                php-version: [ '8.1', '8.2', '8.3']
+        name: PHP ${{ matrix.php-version }}
         steps:
             - name: Checkout
               uses: actions/checkout@v2
@@ -25,7 +26,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   coverage: pcov
-                  php-version: ${{ matrix.php-versions }}
+                  php-version: ${{ matrix.php-version }}
 
             - name: Get Composer Cache Directory
               id: composer-cache
@@ -44,15 +45,13 @@ jobs:
             - name: Run tests
               run: ./vendor/bin/phpunit
 
-
             - name: Run code style check
+              if: matrix.php-version == env.PHP_MIN
               run: ./vendor/bin/ecs
 
-            - name: 'Show coverage'
-              run: |
-                echo "===="
-                summary=$(cat .tmp/coverage.txt | grep -A 4 "Summary:")
-                echo "$summary"
-                echo "===="
-                echo "## Coverage metrics" > $GITHUB_STEP_SUMMARY
-                echo "$summary" > $GITHUB_STEP_SUMMARY
+            - name: Upload coverage reports to Codecov
+              if: matrix.php-version == env.PHP_MIN
+              uses: codecov/codecov-action@v3
+              env:
+                CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
