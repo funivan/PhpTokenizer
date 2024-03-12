@@ -32,7 +32,7 @@ class Helper
 
                 /** @var Token $previousToken */
                 $previousToken = $tokens[$previousIndex];
-                $line = $previousToken->getLine() + substr_count($previousToken->getValue(), "\n");
+                $line = $previousToken->getLine() + substr_count((string)$previousToken->getValue(), "\n");
                 $tokenData = [
                     Token::INVALID_TYPE,
                     $tokenData,
